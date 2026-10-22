@@ -1,8 +1,13 @@
 {
+  // 바둑DB 사이트 배포 설정 (Cloudflare Workers 정적 자산)
   "name": "baduk",
   "compatibility_date": "2026-10-01",
+  "workers_dev": true,
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application"
-  }
+  },
+  "routes": [
+    { "pattern": "baduk.rajin.live", "custom_domain": true }
+  ]
 }
