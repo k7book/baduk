@@ -78,7 +78,7 @@ button,input,select{font-family:inherit;color:inherit}
 
 /* ===== scoreboard strip ===== */
 .board{background:var(--card);border-bottom:1px solid var(--rule)}
-.board .in{display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:thin}
+.board .in{display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:thin;padding:0 8px}
 .board .lbl{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center;padding:8px 12px 8px 0;border-right:1px solid var(--rule);margin-right:4px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
 .board .lbl b{font-size:13px;color:var(--ink);font-family:var(--font-mono)}
 .sb{flex:0 0 auto;width:172px;padding:7px 10px;border-right:1px solid var(--rule-2);text-decoration:none;color:inherit;font-size:12px}
@@ -88,6 +88,25 @@ button,input,select{font-family:inherit;color:inherit}
 .sb .r.w{font-weight:700}.sb .r.l{color:var(--muted-2)}
 .sb .r small{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
 .sb .r.w small{color:var(--win)}
+
+/* ===== hero ===== */
+.hero{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-3) 70%,#2a5298 100%);color:#fff;border-radius:var(--radius);padding:22px 24px;display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.18),transparent 60%)}
+.hero .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#ffd166;font-weight:700}
+.hero h2{font-family:var(--font-head);font-weight:800;font-size:clamp(30px,4.2vw,50px);line-height:1.02;margin:6px 0 10px;letter-spacing:.01em}
+.hero p{color:#c9d4e6;font-size:13.5px;margin:0 0 14px;max-width:560px}
+.hero .cta{display:flex;gap:8px;flex-wrap:wrap}
+.hero .cta a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;padding:7px 14px;border-radius:999px;font-size:13px}
+.hero .cta a.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+.feat{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:12px 14px;position:relative;z-index:1}
+.feat .ph{width:110px;border-radius:50%;background:#1f3b66;border:3px solid rgba(255,255,255,.25)}
+.feat .ph .ini{color:#8fa6c7}
+.feat .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#b9c6da;font-weight:700}
+.feat .nm{font-family:var(--font-head);font-weight:800;font-size:30px;line-height:1.05;margin:2px 0 6px}
+.feat .nm a{color:#fff;text-decoration:none}
+.feat .st{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#c9d4e6}
+.feat .st b{display:block;font-family:var(--font-head);font-size:22px;color:#fff;line-height:1}
+@media (max-width:767px){.hero{grid-template-columns:1fr;padding:18px}.feat{grid-template-columns:80px 1fr}.feat .ph{width:80px}}
 
 /* ===== page frame ===== */
 .page{padding:16px 0 60px}
@@ -351,7 +370,7 @@ td.d{color:var(--muted);font-family:var(--font-mono);font-size:11.5px;white-spac
       <a href="#/players/compare" data-r="compare">상대전적</a>
       <a href="#/records" data-r="records">기록실</a>
       <a href="#/search" data-r="search">검색</a>
-      <div class="more"><button type="button" aria-haspopup="true">더보기 ▾</button><div class="dd">
+      <div class="more"><button type="button" aria-haspopup="true">기타 ▾</button><div class="dd">
         <a href="#/games" data-r="games">대국 목록</a><a href="#/schedule" data-r="schedule">대국일정</a><a href="#/federations" data-r="federations">소속·국가</a><a href="#/data" data-r="data">오픈데이터</a><a href="#/about" data-r="about">자료에 대하여</a>
       </div></div>
     </nav>
@@ -363,7 +382,6 @@ td.d{color:var(--muted);font-family:var(--font-mono);font-size:11.5px;white-spac
   </div>
   <div class="wrap" id="favpop" hidden></div>
 </header>
-<div class="board"><div class="wrap in" id="board"></div></div>
 <main class="wrap page" id="app"><div class="skel"></div></main>
 <footer class="wrap foot">
   <span id="dl"></span>
@@ -525,7 +543,7 @@ function streaks(k){
 function renderBoard(){
   const el=document.getElementById('board');if(!el)return;
   const last=GAMES.slice(-14).reverse();
-  el.innerHTML=`<div class="lbl">최근 대국<b>${dstr(LASTD).slice(5).replace('-','.')}</b></div>`+last.map(g=>`<a class="sb" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="${esc(T[g.ti])}"><div class="t">${esc(G[g.g])}</div><div class="r w"><span>${esc(nameOf(g.wk))}</span><small>${g.j?'무':'승'}</small></div><div class="r l"><span>${esc(nameOf(g.lk))}</span><small>${g.j?'':resText(g).replace(/^\d+수 /,'')}</small></div></a>`).join('');
+  el.innerHTML=last.map(g=>`<a class="sb" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="${esc(T[g.ti])}"><div class="t">${esc(G[g.g])}</div><div class="r w"><span>${esc(nameOf(g.wk))}</span><small>${g.j?'무':'승'}</small></div><div class="r l"><span>${esc(nameOf(g.lk))}</span><small>${g.j?'':resText(g).replace(/^\d+수 /,'')}</small></div></a>`).join('');
 }
 /* movement: rank now vs rank N months before */
 let RANKCACHE={};
@@ -553,7 +571,14 @@ function pHome(){
   // season table: top by wins this year, standings style
   const season=Object.keys(A.n).map(k=>{let w=A.w[k]||0,n=A.n[k];const st=streaks(k);return {k,w,l:n-w,n,p:w/n,cur:st.cur};}).filter(x=>x.n>=10).sort((a,b)=>b.w-a.w||b.p-a.p).slice(0,12);
   const recent=GAMES.slice(-10).reverse();
+  const k1=top.length?top[0][0]:null;const p1=k1?PBY[k1]:null;const r1=k1?rec(k1):null;const y1=k1?{w:A.w[k1]||0,n:A.n[k1]||0}:null;
+  const lastCh=CHAMP.filter(c=>c.st===0).sort((a,b)=>b.d-a.d)[0];
   app.innerHTML=`
+  <section class="hero">
+    <div><div class="kick">바둑DB · ${YEARS[0]}–${yr}</div><h2>프로 바둑 ${fmt(Math.round(GAMES.length/1000))}천 대국의 기록</h2><p>한국기원 기록을 바탕으로 기사 ${fmt(P.length)}명의 통산 성적, 실력 점수(WHR), 대회별 우승, 상대전적을 한곳에서 봅니다. 계산한 값에는 '계산값' 표시를 붙였고, 원본은 고치지 않았습니다.</p>
+    <div class="cta"><a href="#/players">기사 찾기</a><a href="#/rankings">실력 점수 랭킹</a><a class="ghost" href="#/players/compare">상대전적 비교</a><a class="ghost" href="#/search">자유 검색</a></div></div>
+    ${k1?`<div class="feat"><div class="ph">${photo(p1,nameOf(k1))}</div><div><div class="k">현재 실력 점수 1위 ${calc('WHR 계산값')}</div><div class="nm"><a href="#/players/${encodeURIComponent(k1)}">${esc(nameOf(k1))}</a></div><div class="st"><span><b>${fmt(top[0][1])}</b>실력 점수</span><span><b>${y1.w}-${y1.n-y1.w}</b>${yr} 성적</span><span><b>${fmt(r1.w)}</b>통산 승</span><span><b>${(CHB[k1]||[]).length}</b>우승</span></div>${lastCh?`<div class="small" style="margin-top:8px;color:#c9d4e6">최근 우승: ${plink(lastCh.ck,'w').replace('class="pl','style="color:#ffd166" class="pl')} · <a style="color:#c9d4e6" href="#/tournaments/${lastCh.g}">${esc(G[lastCh.g])}</a> ${esc(lastCh.ed)} (${dstr(lastCh.d).slice(5)})</div>`:''}</div></div>`:''}
+  </section>
   <div class="kpis">
     <div class="kpi"><div class="num">${fmt(GAMES.length)}</div><div class="lbl">대국 ${YEARS[0]}–${yr}</div></div>
     <div class="kpi"><div class="num">${fmt(P.length)}</div><div class="lbl">기사 정보</div></div>
@@ -566,6 +591,7 @@ function pHome(){
     <div class="mod"><div class="hd"><span>${yr} 다승 리더</span><a class="more" href="#/seasons/${yr}">시즌 →</a></div><div class="bd">${rankList(Object.entries(A.w).sort((a,b)=>b[1]-a[1]),10,v=>v+'승')}</div></div>
     <div class="mod"><div class="hd"><span>통산 우승 ${calc('결승·도전기 다승자 판정, 동점 미확정 제외')}</span><a class="more" href="#/rankings/overall?by=titles">전체 →</a></div><div class="bd">${rankList(champTop,10,v=>v+'회')}</div></div>
   </div>
+  <div class="mod" style="margin-top:16px"><div class="hd"><span>최근 대국</span><span class="desc">마지막 기록일 ${dstr(LASTD)}</span><a class="more" href="#/games">대국 목록 →</a></div><div class="board" style="border-bottom:1px solid var(--rule)"><div class="in" id="board"></div></div><div class="bd flush"><div class="tw"><table><thead><tr><th>날짜</th><th>대회</th><th>승</th><th>패</th><th>내용</th><th>통산 맞대결</th></tr></thead><tbody>${recent.map(g=>`<tr><td class="d">${dstr(g.d)}</td><td class="tname" title="${esc(T[g.ti])}">${badge(g.c)} ${esc(T[g.ti])}</td><td>${plink(g.wk,'w')}</td><td>${plink(g.lk)}</td><td class="n">${stone(g)}${resText(g)}</td><td>${h2hBadge(g.wk,g.lk)}</td></tr>`).join('')}</tbody></table></div></div></div>
   <div class="grid g31" style="margin-top:16px">
     <div class="mod"><div class="hd"><span>${yr} 시즌 테이블</span><span class="desc">10국 이상 · 다승순 · 승률은 무승부·무효 제외</span></div><div class="bd flush"><div class="tw sticky"><table><thead><tr><th>#</th><th>기사</th><th>국가</th><th class="r">국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>연속</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n">${i+1}</td><td>${plink(x.k)}</td><td class="d">${esc((PBY[x.k]||{}).c||'')}</td><td class="n r">${x.n}</td><td class="n r">${x.w}</td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}</td><td class="n ${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]?x.cur[1]+x.cur[0].slice(1):''}</td><td class="n r">${s&&s[7]>=RANK_MIN?fmt(s[0]):'–'}</td></tr>`;}).join('')}</tbody></table></div></div></div>
     <div style="display:grid;gap:16px;align-content:start">
@@ -574,7 +600,8 @@ function pHome(){
       <div class="mod"><div class="hd"><span>갱신 이력</span><a class="more" href="#/about/changelog">전체 →</a></div><div class="bd">${META.changelog.slice(0,3).map(c=>`<div class="gl"><span class="d">${esc(c[0].slice(5))}</span><span class="small">${esc(c[1])}</span></div>`).join('')}</div></div>
     </div>
   </div>
-  <div class="mod" style="margin-top:16px"><div class="hd"><span>최근 대국</span><a class="more" href="#/games">대국 목록 →</a></div><div class="bd flush"><div class="tw"><table><thead><tr><th>날짜</th><th>대회</th><th>승</th><th>패</th><th>내용</th><th>통산 맞대결</th></tr></thead><tbody>${recent.map(g=>`<tr><td class="d">${dstr(g.d)}</td><td class="tname" title="${esc(T[g.ti])}">${badge(g.c)} ${esc(T[g.ti])}</td><td>${plink(g.wk,'w')}</td><td>${plink(g.lk)}</td><td class="n">${stone(g)}${resText(g)}</td><td>${h2hBadge(g.wk,g.lk)}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+`;
+  renderBoard();
 }
 
 /* =============== PLAYERS LIST =============== */
@@ -799,13 +826,14 @@ function tRecords(el,k,p,gs){
 }
 
 /* =============== RANKINGS =============== */
-const RSUB=[['','실력 점수'],['women','여자'],['overall','통산'],['legacy','역대 1위 계보'],['goat','GOAT']];
+const RSUB=[['','전체'],['kr','한국'],['cn','중국'],['jp','일본'],['women','여자'],['overall','통산'],['legacy','역대 1위 계보'],['goat','GOAT']];
+const RCTRY={kr:'한국',cn:'중국',jp:'일본'};
 function rankingCalcBox(extra){return `<div class="note">계산 조건 — 실력 점수는 WHR(w²=${META.whr.w2}) 계산값이며, 통산 ${RANK_MIN}국 이상·오차 ±${UNC_MAX} 이내 기사만 순위에 넣습니다. 기준일 ${dstr(LASTD)}. 한국기원에 기록된 공인전 기준이라 중국·일본 국내 대회는 일부만 반영됩니다. ${extra||''}</div>`;}
 function pRankings(sub,q){
   sub=sub||'';
-  app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1><nav class="tabs">${RSUB.map(([s,l])=>s==='goat'?`<span title="대회 등급 확정 후 공개">${l} · 준비 중</span>`:`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav><div id="rk"></div>`;
+  app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1><p class="lede">실력 점수는 WHR 계산값입니다. 국가별 탭은 같은 점수에서 그 나라 기사만 다시 줄 세운 것으로, 한국기원 기록에 있는 대국만 반영됩니다.</p><nav class="tabs">${RSUB.map(([s,l])=>s==='goat'?`<span title="대회 등급 확정 후 공개">${l} · 준비 중</span>`:`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav><div id="rk"></div>`;
   const el=document.getElementById('rk');
-  if(sub===''||sub==='women')return rkSkill(el,sub==='women',q);
+  if(sub===''||sub==='women'||RCTRY[sub]){if(RCTRY[sub])q={...q,c:RCTRY[sub],lock:1};return rkSkill(el,sub==='women',q);}
   if(sub==='overall')return rkOverall(el,q);
   if(sub==='legacy')return rkLegacy(el,q);
 }
@@ -813,7 +841,7 @@ function rkSkill(el,women,q){
   const st={mode:q.mode||'now',y:+q.y||YEARS[YEARS.length-1],c:q.c||'all',era:q.era||'all'};
   el.innerHTML=`<div class="fbar"><div class="fg"><span class="fl">기준</span><div class="pills" id="rm">${[['now','지금'],['at','특정 연도 말'],['peak','역대 최고']].map(([v,l])=>`<button class="pill" data-v="${v}" aria-pressed="${st.mode===v}">${l}</button>`).join('')}</div></div>
   <div class="fg" id="ryw" ${st.mode==='at'?'':'hidden'}><span class="fl">연도</span><select class="q" id="ry" style="min-width:90px">${YEARS.slice().reverse().map(y=>`<option ${y===st.y?'selected':''}>${y}</option>`).join('')}</select></div>
-  <div class="fg"><span class="fl">국가</span><select class="q" id="rc" style="min-width:90px"><option value="all">전체</option>${['한국','중국','일본','대만'].map(c=>`<option ${st.c===c?'selected':''}>${c}</option>`).join('')}</select></div>
+  <div class="fg" ${q.lock?'hidden':''}><span class="fl">국가</span><select class="q" id="rc" style="min-width:90px"><option value="all">전체</option>${['한국','중국','일본','대만'].map(c=>`<option ${st.c===c?'selected':''}>${c}</option>`).join('')}</select></div>
   <div class="fg" ${st.mode==='peak'?'':'hidden'} id="rew"><span class="fl">시대</span><select class="q" id="re" style="min-width:110px">${ERAS.map(([v,l])=>`<option value="${v}" ${st.era===v?'selected':''}>${l}</option>`).join('')}</select></div></div>
   ${women?`<div class="note" style="margin-top:10px">여자 랭킹은 같은 계산 결과에서 성별 정보가 '여자'인 기사만 다시 줄 세운 것입니다. 중국기원 소속 기사(${fmt(META.cn_no_gender)}명)는 성별 정보가 없어 이 목록에서 빠져 있을 수 있습니다.</div>`:''}
   <div id="rt" style="margin-top:6px"></div>${rankingCalcBox(st.mode==='now'?'"지금"은 최근 '+META.active_window+'년 안에 대국이 있는 기사이며, 변동은 1년 전 같은 기준 순위와 비교한 값입니다.':'')}`;
@@ -921,7 +949,7 @@ function pCompare(q){
   const go=()=>{const ka=keyFromInput($('ca').value),kb=keyFromInput($('cb').value);if(ka&&kb)location.hash=`#/players/compare?p1=${encodeURIComponent(ka)}&p2=${encodeURIComponent(kb)}`;};
   $('ca').onchange=go;$('cb').onchange=go;
   const el=$('cr');
-  if(!a||!b){el.innerHTML='<div class="empty">두 기사의 이름을 입력하세요. 기사 프로필의 라이벌 탭에서도 바로 올 수 있습니다.</div>';return;}
+  if(!a||!b){el.innerHTML='<div class="empty">두 기사의 이름을 입력하거나 아래 기록에서 고르세요.</div>'+bestH2H();return;}
   for(const x of [a,b])if(x.startsWith('?')||(!PBY[x]&&!BYK[x])){el.innerHTML=`<div class="empty">${esc(x.replace(/^\?|^n:/,''))}을(를) 찾을 수 없습니다. <a class="pl" href="#/players">기사 목록에서 찾기</a></div>`;return;}
   const gs=(BYK[a]||[]).filter(g=>(g.wk===a&&g.lk===b)||(g.wk===b&&g.lk===a));
   const aw=gs.filter(g=>!g.j&&g.wk===a).length,bw=gs.filter(g=>!g.j&&g.wk===b).length,dr=gs.filter(g=>g.j).length;
@@ -938,6 +966,29 @@ function pCompare(q){
   <section class="panel"><h2 class="sec"><span>맞대결 목록</span><span class="desc">${gs.length}국 · 최신순</span></h2><div id="cg"></div></section>`:'<div class="empty" style="margin-top:12px">두 기사는 맞대결 기록이 없습니다.</div>'}`;
   $('share').onclick=()=>{const u=location.href;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{$('share').textContent='복사했습니다';},()=>{prompt('이 주소를 복사하세요',u);});};
   if(gs.length)pagedTable($('cg'),gs.slice().reverse(),['날짜','결과','상대','대회','내용'],x=>gameRows(x,a),30);
+}
+
+/* best head-to-head records */
+let BH=null;
+function bestH2H(){
+  if(!BH){const pair={},cur={},best={};
+    for(const g of GAMES){if(g.j)continue;const a=g.wk<g.lk?g.wk:g.lk,b=a===g.wk?g.lk:g.wk;const id=a+'|'+b;const o=pair[id]=pair[id]||{a,b,n:0,aw:0,last:0};o.n++;if(g.wk===a)o.aw++;o.last=g.d;
+      const wkey=g.wk+'>'+g.lk,lkey=g.lk+'>'+g.wk;cur[wkey]=(cur[wkey]||0)+1;cur[lkey]=0;if(cur[wkey]>(best[wkey]||[0])[0])best[wkey]=[cur[wkey],g.d];}
+    const arr=Object.values(pair);
+    BH={most:arr.slice().sort((x,y)=>y.n-x.n).slice(0,10),
+      rival:arr.filter(x=>x.n>=20).map(x=>({...x,idx:x.n*(1-Math.abs(x.aw/x.n-.5)*2)})).sort((x,y)=>y.idx-x.idx).slice(0,10),
+      lop:arr.filter(x=>x.n>=15).map(x=>({...x,d:Math.abs(x.aw*2-x.n)})).sort((x,y)=>y.d-x.d).slice(0,10),
+      streak:Object.entries(best).sort((x,y)=>y[1][0]-x[1][0]).slice(0,10).map(([k,v])=>{const [w,l]=k.split('>');return {w,l,n:v[0],d:v[1]};}),
+      recent:arr.filter(x=>x.n>=10).sort((x,y)=>y.last-x.last).slice(0,10)};}
+  const B=BH;const lk=(a,b)=>`<a class="pl" style="font-weight:400" href="#/players/compare?p1=${encodeURIComponent(a)}&p2=${encodeURIComponent(b)}">비교</a>`;
+  const row=(x,v,s)=>`<div class="rk"><span class="i"></span><span class="nm">${plink(x.a)} <span class="muted">vs</span> ${plink(x.b)}<small>${s}</small></span><span class="v">${v} ${lk(x.a,x.b)}</span></div>`;
+  return `<div class="grid g3" style="margin-top:16px">
+  <div class="mod"><div class="hd"><span>최다 맞대결</span><span class="desc">무승부·무효 제외</span></div><div class="bd">${B.most.map((x,i)=>row(x,x.n+'국',x.aw+'-'+(x.n-x.aw))).join('')}</div></div>
+  <div class="mod"><div class="hd"><span>최고 라이벌 ${calc('맞대결 수 × (1 − |승률−0.5|×2), 20국 이상')}</span></div><div class="bd">${B.rival.map(x=>row(x,x.idx.toFixed(1),x.n+'국 '+x.aw+'-'+(x.n-x.aw))).join('')}</div></div>
+  <div class="mod"><div class="hd"><span>특정 상대 최다 연승</span></div><div class="bd">${B.streak.map(x=>`<div class="rk"><span class="i"></span><span class="nm">${plink(x.w)} <span class="muted">→</span> ${plink(x.l)}<small>${dstr(x.d).slice(0,7)}까지</small></span><span class="v">${x.n}연승 ${lk(x.w,x.l)}</span></div>`).join('')}</div></div>
+  <div class="mod"><div class="hd"><span>가장 일방적인 맞대결</span><span class="desc">15국 이상</span></div><div class="bd">${B.lop.map(x=>{const [w,l]=x.aw*2>=x.n?[x.a,x.b]:[x.b,x.a];const ww=Math.max(x.aw,x.n-x.aw);return `<div class="rk"><span class="i"></span><span class="nm">${plink(w)} <span class="muted">vs</span> ${plink(l)}<small>${x.n}국</small></span><span class="v"><span class="rw">${ww}</span>-<span class="rl">${x.n-ww}</span> ${lk(w,l)}</span></div>`;}).join('')}</div></div>
+  <div class="mod"><div class="hd"><span>최근에 이어진 맞대결</span><span class="desc">10국 이상</span></div><div class="bd">${B.recent.map(x=>row(x,x.aw+'-'+(x.n-x.aw),'마지막 '+dstr(x.last))).join('')}</div></div>
+  </div><div class="note">모두 한국기원 기록에 남은 대국만으로 센 계산값입니다. 이름을 누르면 기사 페이지, '비교'를 누르면 두 기사의 상대전적으로 갑니다.</div>`;
 }
 
 /* =============== TOURNAMENTS =============== */
@@ -1176,7 +1227,6 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 document.getElementById('dl').textContent=`바둑DB · 기준일 ${dstr(LASTD).replace(/-/g,'.')} · 대국 ${fmt(GAMES.length)} · 기사 정보 ${fmt(P.length)} · ${YEARS[0]}년부터`;
-renderBoard();
 route();
 })();
 </script>
