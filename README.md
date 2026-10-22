@@ -4,4 +4,4 @@
 
 - 화면: 홈 / 기사 / 기사 프로필 / 대국결과 / 기전 / 상대전적 (해시 라우팅)
 - 데이터: 기사 2,305명 · 대국 6,622건 (2026-01-01 ~ 2026-10-21), 기사-대국은 한국기원 pkey로 연결
-- 배포: Cloudflare, 도메인 baduk.rajin.live
+- 배포: Cloudflare Workers (wrangler.jsonc, 정적 자산 public/), 도메인 baduk.rajin.live
