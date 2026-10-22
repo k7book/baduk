@@ -1,6 +1,7 @@
 # 바둑DB
 
-한국기원 데이터 기반 기사·대국결과 대시보드 (정적 사이트)
+한국기원 데이터 기반 프로기사 프로필과 2026 대국결과를 하나로 묶은 정적 사이트 (index.html 한 파일).
 
-- index.html 첫 화면 / matches.html 대국결과 / players.html 기사
-- 배포: Cloudflare Pages, 도메인 baduk.rajin.live
+- 화면: 홈 / 기사 / 기사 프로필 / 대국결과 / 기전 / 상대전적 (해시 라우팅)
+- 데이터: 기사 2,305명 · 대국 6,622건 (2026-01-01 ~ 2026-10-21), 기사-대국은 한국기원 pkey로 연결
+- 배포: Cloudflare, 도메인 baduk.rajin.live
