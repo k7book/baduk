@@ -22,6 +22,7 @@
   --font-sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --font-head:"Barlow Condensed","IBM Plex Sans KR",sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --cat1:#2a78d6;--cat2:#eb6834;--cat3:#1baf7a;--cat4:#eda100;--cat5:#e87ba4;--cat6:#008300;--row-alt:#f7f8fa;--row-hover:#eef4fb;--th-bg:#f3f5f8;--th-rule:#0b1a33;--up:#d6281c;--up-tint:#fdecea;--dn:#1f63c6;--dn-tint:#e6effb;
   --wrap:1240px;--gutter:20px;--radius:6px;
   /* 하위 호환 별칭 */
   --paper:var(--bg);--paper-2:var(--card-3);--paper-3:var(--card);--teal:var(--link);--teal-ink:var(--link);--teal-tint:var(--link-tint);
@@ -29,11 +30,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0d1117;--card:#161b22;--card-2:#1c2330;--card-3:#222b3a;--ink:#e6e9ef;--ink-soft:#c3c9d4;--muted:#8b93a1;--muted-2:#a3abb8;
   --rule:#2d3645;--rule-2:#242c39;--rule-dot:#3b4556;--accent:#ff5a4d;--accent-ink:#ff7a70;--accent-tint:#3a1f1d;--link:#6cb4ff;--link-tint:#17304c;
-  --win:#3fbf74;--loss:#f0864a;--draw:#e2b53c;--none:#1f2733;--sky-2:#1f3344;--beige:#5a4a26;--navy:#070f1f;--navy-2:#0f1f3a}}
+  --win:#3fbf74;--loss:#f0864a;--draw:#e2b53c;--none:#1f2733;--sky-2:#1f3344;--beige:#5a4a26;--navy:#070f1f;--navy-2:#0f1f3a;--cat1:#3987e5;--cat2:#d95926;--cat3:#199e70;--cat4:#c98500;--cat5:#d55181;--cat6:#008300;--row-alt:#191f28;--row-hover:#1c2a3c;--th-bg:#1b222d;--th-rule:#3a4a63;--up:#ff6b5e;--up-tint:#3a1f1d;--dn:#5aa2ff;--dn-tint:#16304d;}}
 :root[data-theme="dark"]{
   --bg:#0d1117;--card:#161b22;--card-2:#1c2330;--card-3:#222b3a;--ink:#e6e9ef;--ink-soft:#c3c9d4;--muted:#8b93a1;--muted-2:#a3abb8;
   --rule:#2d3645;--rule-2:#242c39;--rule-dot:#3b4556;--accent:#ff5a4d;--accent-ink:#ff7a70;--accent-tint:#3a1f1d;--link:#6cb4ff;--link-tint:#17304c;
-  --win:#3fbf74;--loss:#f0864a;--draw:#e2b53c;--none:#1f2733;--sky-2:#1f3344;--beige:#5a4a26;--navy:#070f1f;--navy-2:#0f1f3a}
+  --win:#3fbf74;--loss:#f0864a;--draw:#e2b53c;--none:#1f2733;--sky-2:#1f3344;--beige:#5a4a26;--navy:#070f1f;--navy-2:#0f1f3a;--cat1:#3987e5;--cat2:#d95926;--cat3:#199e70;--cat4:#c98500;--cat5:#d55181;--cat6:#008300;--row-alt:#191f28;--row-hover:#1c2a3c;--th-bg:#1b222d;--th-rule:#3a4a63;--up:#ff6b5e;--up-tint:#3a1f1d;--dn:#5aa2ff;--dn-tint:#16304d;}
 *{box-sizing:border-box}
 html,body{overflow-x:clip}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -54,10 +55,11 @@ button,input,select{font-family:inherit;color:inherit}
 .gnav nav a{display:flex;align-items:center;padding:0 12px;color:#dbe3f0;text-decoration:none;font-weight:600;font-size:13.5px;letter-spacing:.02em;white-space:nowrap;border-bottom:3px solid transparent;border-top:3px solid transparent}
 .gnav nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
 .gnav nav a.on{color:#fff;border-bottom-color:var(--accent)}
-.gnav .more{position:relative}
+.gnav .more{position:static;display:flex;flex:none}
 .gnav .more>button{all:unset;cursor:pointer;display:flex;align-items:center;height:100%;padding:0 12px;color:#dbe3f0;font-weight:600;font-size:13.5px}
-.gnav .more .dd{position:absolute;top:100%;left:0;background:var(--navy-2);min-width:170px;padding:6px 0;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.gnav .more:hover .dd,.gnav .more.open .dd{display:block}
+.gnav .more .dd{position:fixed;top:52px;left:0;z-index:80;border-radius:0 0 8px 8px;background:var(--navy-2);min-width:170px;padding:6px 0;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.gnav .more.open .dd{display:block}
+.gnav .more.on>button{color:#fff;box-shadow:inset 0 -3px 0 var(--accent)}
 .gnav .more .dd a{padding:8px 14px;display:block;border:none}
 .gtools{display:flex;align-items:center;gap:6px;margin-left:auto}
 .qs{position:relative;width:min(240px,100%)}
@@ -72,7 +74,7 @@ button,input,select{font-family:inherit;color:inherit}
 .qsl a span{color:var(--muted);font-size:11.5px}
 .iconbtn{background:none;border:1px solid rgba(255,255,255,.22);color:#dbe3f0;border-radius:999px;padding:5px 11px;font-size:12px;cursor:pointer;white-space:nowrap}
 .iconbtn:hover{background:rgba(255,255,255,.1);color:#fff}
-@media (max-width:767px){.gnav .in{flex-wrap:wrap;height:auto;padding:6px 0}.logo{font-size:22px}.gtools{margin-left:auto}.gnav nav{order:3;flex-basis:100%;height:40px}.qs{width:150px}.iconbtn{padding:5px 8px}}
+@media (max-width:767px){.gnav .in{flex-wrap:wrap;height:auto;padding:6px var(--gutter)}.logo{font-size:22px}.gtools{margin-left:auto}.gnav nav{order:3;flex-basis:100%;height:40px}.qs{width:150px}.iconbtn{padding:5px 8px}}
 #favpop{position:relative}
 .favbox{position:absolute;right:0;top:4px;z-index:70;background:var(--card);color:var(--ink);border:1px solid var(--rule);width:min(320px,92vw);padding:10px 12px;font-size:13px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(0,0,0,.2)}
 
@@ -123,7 +125,8 @@ button,input,select{font-family:inherit;color:inherit}
 @media (max-width:640px){.feat{grid-template-columns:110px 1fr;padding:14px}.feat .ph{width:110px}.feat .nm{font-size:32px}.hero h2{font-size:38px}}
 
 /* ===== page frame ===== */
-.page{padding:16px 0 60px}
+.page{padding:16px var(--gutter) 60px}
+@media (max-width:767px){:root{--gutter:16px}}
 .crumb{font-size:12px;color:var(--muted);margin:2px 0 10px}
 .crumb a{text-decoration:none;color:var(--muted)}.crumb a:hover{color:var(--link)}
 h1.pt{font-family:var(--font-head);font-weight:800;font-size:clamp(28px,3.6vw,40px);margin:0 0 4px;letter-spacing:.01em;line-height:1.1;text-transform:none}
@@ -180,8 +183,9 @@ h1.pt{font-family:var(--font-head);font-weight:800;font-size:clamp(28px,3.6vw,40
 .calc{display:inline-block;font-size:10px;font-weight:600;color:var(--muted-2);border:1px solid var(--rule-dot);border-radius:3px;padding:0 5px;margin-left:5px;vertical-align:2px;cursor:help;white-space:nowrap;font-family:var(--font-sans);letter-spacing:0;text-transform:none}
 .cov{font-size:10.5px;color:var(--muted);margin-left:4px;white-space:nowrap}
 .badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;border-radius:3px;padding:1px 6px;white-space:nowrap;letter-spacing:.02em;text-transform:uppercase}
-.b-W{background:#d9ecff;color:#0b4a8a}.b-M{background:#dcefe3;color:#145a32}.b-L{background:#fde7cf;color:#8a3d05}.b-A{background:#ebe9f7;color:#3f3a7a}.b-O{background:#fbe1e1;color:#8a1c1c}.b-U{background:var(--card-3);color:var(--muted-2)}
-:root[data-theme="dark"] .badge:not(.b-U),@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge:not(.b-U){filter:brightness(.85) saturate(1.3)}}
+.b-M{background:#e3eefb;color:#1d5aa6}.b-W{background:#fde9e0;color:#a6400f}.b-L{background:#dcf3ea;color:#0e6e4c}.b-A{background:#fdf0d2;color:#8a5a00}.b-O{background:#fbe6ee;color:#9c2f5a}.b-U{background:var(--card-3);color:var(--muted-2)}
+:root[data-theme="dark"] .b-M{background:#17304c;color:#8cc0ff}:root[data-theme="dark"] .b-W{background:#3a2216;color:#ffa070}:root[data-theme="dark"] .b-L{background:#12332a;color:#5fd3a6}:root[data-theme="dark"] .b-A{background:#352a10;color:#f0c050}:root[data-theme="dark"] .b-O{background:#3a1a28;color:#f28fb6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .b-M{background:#17304c;color:#8cc0ff}:root:not([data-theme="light"]) .b-W{background:#3a2216;color:#ffa070}:root:not([data-theme="light"]) .b-L{background:#12332a;color:#5fd3a6}:root:not([data-theme="light"]) .b-A{background:#352a10;color:#f0c050}:root:not([data-theme="light"]) .b-O{background:#3a1a28;color:#f28fb6}}
 .chip{background:var(--link-tint);color:var(--link);border-radius:999px;padding:2px 10px;display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:600}
 .chip button{background:none;border:none;color:inherit;cursor:pointer;font-size:14px;padding:0;line-height:1}
 .award{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;background:var(--card-3);border-radius:999px;padding:2px 10px;white-space:nowrap;font-weight:600}
@@ -218,19 +222,21 @@ input.q.n{min-width:0;width:84px}
 /* ===== tables (Sports-Reference style) ===== */
 .tw{overflow-x:auto;position:relative}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
-thead th{text-align:left;font-weight:700;font-size:11px;color:var(--muted-2);padding:7px 8px;white-space:nowrap;border-bottom:2px solid var(--navy);background:var(--card);text-transform:uppercase;letter-spacing:.04em}
+thead th{text-align:left;font-weight:700;font-size:11px;color:var(--muted-2);padding:8px 8px;white-space:nowrap;border-bottom:2px solid var(--th-rule);background:var(--th-bg);text-transform:uppercase;letter-spacing:.04em}
 thead th.r,td.r{text-align:right}
 thead th button{all:unset;cursor:pointer}
-tbody tr{border-bottom:1px solid var(--rule-2)}
-tbody tr:nth-child(even){background:var(--card-2)}
-tbody tr:hover{background:var(--link-tint)}
-td{padding:6px 8px;vertical-align:middle}
+tbody tr{--rowbg:var(--card);border-bottom:1px solid var(--rule-2)}
+tbody tr:nth-child(even){--rowbg:var(--row-alt)}
+tbody tr:hover{--rowbg:var(--row-hover)}
+tbody td{background:var(--rowbg)}
+td{padding:7px 8px;vertical-align:middle}
 td.n{font-family:var(--font-mono);font-size:12px;white-space:nowrap}
 td.d{color:var(--muted);font-family:var(--font-mono);font-size:11.5px;white-space:nowrap}
-.tw.sticky th:first-child,.tw.sticky td:first-child{position:sticky;left:0;background:inherit;z-index:1;box-shadow:6px 0 6px -6px rgba(0,0,0,.2)}
-.tw.sticky th:first-child{background:var(--card)}
-.tw.sticky tbody tr:nth-child(odd) td:first-child{background:var(--card)}
-.tw.sticky tbody tr:nth-child(even) td:first-child{background:var(--card-2)}
+.tw.sticky th:first-child,.tw.sticky td:first-child{position:sticky;left:0;z-index:1;box-shadow:1px 0 0 var(--rule-2)}
+.tw.sticky th:first-child{background:var(--th-bg)}
+td.rkn{font-weight:700;color:var(--ink-soft)}
+td.rkn i{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:50%;font-style:normal;font-size:11.5px}
+td.rkn.t1 i{background:#e3b341;color:#1a1300}td.rkn.t2 i{background:#b9c1cb;color:#14181d}td.rkn.t3 i{background:#cf8a52;color:#1d0f04}
 .scrollbox{max-height:440px;overflow:auto}
 .scrollbox thead th{position:sticky;top:0;z-index:2}
 .tname{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft)}
@@ -246,8 +252,20 @@ td.d{color:var(--muted);font-family:var(--font-mono);font-size:11.5px;white-spac
 .pager{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12.5px;color:var(--muted);gap:10px;flex-wrap:wrap}
 .pager button{border:1px solid var(--rule);background:var(--card);padding:5px 12px;border-radius:var(--radius);cursor:pointer;font-size:12.5px;font-weight:600}
 .pager button:disabled{opacity:.4;cursor:not-allowed}
-.mv{font-family:var(--font-mono);font-size:11px;white-space:nowrap}
-.mv.up{color:var(--win)}.mv.dn{color:var(--loss)}.mv.new{color:var(--link)}
+.mv{display:inline-flex;align-items:center;justify-content:center;min-width:40px;padding:1px 7px;border-radius:999px;font-family:var(--font-mono);font-size:11px;font-weight:600;white-space:nowrap;color:var(--muted)}
+.mv.up{color:var(--up);background:var(--up-tint)}.mv.dn{color:var(--dn);background:var(--dn-tint)}.mv.new{color:var(--link);background:var(--link-tint);font-size:10px;letter-spacing:.04em}
+.mod.dark .mv,.hero .mv{background:rgba(255,255,255,.1)}.mod.dark .mv.up{color:#ff8a80}.mod.dark .mv.dn{color:#8cc0ff}
+/* flags */
+.flag{display:inline-flex;vertical-align:-1px;line-height:0}.flag svg{width:18px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.cty{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.feat .nm .flag svg{width:30px;height:20px}
+.ctabs{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+.ctabs button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--card);color:var(--ink-soft);border-radius:999px;padding:7px 14px 7px 12px;font-size:13.5px;font-weight:700;cursor:pointer}
+.ctabs button:hover{border-color:var(--link);color:var(--ink)}
+.ctabs button em{font-style:normal;font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--muted);background:var(--card-3);border-radius:999px;padding:1px 7px}
+.ctabs button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.ctabs button[aria-pressed="true"] em{background:color-mix(in srgb,var(--card) 18%,transparent);color:var(--card)}
+.ctabs .flag svg{width:21px;height:14px}
 
 /* leaders list */
 .rk{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule-2);font-size:13px}
@@ -493,7 +511,7 @@ function mkChart(id,cfg){const el=document.getElementById(id);if(!el)return null
   const c=new Chart(el,cfg);charts.push(c);return c;}
 const gridY=()=>({grid:{color:cssv('--rule-2')},border:{display:false},ticks:{precision:0}});
 const noGrid=()=>({grid:{display:false},border:{color:cssv('--ink')}});
-const CAT_COLOR={'국내기전':'#0f766e','세계기전':'#5eb8a8','리그':'#7aa37a','협회리그':'#b8b2a0','해외리그':'#c97b5b','기타':'#d8d4c8'};
+const CAT_VAR={'국내기전':'--cat1','세계기전':'--cat2','리그':'--cat3','협회리그':'--cat4','해외리그':'--cat5','기타':'--cat6'};const CAT_COLOR=new Proxy({},{get:(t,c)=>cssv(CAT_VAR[c]||'--cat6')});
 
 /* ---------- favourites ---------- */
 const favs=()=>store.get('bdb-fav',[]);
@@ -571,7 +589,28 @@ function rankAt(ym){
 }
 const mvHtml=(now,prev)=>prev==null?'<span class="mv new">NEW</span>':now<prev?`<span class="mv up">▲${prev-now}</span>`:now>prev?`<span class="mv dn">▼${now-prev}</span>`:'<span class="mv">–</span>';
 
-(function(){const m=document.querySelector('.gnav .more');if(!m)return;const b=m.querySelector('button');b.onclick=e=>{e.stopPropagation();m.classList.toggle('open');};document.addEventListener('click',e=>{if(!e.target.closest('.gnav .more'))m.classList.remove('open');});m.querySelector('.dd').addEventListener('click',()=>m.classList.remove('open'));window.addEventListener('hashchange',()=>m.classList.remove('open'));})();
+(function(){const m=document.querySelector('.gnav .more');if(!m)return;const b=m.querySelector('button'),d=m.querySelector('.dd');
+const place=()=>{const r=b.getBoundingClientRect();const w=Math.max(170,d.offsetWidth||170);d.style.top=r.bottom+'px';d.style.left=Math.max(8,Math.min(r.left,window.innerWidth-w-8))+'px';};
+const open=()=>{m.classList.add('open');place();b.setAttribute('aria-expanded','true');};const close=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false');};
+const hov=matchMedia('(hover:hover)').matches;let ot=0;b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(m.classList.contains('open')&&Date.now()-ot>400)close();else open();});
+if(hov){let t;m.addEventListener('mouseenter',()=>{clearTimeout(t);if(!m.classList.contains('open')){ot=Date.now();open();}});m.addEventListener('mouseleave',()=>{t=setTimeout(close,180);});d.addEventListener('mouseenter',()=>clearTimeout(t));d.addEventListener('mouseleave',()=>{t=setTimeout(close,180);});}
+document.addEventListener('click',e=>{if(!e.target.closest('.gnav .more'))close();});d.addEventListener('click',close);
+window.addEventListener('hashchange',close);window.addEventListener('resize',()=>{if(m.classList.contains('open'))place();});
+document.querySelector('#nav').addEventListener('scroll',()=>{if(m.classList.contains('open'))place();},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});})();
+
+/* ---------- country flags (inline SVG; Windows에서 국기 이모지가 안 보여서 직접 그림) ---------- */
+const FLAG=(()=>{
+  const star=(cx,cy,r,rot=0)=>{let d='';for(let i=0;i<10;i++){const a=(rot-90+i*36)*Math.PI/180,rr=i%2?r*0.382:r;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(2)+' '+(cy+rr*Math.sin(a)).toFixed(2);}return `<path d="${d}Z"/>`;};
+  const bars=(o)=>`<path d="M-6 ${o}h12v2h-12zM-6 ${o+3}h12v2h-12zM-6 ${o+6}h12v2h-12z"/>`;
+  const kr=`<svg viewBox="-36 -24 72 48" aria-hidden="true"><rect x="-36" y="-24" width="72" height="48" fill="#fff"/><g transform="rotate(-56.31)">${bars(-26)}${bars(18)}<path stroke="#fff" stroke-width="1" d="M0 17v10"/><path fill="#cd2e3a" d="M0-12A12 12 0 0 1 0 12z"/><path fill="#0047a0" d="M0-12A12 12 0 0 0 0 12 6 6 0 0 0 0 0z"/><circle cy="-6" fill="#cd2e3a" r="6"/></g><g transform="rotate(-123.69)">${bars(-26)}${bars(18)}<path stroke="#fff" stroke-width="1" d="M0-23.5v3M0 17v3.5M0 23.5v3"/></g></svg>`;
+  const cn=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#ee1c25"/><g fill="#ffde00">${star(5,5,3)}${star(10,2,1,23)}${star(12,4,1,46)}${star(12,7,1,70)}${star(10,9,1,21)}</g></svg>`;
+  const jp=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></svg>`;
+  const tw=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fe0000"/><rect width="15" height="10" fill="#000095"/><g fill="#fff">${star(7.5,5,3.6)}</g><circle cx="7.5" cy="5" r="1.9" fill="#000095"/><circle cx="7.5" cy="5" r="1.5" fill="#fff"/></svg>`;
+  return {'한국':kr,'중국':cn,'일본':jp,'대만':tw};
+})();
+const flag=c=>FLAG[c]?`<span class="flag" title="${c}">${FLAG[c]}</span>`:'';
+const cflag=c=>c?`<span class="cty">${flag(c)}${esc(c)}</span>`:'';
 
 /* =============== HOME =============== */
 function currentTop(filter,n){
@@ -599,13 +638,13 @@ function pHome(){
     <div class="feat" style="grid-template-columns:1fr;align-items:start"><div><div class="k">최근 우승 ${calc('결승·도전기 다승자 판정')}</div>${CHAMP.filter(c=>c.st===0).sort((x,y)=>y.d-x.d).slice(0,6).map(c=>`<div class="gl" style="border-color:rgba(255,255,255,.12);grid-template-columns:44px 1fr"><span class="d" style="color:#9fb0c8">${dstr(c.d).slice(5)}</span><span><a class="pl" style="color:#fff;font-size:15px" href="#/players/${encodeURIComponent(c.ck)}">${esc(nameOf(c.ck))}</a><div class="t" style="color:#c9d4e6"><a style="color:#ffd166;text-decoration:none" href="#/tournaments/${c.g}">${esc(G[c.g])}</a> ${esc(c.ed)}${c.rk?' · 결승 상대 '+esc(nameOf(c.rk)):''}</div></span></div>`).join('')}<div class="top3" style="margin-top:12px"><a href="#/tournaments">대회별 역대 우승 →</a><a href="#/rankings/overall?by=titles">통산 우승 순위 →</a></div></div></div>
   </section>
   <div class="grid g3">
-    <div class="mod dark"><div class="hd"><span>실력 점수 리더 ${calc('WHR(w²='+META.whr.w2+'), 통산 '+RANK_MIN+'국 이상, 최근 활동 기사')}</span><a class="more" href="#/rankings">전체 →</a></div><div class="bd">${top.map(([k,v],i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(k)}<small>${esc((PBY[k]||{}).c||'')}</small></span><span class="v">${fmt(v)} ${mvHtml(rNow[k],rPrev[k])}</span></div>`).join('')}<div class="note" style="margin-top:8px">변동은 1년 전 순위 대비입니다.</div></div></div>
+    <div class="mod dark"><div class="hd"><span>실력 점수 리더 ${calc('WHR(w²='+META.whr.w2+'), 통산 '+RANK_MIN+'국 이상, 최근 활동 기사')}</span><a class="more" href="#/rankings">전체 →</a></div><div class="bd">${top.map(([k,v],i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(k)}<small>${cflag((PBY[k]||{}).c)}</small></span><span class="v">${fmt(v)} ${mvHtml(rNow[k],rPrev[k])}</span></div>`).join('')}<div class="note" style="margin-top:8px">변동은 1년 전 순위 대비입니다.</div></div></div>
     <div class="mod"><div class="hd"><span>${yr} 다승 리더</span><a class="more" href="#/seasons/${yr}">시즌 →</a></div><div class="bd">${rankList(Object.entries(A.w).sort((a,b)=>b[1]-a[1]),10,v=>v+'승')}</div></div>
     <div class="mod"><div class="hd"><span>통산 우승 ${calc('결승·도전기 다승자 판정, 동점 미확정 제외')}</span><a class="more" href="#/rankings/overall?by=titles">전체 →</a></div><div class="bd">${rankList(champTop,10,v=>v+'회')}</div></div>
   </div>
-  <div class="mod" style="margin-top:16px"><div class="hd"><span>최근 대국</span><span class="desc">마지막 기록일 ${dstr(LASTD)}</span><a class="more" href="#/games">대국 목록 →</a></div><div class="board" style="border-bottom:1px solid var(--rule)"><div class="in" id="board"></div></div><div class="bd flush"><div class="tw"><table><thead><tr><th>날짜</th><th>대회</th><th>승</th><th>패</th><th>내용</th><th>통산 맞대결</th></tr></thead><tbody>${recent.map(g=>`<tr><td class="d">${dstr(g.d)}</td><td class="tname" title="${esc(T[g.ti])}">${badge(g.c)} ${esc(T[g.ti])}</td><td>${plink(g.wk,'w')}</td><td>${plink(g.lk)}</td><td class="n">${stone(g)}${resText(g)}</td><td>${h2hBadge(g.wk,g.lk)}</td></tr>`).join('')}</tbody></table></div></div></div>
+  <div class="mod" style="margin-top:16px"><div class="hd"><span>최근 대국</span><span class="desc">마지막 기록일 ${dstr(LASTD)}</span><a class="more" href="#/games">대국 목록 →</a></div><div class="bd flush"><div class="tw"><table><thead><tr><th>날짜</th><th>대회</th><th>승</th><th>패</th><th>내용</th><th>통산 맞대결</th></tr></thead><tbody>${recent.map(g=>`<tr><td class="d">${dstr(g.d)}</td><td class="tname" title="${esc(T[g.ti])}">${badge(g.c)} ${esc(T[g.ti])}</td><td>${plink(g.wk,'w')}</td><td>${plink(g.lk)}</td><td class="n">${stone(g)}${resText(g)}</td><td>${h2hBadge(g.wk,g.lk)}</td></tr>`).join('')}</tbody></table></div></div></div>
   <div class="grid g31" style="margin-top:16px">
-    <div class="mod fill"><div class="hd"><span>${yr} 시즌 테이블</span><span class="desc">상위 30 · 10국 이상 · 다승순 · 무승부·무효 제외</span></div><div class="bd flush"><div class="tw sticky"><table><thead><tr><th>#</th><th>기사</th><th>국가</th><th class="r">국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>연속</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n">${i+1}</td><td>${plink(x.k)}</td><td class="d">${esc((PBY[x.k]||{}).c||'')}</td><td class="n r">${x.n}</td><td class="n r">${x.w}</td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}</td><td class="n ${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]?x.cur[1]+x.cur[0].slice(1):''}</td><td class="n r">${s&&s[7]>=RANK_MIN?fmt(s[0]):'–'}</td></tr>`;}).join('')}</tbody></table></div></div></div>
+    <div class="mod fill"><div class="hd"><span>${yr} 시즌 테이블</span><span class="desc">상위 30 · 10국 이상 · 다승순 · 무승부·무효 제외</span></div><div class="bd flush"><div class="tw sticky"><table><thead><tr><th>#</th><th>기사</th><th>국가</th><th class="r">국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>연속</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n">${i+1}</td><td>${plink(x.k)}</td><td class="d">${cflag((PBY[x.k]||{}).c)}</td><td class="n r">${x.n}</td><td class="n r">${x.w}</td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}</td><td class="n ${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]?x.cur[1]+x.cur[0].slice(1):''}</td><td class="n r">${s&&s[7]>=RANK_MIN?fmt(s[0]):'–'}</td></tr>`;}).join('')}</tbody></table></div></div></div>
     <div style="display:grid;gap:16px;align-content:start">
       <div class="mod"><div class="hd"><span>${yr} 우승 ${calc('결승·도전기 다승자 판정')}</span><a class="more" href="#/tournaments">대회 →</a></div><div class="bd">${yChamps.length?yChamps.map(c=>`<div class="gl"><span class="d">${dstr(c.d).slice(5)}</span><span>${plink(c.ck,'w')}<div class="t"><a class="pl" style="color:inherit;font-weight:400" href="#/tournaments/${c.g}">${esc(G[c.g])}</a> ${esc(c.ed)}</div></span></div>`).join(''):'<div class="empty">판정된 우승이 없습니다</div>'}</div></div>
       ${bday.length?`<div class="mod"><div class="hd"><span>오늘 생일</span><span class="desc">KST ${t.m}.${t.d} · 현역</span></div><div class="bd">${bday.map(p=>`<div class="gl"><span class="d">${p.b.slice(0,4)}</span><span>${plink(p.k)} <span class="muted small">만 ${ageNow(p.b)}세</span></span></div>`).join('')}</div></div>`:''}
@@ -613,7 +652,6 @@ function pHome(){
     </div>
   </div>
 `;
-  renderBoard();
 }
 
 /* =============== PLAYERS LIST =============== */
@@ -624,9 +662,10 @@ function pPlayers(q){
   if(q.org)pst.org=q.org;if(q.c)pst.c=q.c;
   const orgs=[...new Set(P.map(p=>p.o).filter(Boolean))].sort();
   app.innerHTML=crumb([['홈','#/'],['기사']])+`<h1 class="pt">기사</h1><p class="lede">기사 정보 ${fmt(P.length)}명과 기사 정보에 연결되지 않은 대국 표기를 함께 찾습니다.</p>
+  <div class="ctabs" id="pc" role="group" aria-label="국가">${[['all','전체'],['한국','한국'],['중국','중국'],['일본','일본'],['대만','대만'],['기타','기타']].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${pst.c===v}">${flag(v)}<span>${l}</span><em></em></button>`).join('')}</div>
   <div class="fbar">
     <div class="fg w"><label class="sr" for="pq">이름 검색</label><input class="q" id="pq" type="search" placeholder="이름·한자·영문" value="${esc(pst.q)}"></div>
-    <div class="fg"><span class="fl">국가</span><select class="q" id="pc" style="min-width:90px"><option value="all">전체</option>${['한국','중국','일본','대만','기타'].map(c=>`<option ${pst.c===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    
     <div class="fg"><span class="fl">소속</span><select class="q" id="po" style="min-width:110px"><option value="all">전체</option>${orgs.map(o=>`<option ${pst.org===o?'selected':''}>${esc(o)}</option>`).join('')}</select></div>
     <div class="fg"><span class="fl">현역</span><select class="q" id="ps" style="min-width:80px"><option value="all">전체</option><option ${pst.st==='현역'?'selected':''}>현역</option><option ${pst.st==='은퇴'?'selected':''}>은퇴</option></select></div>
     <div class="fg"><span class="fl">성별</span><select class="q" id="pg" style="min-width:80px"><option value="all">전체</option><option ${pst.g==='남자'?'selected':''}>남자</option><option ${pst.g==='여자'?'selected':''}>여자</option></select></div>
@@ -636,8 +675,10 @@ function pPlayers(q){
   <div class="note" id="pcount" style="margin-top:12px"></div>
   <div id="plist"></div><div id="ppager"></div>`;
   const bind=(id,key,ev='change')=>{const el=document.getElementById(id);el.addEventListener(ev,()=>{pst[key]=el.value.trim?el.value.trim():el.value;pst.page=0;draw();});};
-  ['pc:c','po:org','ps:st','pg:g','pe:era','pso:sort'].forEach(s=>{const [i,k]=s.split(':');bind(i,k);});
+  ['po:org','ps:st','pg:g','pe:era','pso:sort'].forEach(s=>{const [i,k]=s.split(':');bind(i,k);});
   document.getElementById('pso').value=pst.sort;
+  document.getElementById('pc').onclick=e=>{const b=e.target.closest('button');if(!b)return;pst.c=b.dataset.v;pst.page=0;document.querySelectorAll('#pc button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();};
+  {const cnt={all:P.length,'기타':0};P.forEach(p=>{if(['한국','중국','일본','대만'].includes(p.c))cnt[p.c]=(cnt[p.c]||0)+1;else cnt['기타']++;});document.querySelectorAll('#pc button').forEach(b=>b.querySelector('em').textContent=fmt(cnt[b.dataset.v]||0));}
   let tm;document.getElementById('pq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{pst.q=e.target.value.trim();pst.page=0;draw();},250);});
   draw();
   function draw(){
@@ -662,7 +703,7 @@ function pPlayers(q){
     const el=document.getElementById('plist');
     if(!list.length){el.innerHTML='<div class="empty" style="margin-top:14px">조건에 맞는 기사가 없습니다. <button class="linkbtn" id="preset">필터 초기화</button></div>';document.getElementById('preset').onclick=()=>{Object.assign(pst,{q:'',c:'all',org:'all',st:'all',g:'all',era:'all',page:0});pPlayers({});};document.getElementById('ppager').innerHTML='';return;}
     el.innerHTML=`<div class="cards">${list.slice(pst.page*per,(pst.page+1)*per).map(k=>{const p=PBY[k],r=rec(k),s=ws(k);
-      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${photo(p,nameOf(k))}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${esc(p?[p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):'기사 정보 미연결')}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
+      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${photo(p,nameOf(k))}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+' ':''}${esc(p?[p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):'기사 정보 미연결')}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
     const pg=document.getElementById('ppager');
     pg.innerHTML=pages>1?`<div class="pager"><span>${pst.page+1} / ${pages} 페이지</span><span><button data-p="-1" ${pst.page===0?'disabled':''}>이전</button> <button data-p="1" ${pst.page>=pages-1?'disabled':''}>다음</button></span></div>`:'';
     pg.querySelectorAll('button').forEach(b=>b.onclick=()=>{pst.page+=+b.dataset.p;draw();window.scrollTo(0,0);});
@@ -697,7 +738,7 @@ function pPlayer(k,tab,q){
     <div>
       <h1>${esc(name)} <button class="fav" id="favt" aria-pressed="${fav}" title="이 브라우저에만 저장됩니다">${fav?'★ 즐겨찾기됨':'☆ 즐겨찾기'}</button></h1>
       <div class="alt">${p?esc([p.hn||'',p.en||''].filter(Boolean).join(' · ')):'기사 정보와 연결되지 않은 표기 — 대국 기록만 표시합니다'}${p&&nameOf(k)!==p.n?` · 기사 정보 표기: ${esc(p.n)}`:''}</div>
-      <div class="bio">${bio.map(([a,b])=>`<span>${a}<b>${esc(b)}</b></span>`).join('')}</div>
+      <div class="bio">${bio.map(([a,b])=>`<span>${a}<b>${a==='국가'&&FLAG[b]?flag(b)+' ':''}${esc(b)}</b></span>`).join('')}</div>
       ${chips.length?`<div class="awards">${chips.join('')}</div>`:''}
     </div>
     <div class="rating"><div class="k">실력 점수 ${calc('WHR 계산값')}</div><div class="v">${s?fmt(s[0]):'–'}</div><div class="s">${s?`±${s[1]} · ${rNow[k]?'현재 '+rNow[k]+'위':'랭킹 제외'}`:'표본 없음'}</div></div>
@@ -815,7 +856,7 @@ function tRivals(el,k){
   <div class="note">많이 만났고 승패가 팽팽할수록 지수가 높습니다. 표본 왜곡을 막으려고 맞대결 10국 미만인 상대는 추천에서 뺐습니다(아래 전체 상대 전적에는 그대로 나옵니다). 무승부·무효는 제외했습니다.</div></section>
   <section class="panel"><h2 class="sec"><span>전체 상대 전적</span><span class="desc">${all.length}명 · 맞대결 많은 순</span></h2><div id="rv"></div></section>`;
   const rows=all.sort((a,b)=>b.n-a.n||b.w-a.w);
-  pagedTable(document.getElementById('rv'),rows,['상대','국가','맞대결','승','패','승률','라이벌 지수',''],x=>x.map(r=>`<tr><td>${plink(r.o)}</td><td class="d">${esc((PBY[r.o]||{}).c||'')}</td><td class="n r">${r.n}</td><td class="n r">${r.w}</td><td class="n r">${r.l}</td><td class="n r">${pct(r.w,r.n)}</td><td class="n r">${r.n>=10?r.idx.toFixed(1):'<span class="muted small">10국 미만</span>'}</td><td class="r"><a class="linkbtn" href="#/players/compare?p1=${encodeURIComponent(k)}&p2=${encodeURIComponent(r.o)}">비교</a></td></tr>`).join(''),30,{sticky:true,empty:'승부가 난 대국이 없습니다'});
+  pagedTable(document.getElementById('rv'),rows,['상대','국가','맞대결','승','패','승률','라이벌 지수',''],x=>x.map(r=>`<tr><td>${plink(r.o)}</td><td class="d">${cflag((PBY[r.o]||{}).c)}</td><td class="n r">${r.n}</td><td class="n r">${r.w}</td><td class="n r">${r.l}</td><td class="n r">${pct(r.w,r.n)}</td><td class="n r">${r.n>=10?r.idx.toFixed(1):'<span class="muted small">10국 미만</span>'}</td><td class="r"><a class="linkbtn" href="#/players/compare?p1=${encodeURIComponent(k)}&p2=${encodeURIComponent(r.o)}">비교</a></td></tr>`).join(''),30,{sticky:true,empty:'승부가 난 대국이 없습니다'});
 }
 function tRecords(el,k,p,gs){
   const r=rec(k),st=streaks(k),s=ws(k);
@@ -875,7 +916,7 @@ function rkSkill(el,women,q){
     const el2=$('rt');
     if(!rows.length){el2.innerHTML=`<div class="empty">${st.mode==='at'&&st.y<1956?'이 시기는 기록이 부족해 순위를 내지 않습니다(표본 부족).':'조건에 맞는 기사가 없습니다'}</div>`;return;}
     const rPrev=st.mode==='now'?rankAt((LASTD/100|0)-100):null;const rCur={};rows.forEach((r,i)=>rCur[r[0]]=i+1);
-    pagedTable(el2,rows,['순위',st.mode==='now'?'변동':'','기사','국가','실력 점수',st.mode==='peak'?'시기':'오차','통산 대국',st.mode==='now'?'역대 최고 순위':''],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr><td class="n">${i}</td><td>${st.mode==='now'?mvHtml(i,rPrev[r[0]]):''}</td><td>${plink(r[0])}</td><td class="d">${esc((PBY[r[0]]||{}).c||'')}</td><td class="n r"><b>${fmt(r[1])}</b></td><td class="d">${r[2]!=null?'±'+r[2]:ymstr(r[3])}</td><td class="n r">${fmt(rec(r[0]).g)}</td><td class="d">${st.mode==='now'?peakRank(r[0],women)+'위':''}</td></tr>`;}).join(''),50,{sticky:true});
+    pagedTable(el2,rows,['순위',st.mode==='now'?'변동':'','기사','국가','실력 점수',st.mode==='peak'?'시기':'오차','통산 대국',st.mode==='now'?'역대 최고 순위':''],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td><td>${st.mode==='now'?mvHtml(i,rPrev[r[0]]):''}</td><td>${plink(r[0])}</td><td class="d">${cflag((PBY[r[0]]||{}).c)}</td><td class="n r"><b>${fmt(r[1])}</b></td><td class="d">${r[2]!=null?'±'+r[2]:ymstr(r[3])}</td><td class="n r">${fmt(rec(r[0]).g)}</td><td class="d">${st.mode==='now'?peakRank(r[0],women)+'위':''}</td></tr>`;}).join(''),50,{sticky:true});
   }
 }
 const PEAKR={};function peakRank(k,women){const key=women?'w':'a';if(!PEAKR[key]){const m={};Object.entries(WS).filter(([x,s])=>s[7]>=RANK_MIN&&(!women||(PBY[x]&&PBY[x].g==='여자'))).sort((a,b)=>b[1][3]-a[1][3]).forEach(([x],i)=>m[x]=i+1);PEAKR[key]=m;}return PEAKR[key][k]||'–';}
@@ -889,7 +930,7 @@ function rkOverall(el,q){
     let keys=Object.keys(BYK);if(st.scope==='active')keys=keys.filter(k=>PBY[k]&&(PBY[k].st||'').includes('현역'));
     const val={wins:k=>rec(k).w,games:k=>rec(k).g,pct:k=>{const r=rec(k);return r.w+r.l>=RANK_MIN?r.w/(r.w+r.l):-1;},titles:k=>(CHB[k]||[]).length}[st.by];
     const rows=keys.map(k=>[k,val(k)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-    pagedTable($('ot'),rows,['순위','기사','국가','통산 대국','승','패','승률','우승'],x=>x.map(([k])=>{const r=rec(k);return `<tr><td class="n">${rows.findIndex(z=>z[0]===k)+1}</td><td>${plink(k)}</td><td class="d">${esc((PBY[k]||{}).c||'')}</td><td class="n r">${fmt(r.g)}</td><td class="n r">${fmt(r.w)}</td><td class="n r">${fmt(r.l)}</td><td class="n r">${wpct(r)}</td><td class="n r">${(CHB[k]||[]).length||''}</td></tr>`;}).join(''),50,{sticky:true});
+    pagedTable($('ot'),rows,['순위','기사','국가','통산 대국','승','패','승률','우승'],x=>x.map(([k])=>{const r=rec(k);return `${(()=>{const i=rows.findIndex(z=>z[0]===k)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td>`;})()}<td>${plink(k)}</td><td class="d">${cflag((PBY[k]||{}).c)}</td><td class="n r">${fmt(r.g)}</td><td class="n r">${fmt(r.w)}</td><td class="n r">${fmt(r.l)}</td><td class="n r">${wpct(r)}</td><td class="n r">${(CHB[k]||[]).length||''}</td></tr>`;}).join(''),50,{sticky:true});
   }
 }
 function rkLegacy(el){
@@ -1006,7 +1047,7 @@ function bestH2H(){
 function rankHero(){
   const top=currentTop(null,4);if(!top.length)return '';const k1=top[0][0],p1=PBY[k1],s=ws(k1),r=rec(k1),yr=YEARS[YEARS.length-1],A=yagg()[yr]||{w:{},n:{}};const y1={w:A.w[k1]||0,n:A.n[k1]||0};
   const rNow=rankAt(LASTD/100|0),rPrev=rankAt((LASTD/100|0)-100);const peak=Object.entries(WS).filter(([k,x])=>x[7]>=RANK_MIN).sort((x,y)=>y[1][3]-x[1][3])[0];
-  return `<section class="hero" style="min-height:0;padding:22px 26px;grid-template-columns:1.1fr 1fr"><div class="feat" style="background:transparent;border:none;padding:0"><div class="ph">${photo(p1,nameOf(k1))}</div><div><div class="k">현재 실력 점수 1위 ${calc('WHR 계산값, 기준일 '+dstr(LASTD))}</div><div class="nm"><a href="#/players/${encodeURIComponent(k1)}">${esc(nameOf(k1))}</a></div><div class="st"><span><b>${fmt(top[0][1])}</b>실력 점수 ±${s[1]}</span><span><b>${y1.w}-${y1.n-y1.w}</b>${yr} 성적 (${pct(y1.w,y1.n)})</span><span><b>${fmt(r.w)}-${fmt(r.l)}</b>통산 전적</span><span><b>${(CHB[k1]||[]).length}</b>우승 · 최고점 ${fmt(s[3])}</span></div><div class="top3">${top.slice(1).map(([k,v],i)=>`<a href="#/players/${encodeURIComponent(k)}"><b>${i+2}</b>${esc(nameOf(k))} ${fmt(v)} ${mvHtml(rNow[k],rPrev[k]).replace('class="mv','style="color:#ffd166" class="mv')}</a>`).join('')}</div></div></div>
+  return `<section class="hero" style="min-height:0;padding:22px 26px;grid-template-columns:1.1fr 1fr"><div class="feat" style="background:transparent;border:none;padding:0"><div class="ph">${photo(p1,nameOf(k1))}</div><div><div class="k">현재 실력 점수 1위 ${calc('WHR 계산값, 기준일 '+dstr(LASTD))}</div><div class="nm"><a href="#/players/${encodeURIComponent(k1)}">${esc(nameOf(k1))}</a> ${flag((p1||{}).c)}</div><div class="st"><span><b>${fmt(top[0][1])}</b>실력 점수 ±${s[1]}</span><span><b>${y1.w}-${y1.n-y1.w}</b>${yr} 성적 (${pct(y1.w,y1.n)})</span><span><b>${fmt(r.w)}-${fmt(r.l)}</b>통산 전적</span><span><b>${(CHB[k1]||[]).length}</b>우승 · 최고점 ${fmt(s[3])}</span></div><div class="top3">${top.slice(1).map(([k,v],i)=>`<a href="#/players/${encodeURIComponent(k)}"><b>${i+2}</b>${flag((PBY[k]||{}).c)} ${esc(nameOf(k))} ${fmt(v)} ${mvHtml(rNow[k],rPrev[k]).replace('class="mv','style="color:#ffd166" class="mv')}</a>`).join('')}</div></div></div>
   <div style="display:grid;gap:10px;align-content:center"><div class="hstats" style="grid-template-columns:repeat(2,1fr);gap:12px 20px"><div><b>${fmt(Object.keys(rNow).length)}</b><span>현재 랭킹 대상 기사</span></div><div><b>${RANK_MIN}국 · ±${UNC_MAX}</b><span>포함 기준 (통산·오차)</span></div><div><b>${peak?esc(nameOf(peak[0])):'–'}</b><span>역대 최고점 ${peak?fmt(peak[1][3])+' ('+ymstr(peak[1][4])+')':''}</span></div><div><b>${LEG.filter(x=>x[1]===k1).length}년</b><span>${esc(nameOf(k1))} 연말 1위 횟수</span></div></div><div class="small" style="color:#c9d4e6">변동(▲▼)은 1년 전 같은 기준 순위와 비교한 값입니다. 한국기원에 기록된 대국만 반영됩니다.</div></div></section>`;
 }
 
@@ -1070,7 +1111,7 @@ function pSeason(y){
   <section class="panel"><h2 class="sec"><span>월별 대국 · 분류</span></h2><div class="chart"><canvas id="sm"></canvas></div></section></div>`;
   document.getElementById('sy').onchange=e=>location.hash='#/seasons/'+e.target.value;
   const ms=[1,2,3,4,5,6,7,8,9,10,11,12];
-  mkChart('sm',{type:'bar',data:{labels:ms.map(m=>m+'월'),datasets:CATS.map(c=>({label:CLABEL[c],data:ms.map(m=>gs.filter(g=>g.c===c&&((g.d/100)|0)%100===m).length),backgroundColor:CAT_COLOR[c],stack:'s'}))},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{...noGrid(),stacked:true},y:{...gridY(),stacked:true}}}});
+  mkChart('sm',{type:'bar',data:{labels:ms.map(m=>m+'월'),datasets:CATS.map(c=>({label:CLABEL[c],data:ms.map(m=>gs.filter(g=>g.c===c&&((g.d/100)|0)%100===m).length),backgroundColor:CAT_COLOR[c],borderColor:cssv('--card'),borderWidth:{top:2},borderSkipped:false,stack:'s'}))},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{...noGrid(),stacked:true},y:{...gridY(),stacked:true}}}});
 }
 
 /* =============== GAMES LIST =============== */
@@ -1224,7 +1265,7 @@ function route(){
   killCharts();
   const {parts,q}=parseHash();const r=parts[0]||'home';
   let nav=r;if(r==='players'&&parts[1]==='compare')nav='compare';
-  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===nav));
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===nav));{const mm=document.querySelector('.gnav .more');if(mm)mm.classList.toggle('on',!!mm.querySelector('.dd a[data-r="'+nav+'"]'));}
   try{
     if(r==='home')pHome();
     else if(r==='players'){if(parts[1]==='compare')pCompare(q);else if(parts[1])pPlayer(parts[1],parts[2]||'',q);else pPlayers(q);}
