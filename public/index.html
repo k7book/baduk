@@ -545,6 +545,28 @@ a.hlc[href]:hover{border-color:var(--link)}
 .fedc .fedf{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;flex-wrap:wrap}
 @media (max-width:900px){.fedg{grid-template-columns:1fr}}
 @media (max-width:520px){.feds{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ===== season year picker ===== */
+.ypk{background:var(--navy);color:#dbe3f0;padding:12px 16px 8px}
+.ypk-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ypk-nav{display:flex;align-items:center;gap:6px}
+.ypk-btn{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;text-decoration:none;font-size:18px;font-weight:700;line-height:1}
+a.ypk-btn:hover{background:rgba(255,255,255,.18)}.ypk-btn.off{opacity:.3}
+#ysel{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%230b1a33' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--navy);border:none;border-radius:8px;height:32px;padding:0 28px 0 12px;font-family:var(--font-num);font-feature-settings:"tnum" 1;font-size:15px;font-weight:700;cursor:pointer}
+.ypk-dec{display:flex;gap:2px;flex-wrap:wrap;background:rgba(255,255,255,.06);border-radius:999px;padding:3px}
+.ypk-dec a{font-family:var(--font-num);font-feature-settings:"tnum" 1;font-size:12.5px;font-weight:600;color:#9fb0c8;text-decoration:none;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.ypk-dec a small{font-size:10.5px;margin-left:1px;font-weight:500}
+.ypk-dec a:hover{color:#fff}.ypk-dec a.on{background:#fff;color:var(--navy)}
+.ypk-bars{display:flex;align-items:stretch;gap:2px;height:64px;margin-top:12px;padding:0 12px;overflow-x:auto;scrollbar-width:none}
+.ypk-bars::-webkit-scrollbar{display:none}
+.ypk-bars a{flex:1 0 9px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-decoration:none;position:relative;min-width:9px;padding-bottom:16px}
+.ypk-bars a i{display:block;width:100%;background:rgba(159,176,200,.35);border-radius:2px 2px 0 0;transition:background .12s}
+.ypk-bars a:hover i{background:rgba(255,255,255,.7)}
+.ypk-bars a.on i{background:var(--accent)}
+.ypk-bars a span{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-family:var(--font-num);font-feature-settings:"tnum" 1;font-size:10px;color:#7f90a8;white-space:nowrap}
+.ypk-bars a.d0::before{content:"";position:absolute;left:-1px;top:0;bottom:16px;border-left:1px dashed rgba(255,255,255,.12)}
+.ypk-bars a.on span{color:#fff;font-weight:700;font-size:11px;background:var(--accent);border-radius:3px;padding:0 4px;z-index:1}
+@media (max-width:640px){.ypk-dec{width:100%;overflow-x:auto;flex-wrap:nowrap}.ypk-bars a{flex:0 0 10px}}
 </style>
 </head>
 <body>
@@ -1461,6 +1483,22 @@ function calHeat(y,gs,lastD){
   <div class="calf"><div class="callg"><span>적음</span>${[1,2,3,4,5].map(i=>`<i class="h${i}"></i>`).join('')}<span>많음</span></div>
   <div class="cals"><span>대국이 있었던 날 <b>${fmt(active)}</b>일</span>${busiest?`<span>가장 많았던 날 <b>${dstr(+busiest[0]).slice(5).replace('-','.')}</b> ${fmt(busiest[1])}국</span>`:''}<span class="dows">${['일','월','화','수','목','금','토'].map((t,i)=>`<span title="${t}요일 ${fmt(byDow[i])}국"><i style="height:${Math.max(2,byDow[i]/mxd*22)}px"></i>${t}</span>`).join('')}</span></div></div>`;
 }
+/* 연도 선택: 10년 단위 바로가기 + 연도별 대국 수 막대(누르면 그해로 이동) */
+function yearPicker(y){
+  const cnt=YEARS.map(x=>[x,YRANGE[x]?YRANGE[x][1]-YRANGE[x][0]:0]);const mx=Math.max(...cnt.map(c=>c[1]),1);
+  const iy=YEARS.indexOf(y),prev=YEARS[iy-1],next=YEARS[iy+1];
+  const decs=[...new Set(YEARS.map(x=>Math.floor(x/10)*10))].reverse();const cd=Math.floor(y/10)*10;
+  const lastIn=d=>Math.max(...YEARS.filter(x=>x>=d&&x<d+10));
+  return `<div class="ypk">
+  <div class="ypk-top">
+    <div class="ypk-nav">${prev?`<a class="ypk-btn" href="#/seasons/${prev}" aria-label="${prev}년">‹</a>`:'<span class="ypk-btn off">‹</span>'}
+      <label class="sr" for="ysel">시즌 선택</label><select id="ysel">${YEARS.slice().reverse().map(x=>`<option value="${x}" ${x===y?'selected':''}>${x}</option>`).join('')}</select>
+      ${next?`<a class="ypk-btn" href="#/seasons/${next}" aria-label="${next}년">›</a>`:'<span class="ypk-btn off">›</span>'}</div>
+    <div class="ypk-dec">${decs.map(d=>`<a href="#/seasons/${lastIn(d)}" class="${d===cd?'on':''}">${d}<small>년대</small></a>`).join('')}</div>
+  </div>
+  <div class="ypk-bars" id="ys">${cnt.map(([x,n])=>`<a href="#/seasons/${x}" class="${x===y?'on':''}${x%10===0?' d0':''}" title="${x}년 · ${fmt(n)}국"><i style="height:${Math.max(3,Math.sqrt(n/mx)*100)}%"></i><span>${x===y||x%10===0?x:''}</span></a>`).join('')}</div>
+  </div>`;
+}
 function pSeason(y){
   y=+y||YEARS[YEARS.length-1];
   if(!YRANGE[y])y=YEARS[YEARS.length-1];
@@ -1551,9 +1589,9 @@ function pSeason(y){
   const sec=(t,d)=>`<div class="szsec"><h2>${t}</h2>${d?`<span>${d}</span>`:''}</div>`;
   app.innerHTML=crumb([['홈','#/'],['시즌'],[String(y)]])+`
   <section class="szh">
-    <div class="ys" id="ys">${YEARS.slice().reverse().map(x=>`<a href="#/seasons/${x}" class="${x===y?'on':''}">${x}</a>`).join('')}</div>
+    ${yearPicker(y)}
     <div class="szt"><div><div class="k">시즌 대시보드</div><h1 class="pt">${y} 시즌</h1><div class="sub">${dstr(gs[0]?gs[0].d:y*10000+101).slice(5).replace('-','.')} – ${dstr(lastDay).slice(5).replace('-','.')} ${isCur?'· <b class="live">진행 중</b>':''} · 한국기원 기록 대국 기준</div></div>
-    <div class="nav">${iy>0?`<a href="#/seasons/${YEARS[iy-1]}">‹ ${YEARS[iy-1]}</a>`:''}${iy<YEARS.length-1?`<a href="#/seasons/${YEARS[iy+1]}">${YEARS[iy+1]} ›</a>`:''}</div></div>
+    </div>
     ${thin?'<div class="note" style="margin:10px 20px 0">이 시기는 기록이 부족합니다. 순위와 점수는 참고용으로만 보세요.</div>':''}
     <div class="kts">
       ${kt('대국',fmt(S.n),Sp?delta(Sc.n,Sp.n):'',sp(s=>s.n))}
@@ -1609,7 +1647,8 @@ function pSeason(y){
     <div class="mod"><div class="hd"><span>올해 첫 기록 기사</span><span class="desc">승수 순 · ${fmt(rook.length)}명</span></div><div class="bd cols2">${rook.length?rook.slice(0,16).map(([k,w])=>{const p=PBY[k];const a=p&&p.b?ageAt(p.b,lastDay):null;return `<div class="lb2"><span class="nm">${plink(k)} ${flag((p||{}).c)}</span><span class="s">${a!=null?'만 '+a+'세':''}</span><span class="v">${rec_(k)}</span></div>`;}).join(''):'<div class="empty">기록 없음</div>'}</div></div>
     <div class="mod"><div class="hd"><span>최장 연패</span><span class="desc">기사 정보가 있는 기사 · 시즌 안에서만</span></div><div class="bd">${worstS?(()=>{const L2=Object.entries(worst).filter(([k])=>person(k)&&!isNK(k)).map(([k,v])=>[k,v[0],v[1]]).sort((a,b)=>b[1]-a[1]).slice(0,8);return L2.map(([k,n,d])=>`<div class="lb2"><span class="nm">${plink(k)} ${flag((PBY[k]||{}).c)}</span><span class="s">${dstr(d).slice(5)} 도달</span><span class="v">${n}연패</span></div>`).join('');})():'<div class="empty">기록 없음</div>'}</div></div>
   </div>`;
-  document.querySelector('#ys a.on')?.scrollIntoView({inline:'center',block:'nearest'});
+  {const bx=document.getElementById('ys'),on=bx&&bx.querySelector('a.on');if(on)bx.scrollLeft=on.offsetLeft-bx.clientWidth/2;}
+  const ysel=document.getElementById('ysel');if(ysel)ysel.onchange=()=>{location.hash='#/seasons/'+ysel.value;};
   window.scrollTo(0,0);
   document.getElementById('natp').onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#natp button').forEach(x=>x.setAttribute('aria-pressed',x===b));document.getElementById('natb').innerHTML=natHtml(natAgg(b.dataset.v==='1'));};
   /* charts */
