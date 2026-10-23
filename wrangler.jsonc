@@ -1,12 +1,20 @@
 {
-  // 바둑DB 사이트 배포 설정 (Cloudflare Workers 정적 자산)
+  // 바둑DB 사이트 배포 설정 (Cloudflare Workers: 정적 자산 + 뉴스 수집 워커)
   "name": "baduk",
+  "main": "worker/worker.js",
   "compatibility_date": "2026-10-01",
   "workers_dev": true,
   "assets": {
     "directory": "./public",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
   },
+  // 뉴스 갱신: 매일 09:00, 18:00 (한국시간) = UTC 00:00, 09:00
+  "triggers": { "crons": ["0 0,9 * * *"] },
+  "kv_namespaces": [
+    { "binding": "NEWS_KV", "id": "e4cbe9fb37344d729371da6bc56f4e14" }
+  ],
   "routes": [
     { "pattern": "baduk.rajin.live", "custom_domain": true }
   ]
