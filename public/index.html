@@ -117,51 +117,6 @@ button,input,select{font-family:inherit;color:inherit}
 .ht b{font-family:var(--font-num);font-size:32px;font-weight:800;line-height:1.05;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
 .ht .k{font-size:14px;font-weight:700;color:#ffd166}
 .ht .s{font-size:12px;color:#aebcd2;line-height:1.4}
-.mhero{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:44px 32px 26px;margin-bottom:16px;position:relative;overflow:hidden;--hl:#D62839}
-:root[data-theme="dark"] .mhero{--hl:#FF5A6A}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mhero{--hl:#FF5A6A}}
-.mhero::before{content:"";position:absolute;inset:0 0 auto 0;height:260px;background-image:radial-gradient(circle at 1px 1px,var(--rule) 1.2px,transparent 1.6px);background-size:26px 26px;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none;opacity:.9}
-.mh-top{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:760px;margin:0 auto}
-.mh-pill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--card-2);border:1px solid var(--rule);border-radius:999px;padding:6px 14px}
-.mh-pill i{width:8px;height:8px;border-radius:50%;background:#1a9e55;box-shadow:0 0 0 3px rgba(26,158,85,.18)}
-.mhero h2{font-family:"IBM Plex Sans KR",sans-serif;font-weight:700;font-size:clamp(30px,4.4vw,52px);line-height:1.18;letter-spacing:-.025em;margin:18px 0 12px;color:var(--ink);word-break:keep-all}
-.mhero h2 .nw{white-space:nowrap}.mhero h2 em{font-style:normal;color:var(--hl)}
-.mhero p{margin:0 0 24px;color:var(--muted-2);font-size:15.5px;line-height:1.6;word-break:keep-all}
-.mh-search{position:relative;display:flex;align-items:center;gap:10px;width:100%;max-width:600px;height:58px;padding:0 6px 0 20px;background:var(--card);border:1.5px solid var(--rule);border-radius:999px;box-shadow:0 6px 24px rgba(15,23,42,.08);color:var(--muted)}
-.mh-search:focus-within{border-color:var(--navy-3);box-shadow:0 6px 24px rgba(15,23,42,.12),0 0 0 4px rgba(27,58,107,.12)}
-.mh-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:16px;color:var(--ink);height:100%}
-.mh-search button{height:46px;padding:0 22px;border:0;border-radius:999px;background:var(--navy);color:#fff;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer}
-.mh-search button:hover{background:var(--navy-3)}
-:root[data-theme="dark"] .mh-search button{background:#e5e7eb;color:#0b1a33}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mh-search button{background:#e5e7eb;color:#0b1a33}}
-.mh-search .qsl{position:absolute;left:0;right:0;top:64px;z-index:30;text-align:left}
-.mh-chips{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-top:16px;font-size:13px}
-.mh-chips span{color:var(--muted);margin-right:2px}
-.mh-chips a{color:var(--ink);text-decoration:none;background:var(--card-2);border:1px solid var(--rule);border-radius:999px;padding:6px 13px;font-weight:600;min-height:32px;display:inline-flex;align-items:center}
-.mh-chips a:hover{border-color:var(--ink-soft)}.mh-chips a.go{background:transparent;border-color:transparent;color:var(--navy-3)}
-:root[data-theme="dark"] .mh-chips a.go{color:#8cb4ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mh-chips a.go{color:#8cb4ff}}
-.mh-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 28px;margin-top:26px;font-size:13px;color:var(--muted-2)}
-.mh-stats a{color:inherit;text-decoration:none;display:inline-flex;align-items:baseline;gap:6px}
-.mh-stats b{font-family:var(--font-num);font-size:20px;font-weight:800;color:var(--ink);font-feature-settings:"tnum" 1;letter-spacing:-.01em}
-.mh-hd{position:relative;display:flex;justify-content:space-between;align-items:baseline;margin:34px 0 12px;padding-top:20px;border-top:1px solid var(--rule)}
-.mh-hd b{font-size:14px}.mh-hd a{font-size:13px;color:var(--navy-3);text-decoration:none;font-weight:600}
-:root[data-theme="dark"] .mh-hd a{color:#8cb4ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mh-hd a{color:#8cb4ff}}
-.mh-strip{display:grid;grid-auto-flow:column;grid-auto-columns:148px;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;scrollbar-width:thin}
-.mh-card{position:relative;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ink);scroll-snap-align:start}
-.mh-card .ph{border-radius:12px;margin-bottom:8px;border:1px solid var(--rule)}
-.mh-card .ph{background:var(--card-2)}
-.mh-card .ph .ini{width:58%;aspect-ratio:1/1;border-radius:50%;background:#111827;color:#fff;font-size:34px;display:flex;align-items:center;justify-content:center;box-shadow:inset -6px -8px 14px rgba(255,255,255,.08),0 6px 14px rgba(15,23,42,.18)}
-:root[data-theme="dark"] .mh-card .ph .ini{background:#f3f4f6;color:#111827}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mh-card .ph .ini{background:#f3f4f6;color:#111827}}
-.mh-card:hover .ph{border-color:var(--ink-soft)}
-.mh-card .rk{position:absolute;top:8px;left:8px;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--navy);color:#fff;font-family:var(--font-num);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
-.mh-card .rk{box-shadow:0 0 0 2px var(--card)}
-:root[data-theme="dark"] .mh-card .rk{background:#e5e7eb;color:#0b1a33}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mh-card .rk{background:#e5e7eb;color:#0b1a33}}
-.mh-card .nm{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mh-card .sc{font-family:var(--font-num);font-size:18px;font-weight:800;font-feature-settings:"tnum" 1}
-.mh-card .sub{font-size:12px;color:var(--muted-2)}
-@media (max-width:640px){.mhero{padding:30px 16px 18px}.mh-search{height:52px;padding-left:14px}.mh-search button{height:40px;padding:0 16px}.mh-strip{grid-auto-columns:128px}.mh-stats{gap:6px 16px}}
 .hstats{display:grid;grid-template-columns:repeat(5,auto);gap:4px 26px;justify-content:start}
 .hstats div{min-width:0}
 .hstats b{display:block;font-family:var(--font-num);font-size:30px;font-weight:800;line-height:1;color:#fff;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
@@ -924,22 +879,15 @@ function pHome(){
   const k1=top.length?top[0][0]:null;const p1=k1?PBY[k1]:null;const r1=k1?rec(k1):null;const y1=k1?{w:A.w[k1]||0,n:A.n[k1]||0}:null;
   const lastCh=CHAMP.filter(c=>c.st===0).sort((a,b)=>b.d-a.d)[0];
   app.innerHTML=`
-  <section class="mhero">
-    <div class="mh-top">
-      <span class="mh-pill"><i aria-hidden="true"></i>한국기원 기록실과 같은 기록 · ${dstr(LASTD).replace(/-/g,'.')} 갱신</span>
-      <h2>프로 바둑 <span class="nw"><em>${(()=>{const k=Math.round(GAMES.length/1000),m=Math.floor(k/10),r=k%10;return (m?m+'만':'')+(r?' '+r+'천':'');})()} 대국</em>의 기록</span></h2>
-      <p>${YEARS[0]}년부터 지금까지, 기사 ${fmt(P.length)}명의 통산 성적·실력 점수·우승·상대전적을 찾아보세요.</p>
-      <form class="mh-search" id="hqf" role="search" autocomplete="off">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
-        <label class="sr" for="hqs">기사·대회 검색</label><input id="hqs" type="search" placeholder="기사나 대회 이름 (예: 신진서, 응씨배)">
-        <button type="submit">검색</button>
-        <div class="qsl" id="hqsl" hidden></div>
-      </form>
-      <div class="mh-chips"><span>많이 찾는 기사</span>${['신진서','이창호','최 정','박정환','김은지','조훈현'].map(n=>{const p=P.find(x=>x.n===n);return p?`<a href="#/players/${encodeURIComponent(p.k)}">${esc(p.n)}</a>`:'';}).join('')}<a class="go" href="#/players/compare">상대전적 비교 →</a></div>
-      <div class="mh-stats">${(()=>{const nOf=GAMES.filter(g=>g.of===1).length;return [[fmt(GAMES.length),'대국','#/games',`공식 ${fmt(nOf)} · 비공식 ${fmt(GAMES.length-nOf)}`],[fmt(P.length),'기사','#/players',''],[fmt(G.length),'대회','#/tournaments',''],[fmt(CHAMP.filter(c=>c.st===0).length),'우승 기록','#/rankings/overall?by=titles','']].map(([v,k,h,t])=>`<a href="${h}"${t?` title="${t}"`:''}><b>${v}</b>${k}</a>`).join('');})()}</div>
-    </div>
-    <div class="mh-hd"><b>지금 실력 점수 TOP 12</b><a href="#/rankings">전체 랭킹 →</a></div>
-    <div class="mh-strip">${currentTop(null,12).map(([k,v],i)=>{const p=PBY[k];const yw=A.w[k]||0,yn=A.n[k]||0;return `<a class="mh-card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><span class="rk">${i+1}</span><div class="nm">${flag((p||{}).c)} ${esc(nameOf(k))}</div><div class="sc">${fmt(v)}</div><div class="sub">${yr} ${yw}승 ${yn-yw}패</div></a>`;}).join('')}</div>
+  <section class="hero">
+    <div class="hl"><div class="kick">한국기원 기록 기반 · ${YEARS[0]}–${yr}</div><h2>프로 바둑 <span class="nw"><em>${(()=>{const k=Math.round(GAMES.length/1000),m=Math.floor(k/10),r=k%10;return (m?m+'만':'')+(r?' '+r+'천':'');})()} 대국</em>의 기록</span></h2><p>기사 ${fmt(P.length)}명의 통산 성적과 실력 점수, 대회별 우승, 상대전적을 한곳에서 봅니다.</p>
+    <div class="cta"><a href="#/players">기사 찾기</a><a href="#/rankings">실력 점수 랭킹</a><a class="ghost" href="#/players/compare">상대전적</a><a class="ghost" href="#/records">기록실</a><a class="ghost" href="#/search">자유 검색</a></div></div>
+    <div class="htiles">${(()=>{const nOf=GAMES.filter(g=>g.of===1).length;const cc={};P.forEach(p=>{cc[p.c]=(cc[p.c]||0)+1;});
+      const tile=(href,v,k,sub)=>`<a class="ht" href="${href}"><b>${v}</b><span class="k">${k}</span><span class="s">${sub}</span></a>`;
+      return tile('#/games',fmt(GAMES.length),'대국',`공식 ${fmt(nOf)} · 비공식 ${fmt(GAMES.length-nOf)}`)
+        +tile('#/players',fmt(P.length),'기사',`한국 ${fmt(cc['한국']||0)} · 중국 ${fmt(cc['중국']||0)} · 일본 ${fmt(cc['일본']||0)}`)
+        +tile('#/tournaments',fmt(G.length),'대회',`${YEARS[0]}년부터 ${dstr(LASTD).replace(/-/g,'.')}까지`)
+        +tile('#/rankings/overall?by=titles',fmt(CHAMP.filter(c=>c.st===0).length),'우승 기록',`결승 대국으로 판정한 우승`);})()}</div>
   </section>
   <div class="grid g3">
     <div class="mod dark"><div class="hd"><span>실력 점수 리더 ${calc('WHR(w²='+META.whr.w2+'), 통산 '+RANK_MIN+'국 이상, 최근 활동 기사')}</span><a class="more" href="#/rankings">전체 →</a></div><div class="bd">${top.map(([k,v],i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(k)}<small>${cflag((PBY[k]||{}).c)}</small></span><span class="v">${fmt(v)} ${mvHtml(rNow[k],rPrev[k])}</span></div>`).join('')}<div class="note" style="margin-top:8px">변동은 1년 전 순위 대비입니다.</div></div></div>
@@ -957,7 +905,6 @@ function pHome(){
     </div>
   </div>
 `;
-  heroSearch();
 }
 
 /* =============== PLAYERS LIST =============== */
