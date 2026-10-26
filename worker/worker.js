@@ -27,7 +27,7 @@ const ymd = (y, m, d) => y + String(m).padStart(2, '0') + String(d).padStart(2, 
 
 async function get(url, kr) {
   const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'ko-KR,ko;q=0.9' }, cf: { cacheTtl: 0 } });
-  if (!r.ok) throw new Error(url + ' ' + r.status);
+  if (!r.ok) throw new Error(new URL(url).hostname + ' HTTP ' + r.status);
   return kr ? decodeKr(await r.arrayBuffer()) : await r.text();
 }
 
@@ -98,6 +98,33 @@ export function parseGoogle(xml) {
   return out;
 }
 
+// Bing 뉴스 RSS (구글이 Cloudflare 서버 요청을 막을 때 대신 사용)
+export function parseBing(xml) {
+  const out = [];
+  for (const s of xml.split('<item>').slice(1)) {
+    const g = tag => { const m = s.match(new RegExp('<' + tag + '[^>]*>([\\s\\S]*?)</' + tag + '>', 'i')); return m ? ent(m[1].replace(/<!\[CDATA\[|\]\]>/g, '')).trim() : ''; };
+    let link = g('link'); const u = link.match(/[?&]url=([^&]+)/i);
+    if (u) { try { link = decodeURIComponent(u[1]); } catch (e) { /* keep */ } }
+    const t = strip(g('title')); const src = g('News:Source');
+    const d = new Date(g('pubDate')); if (isNaN(d) || !t || !link) continue;
+    const k = new Date(d.getTime() + 9 * 3600e3);
+    out.push(['ggl', ymd(k.getUTCFullYear(), k.getUTCMonth() + 1, k.getUTCDate()), t, src, link, '', null, '']);
+  }
+  return out;
+}
+async function webNews(res) {
+  // 1) 구글 뉴스(최근 7일) → 2) 막히면 Bing 뉴스(최신순)
+  try {
+    const v = parseGoogle(await get('https://news.google.com/rss/search?q=%EB%B0%94%EB%91%91+when:7d&hl=ko&gl=KR&ceid=KR:ko'));
+    if (v.length) return v;
+    res.fail.push('ggl:google 0건');
+  } catch (e) { res.fail.push('ggl:' + String(e.message || e).slice(0, 60)); }
+  const xml = await get('https://www.bing.com/news/search?q=%EB%B0%94%EB%91%91&format=rss&setlang=ko-KR&cc=KR&qft=sortbydate%3d%221%22');
+  const v = parseBing(xml);
+  res.ok.push('bing:' + v.length);
+  return v;
+}
+
 /* ---------- 기사 이름 연결 ---------- */
 const PART = '은는이가을를의와과도에께만랑';
 const isH = c => c >= '가' && c <= '힣';
@@ -152,7 +179,7 @@ async function refresh(env) {
     ['oro', () => get('https://www.cyberoro.com/news/?cmt_n=0&div_no=A1&pageNo=1&blockNo=1', true).then(parseOro)],
     ['tyg', () => get('https://news.tygem.com/news/tnews/?pagec=1', true).then(parseTyg)],
     ['han', () => get('https://baduk.hangame.com/news.nhn?category=all&page=1').then(parseHan)],
-    ['ggl', () => get('https://news.google.com/rss/search?q=%EB%B0%94%EB%91%91&hl=ko&gl=KR&ceid=KR:ko').then(parseGoogle)],
+    ['ggl', () => webNews(res)],
   ];
   const got = await Promise.all(jobs.map(([k, f]) => f().then(v => { res.ok.push(k + ':' + v.length); return v; }, e => { res.fail.push(k + ':' + String(e.message || e).slice(0, 80)); return []; })));
   let fresh = got.flat();

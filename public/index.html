@@ -1414,7 +1414,7 @@ function downloadCSV(name,pre,head,rows){
 }
 
 /* =============== NEWS =============== */
-const NSRC={oro:['사이버오로','https://www.cyberoro.com/news/'],tyg:['타이젬','https://news.tygem.com/news/tnews/'],han:['한게임바둑','https://baduk.hangame.com/news.nhn?category=all'],ggl:['구글 뉴스','https://news.google.com/search?q=%EB%B0%94%EB%91%91&hl=ko&gl=KR&ceid=KR:ko']};
+const NSRC={oro:['사이버오로','https://www.cyberoro.com/news/'],tyg:['타이젬','https://news.tygem.com/news/tnews/'],han:['한게임바둑','https://baduk.hangame.com/news.nhn?category=all'],ggl:['언론 뉴스','https://news.google.com/search?q=%EB%B0%94%EB%91%91&hl=ko&gl=KR&ceid=KR:ko']};
 const nMap=x=>({s:x[0],d:+x[1],t:x[2],sm:x[0]==='ggl'?'':x[3],pub:x[0]==='ggl'?x[3]:'',u:x[4],img:x[5],fb:x[7]||'',k:x[6]||[]});
 const NEWSL=(typeof NEWS!=='undefined'?NEWS:[]).map(nMap);
 const NEWS_BY={};let NEWS_DATE=0,NEWS_UPD='';
@@ -1449,8 +1449,8 @@ function pNews(q){
   const cnt={all:NEWSL.length};NEWSL.forEach(n=>cnt[n.s]=(cnt[n.s]||0)+1);
   const hot=Object.entries(NEWS_BY).map(([k,a])=>[k,a.length]).sort((a,b)=>b[1]-a[1]).slice(0,14);
   app.innerHTML=crumb([['홈','#/'],['뉴스']])+`<h1 class="pt">뉴스</h1>
-  <p class="lede">사이버오로·타이젬·한게임바둑의 바둑 뉴스와 구글 뉴스 '바둑' 검색 결과를 모았습니다. 제목을 누르면 원문 사이트로 이동합니다. 기사 제목·요약에 나온 기사(棋士)는 이름을 눌러 기록을 볼 수 있습니다.</p>
-  <div class="ctabs" id="nsrc">${[['all','전체'],['oro','사이버오로'],['tyg','타이젬'],['han','한게임바둑'],['ggl','구글 뉴스']].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${st.s===v}">${v==='all'?'':`<i class="nsdot ns-${v}"></i>`}<span>${l}</span><em>${fmt(cnt[v]||0)}</em></button>`).join('')}</div>
+  <p class="lede">사이버오로·타이젬·한게임바둑의 바둑 뉴스와 언론사 기사('바둑' 뉴스 검색 — 구글 뉴스, 안 될 때는 Bing 뉴스)를 모았습니다. 제목을 누르면 원문 사이트로 이동합니다. 기사 제목·요약에 나온 기사(棋士)는 이름을 눌러 기록을 볼 수 있습니다.</p>
+  <div class="ctabs" id="nsrc">${[['all','전체'],['oro','사이버오로'],['tyg','타이젬'],['han','한게임바둑'],['ggl','언론 뉴스']].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${st.s===v}">${v==='all'?'':`<i class="nsdot ns-${v}"></i>`}<span>${l}</span><em>${fmt(cnt[v]||0)}</em></button>`).join('')}</div>
   <div class="grid g31" style="align-items:start;margin-top:4px"><div style="min-width:0">
     <div class="fbar"><div class="fg w"><label class="sr" for="nq">뉴스 검색</label><input class="q" id="nq" type="search" placeholder="제목·요약에서 찾기 (예: 농심배, 김은지)" value="${esc(st.q)}"></div><div class="fg" id="npw" style="${st.p?'':'display:none'}"><span class="chip" id="npc"></span><button class="linkbtn" id="npx" type="button">해제</button></div></div>
     <div class="note" id="ncount" style="margin-top:12px"></div><div id="nlist"></div><div id="nmore"></div>
