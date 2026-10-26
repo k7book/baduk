@@ -98,18 +98,25 @@ button,input,select{font-family:inherit;color:inherit}
 .sb .r.w small{color:var(--win)}
 
 /* ===== hero ===== */
-.hero{background:linear-gradient(115deg,#070f1f 0%,var(--navy) 45%,#1d3f78 80%,#2a5298 100%);color:#fff;border-radius:var(--radius);padding:34px 36px 26px;display:grid;grid-template-columns:1.15fr 1fr;gap:28px;margin-bottom:16px;position:relative;overflow:hidden;min-height:400px;align-items:center}
+.hero{background:linear-gradient(120deg,#08132a 0%,var(--navy) 50%,#16336a 100%);color:#fff;border-radius:var(--radius);padding:36px 40px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;margin-bottom:16px;position:relative;overflow:hidden;align-items:center}
 .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.07) 1px,transparent 1.5px);background-size:22px 22px;pointer-events:none}
-.hero::after{content:"";position:absolute;right:-120px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.16),transparent 62%);pointer-events:none}
+.hero::after{content:none}
 .hero>*{position:relative;z-index:1}
-.hero .kick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#ffd166;font-weight:700}
-.hero h2{font-family:var(--font-head);font-weight:800;font-size:clamp(36px,5vw,60px);line-height:1.05;margin:8px 0 14px;letter-spacing:-.025em}
+.hero .kick{font-size:13px;letter-spacing:.02em;color:#ffd166;font-weight:600}
+.hero h2{font-family:"IBM Plex Sans KR",sans-serif;font-weight:700;font-size:clamp(30px,3.6vw,46px);line-height:1.2;margin:10px 0 12px;letter-spacing:-.02em;word-break:keep-all}
+.hero h2 .nw{white-space:nowrap}
 .hero h2 em{font-style:normal;color:#ffd166}
-.hero p{color:#c9d4e6;font-size:15px;margin:0 0 18px;max-width:560px;line-height:1.6}
-.hero .cta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.hero p{color:#c9d4e6;font-size:15px;margin:0 0 22px;max-width:520px;line-height:1.65;word-break:keep-all}
+.hero .cta{display:flex;gap:8px;flex-wrap:wrap;margin:0}
 .hero .cta a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;padding:9px 16px;border-radius:999px;font-size:13.5px}
 .hero .cta a.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
 .hero .cta a:hover{background:#ffd166;color:var(--navy);border-color:#ffd166}
+.htiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ht{display:flex;flex-direction:column;gap:4px;padding:18px 20px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;text-decoration:none;min-width:0;transition:background .15s}
+.ht:hover{background:rgba(255,255,255,.13)}
+.ht b{font-family:var(--font-num);font-size:32px;font-weight:800;line-height:1.05;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
+.ht .k{font-size:14px;font-weight:700;color:#ffd166}
+.ht .s{font-size:12px;color:#aebcd2;line-height:1.4}
 .hstats{display:grid;grid-template-columns:repeat(5,auto);gap:4px 26px;justify-content:start}
 .hstats div{min-width:0}
 .hstats b{display:block;font-family:var(--font-num);font-size:30px;font-weight:800;line-height:1;color:#fff;letter-spacing:-.02em;font-feature-settings:"tnum" 1}
@@ -127,8 +134,8 @@ button,input,select{font-family:inherit;color:inherit}
 .feat .top3{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px}
 .feat .top3 a{color:#fff;text-decoration:none;background:rgba(255,255,255,.12);padding:3px 10px;border-radius:999px}
 .feat .top3 a b{color:#ffd166;margin-right:4px}
-@media (max-width:1023px){.hero{grid-template-columns:1fr;min-height:0;padding:26px 22px}.hstats{grid-template-columns:repeat(3,auto)}}
-@media (max-width:640px){.feat{grid-template-columns:110px 1fr;padding:14px}.feat .ph{width:110px}.feat .nm{font-size:32px}.hero h2{font-size:38px}}
+@media (max-width:1023px){.hero{grid-template-columns:1fr;gap:24px;padding:28px 22px}.hstats{grid-template-columns:repeat(3,auto)}}
+@media (max-width:640px){.feat{grid-template-columns:110px 1fr;padding:14px}.feat .ph{width:110px}.feat .nm{font-size:32px}.hero h2{font-size:30px}.ht{padding:14px 14px}.ht b{font-size:26px}}
 
 /* ===== page frame ===== */
 .page{padding:16px var(--gutter) 60px}
@@ -866,10 +873,14 @@ function pHome(){
   const lastCh=CHAMP.filter(c=>c.st===0).sort((a,b)=>b.d-a.d)[0];
   app.innerHTML=`
   <section class="hero">
-    <div><div class="kick">바둑DB · ${YEARS[0]}–${yr} · 한국기원 기록 기반</div><h2>프로 바둑<br><em>${(()=>{const k=Math.round(GAMES.length/1000),m=Math.floor(k/10),r=k%10;return (m?m+'만':'')+(r?r+'천':'');})()} 대국</em>의 기록</h2><p>기사 ${fmt(P.length)}명의 통산 성적, 실력 점수(WHR), 대회별 우승, 상대전적을 한곳에서 봅니다. 계산한 값에는 '계산값' 표시를 붙였고, 원본 기록은 고치지 않았습니다.</p>
-    <div class="cta"><a href="#/players">기사 찾기</a><a href="#/rankings">실력 점수 랭킹</a><a class="ghost" href="#/players/compare">상대전적</a><a class="ghost" href="#/records">기록실</a><a class="ghost" href="#/search">자유 검색</a></div>
-    <div class="hstats"><div><b>${fmt(GAMES.length)}</b><span>대국</span></div><div><b>${fmt(P.length)}</b><span>기사 정보</span></div><div><b>${fmt(Object.keys(BYK).length)}</b><span>출전 기사</span></div><div><b>${fmt(G.length)}</b><span>대회</span></div><div><b>${fmt(CHAMP.filter(c=>c.st===0).length)}</b><span>우승 판정</span></div></div></div>
-    <div class="feat" style="grid-template-columns:1fr;align-items:start"><div><div class="k">최근 우승 ${calc('결승·도전기 다승자 판정')}</div>${CHAMP.filter(c=>c.st===0).sort((x,y)=>y.d-x.d).slice(0,6).map(c=>`<div class="gl" style="border-color:rgba(255,255,255,.12);grid-template-columns:44px 1fr"><span class="d" style="color:#9fb0c8">${dstr(c.d).slice(5)}</span><span><a class="pl" style="color:#fff;font-size:15px" href="#/players/${encodeURIComponent(c.ck)}">${esc(nameOf(c.ck))}</a><div class="t" style="color:#c9d4e6"><a style="color:#ffd166;text-decoration:none" href="#/tournaments/${c.g}">${esc(G[c.g])}</a> ${esc(c.ed)}${c.rk?' · 결승 상대 '+esc(nameOf(c.rk)):''}</div></span></div>`).join('')}<div class="top3" style="margin-top:12px"><a href="#/tournaments">대회별 역대 우승 →</a><a href="#/rankings/overall?by=titles">통산 우승 순위 →</a></div></div></div>
+    <div class="hl"><div class="kick">한국기원 기록 기반 · ${YEARS[0]}–${yr}</div><h2>프로 바둑 <span class="nw"><em>${(()=>{const k=Math.round(GAMES.length/1000),m=Math.floor(k/10),r=k%10;return (m?m+'만':'')+(r?' '+r+'천':'');})()} 대국</em>의 기록</span></h2><p>기사 ${fmt(P.length)}명의 통산 성적과 실력 점수, 대회별 우승, 상대전적을 한곳에서 봅니다.</p>
+    <div class="cta"><a href="#/players">기사 찾기</a><a href="#/rankings">실력 점수 랭킹</a><a class="ghost" href="#/players/compare">상대전적</a><a class="ghost" href="#/records">기록실</a><a class="ghost" href="#/search">자유 검색</a></div></div>
+    <div class="htiles">${(()=>{const nOf=GAMES.filter(g=>g.of===1).length;const cc={};P.forEach(p=>{cc[p.c]=(cc[p.c]||0)+1;});
+      const tile=(href,v,k,sub)=>`<a class="ht" href="${href}"><b>${v}</b><span class="k">${k}</span><span class="s">${sub}</span></a>`;
+      return tile('#/games',fmt(GAMES.length),'대국',`공식 ${fmt(nOf)} · 비공식 ${fmt(GAMES.length-nOf)}`)
+        +tile('#/players',fmt(P.length),'기사',`한국 ${fmt(cc['한국']||0)} · 중국 ${fmt(cc['중국']||0)} · 일본 ${fmt(cc['일본']||0)}`)
+        +tile('#/tournaments',fmt(G.length),'대회',`${YEARS[0]}년부터 ${dstr(LASTD).replace(/-/g,'.')}까지`)
+        +tile('#/rankings/overall?by=titles',fmt(CHAMP.filter(c=>c.st===0).length),'우승 기록',`결승 대국으로 판정한 우승`);})()}</div>
   </section>
   <div class="grid g3">
     <div class="mod dark"><div class="hd"><span>실력 점수 리더 ${calc('WHR(w²='+META.whr.w2+'), 통산 '+RANK_MIN+'국 이상, 최근 활동 기사')}</span><a class="more" href="#/rankings">전체 →</a></div><div class="bd">${top.map(([k,v],i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(k)}<small>${cflag((PBY[k]||{}).c)}</small></span><span class="v">${fmt(v)} ${mvHtml(rNow[k],rPrev[k])}</span></div>`).join('')}<div class="note" style="margin-top:8px">변동은 1년 전 순위 대비입니다.</div></div></div>
