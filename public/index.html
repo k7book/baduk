@@ -1242,24 +1242,32 @@ function rkOverall(el,q){
     pagedTable($('ot'),rows,['순위','기사','국가','통산 대국','승','패','승률','우승'],x=>x.map(([k])=>{const r=rec(k);return `${(()=>{const i=rows.findIndex(z=>z[0]===k)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td>`;})()}<td>${plink(k)}</td><td class="d">${cflag((PBY[k]||{}).c)}</td><td class="n r">${fmt(r.g)}</td><td class="n r">${fmt(r.w)}</td><td class="n r">${fmt(r.l)}</td><td class="n r">${wpct(r)}</td><td class="n r">${(CHB[k]||[]).length||''}</td></tr>`;}).join(''),50,{sticky:true});
   }
 }
-/* GOAT — 우승·정점·전성기·통산을 합친 역대 순위(계산값) */
+/* GOAT — 우승·정점·전성기·정상급 맞대결·통산을 합친 역대 순위(계산값, 시대 보정 포함) */
 let GOATC=null;
 function goatData(){
   if(GOATC)return GOATC;
   const gcat={};{const cnt={};for(let t=0;t<T.length;t++){const g=TG[t],c=CATS[TC[t]];(cnt[g]=cnt[g]||{})[c]=(cnt[g][c]||0)+1;}for(const g in cnt)gcat[g]=Object.entries(cnt[g]).sort((a,b)=>b[1]-a[1])[0][0];}
-  const yrs=YEARS.filter(y=>y>=1956&&y<YEARS[YEARS.length-1]);const top3={},top10={};
-  for(const y of yrs){const m=rankAt(y*100+12);for(const k in m){if(m[k]<=3)top3[k]=(top3[k]||0)+1;if(m[k]<=10)top10[k]=(top10[k]||0)+1;}}
-  const no1={};LEG.forEach(([y,k])=>{if(k&&y<YEARS[YEARS.length-1])no1[k]=(no1[k]||0)+1;});
+  // 시대 보정: 그해 연말 실력 점수 상위 10명 평균으로 '경쟁 수준'을 재서 0.5~1.0 배율
+  const yrs=YEARS.filter(y=>y>=1956&&y<YEARS[YEARS.length-1]);const yr={},str={};
+  for(const y of yrs){const m=rankAt(y*100+12);yr[y]=m;const top=Object.keys(m).filter(k=>m[k]<=10).map(k=>whrAt(k,y*100+12)[1]);str[y]=top.length?top.reduce((a,b)=>a+b,0)/top.length:0;}
+  const sv=Object.values(str).filter(Boolean),smx=Math.max(...sv),smn=Math.min(...sv);
+  const ef=y=>str[y]?0.5+0.5*(str[y]-smn)/(smx-smn):1;
   const rows=[];
   for(const k in BYK){const s=WS[k];const r=rec(k);const tl=CHB[k]||[];if(r.g<300&&!tl.length)continue;
-    let w=0,dm=0,ot=0;tl.forEach(c=>{const ct=gcat[c.g];if(ct==='세계기전')w++;else if(ct==='국내기전')dm++;else ot++;});
-    rows.push({k,w,dm,ot,ts:w*5+dm*2+ot,peak:s&&s[7]>=100?s[3]:0,pkym:s?s[4]:0,no1:no1[k]||0,t3:top3[k]||0,t10:top10[k]||0,wins:r.w,g:r.g});}
-  const mx=f=>Math.max(1,...rows.map(f));const MX={ts:mx(x=>x.ts),no1:mx(x=>x.no1),t3:mx(x=>x.t3),wins:mx(x=>x.wins)};
-  const pk=rows.map(x=>x.peak).filter(Boolean);const pmax=Math.max(...pk),pmin=Math.min(...pk.filter(v=>v>pmax-900));
-  rows.forEach(x=>{x.n={ts:x.ts/MX.ts,peak:x.peak?Math.max(0,(x.peak-pmin)/(pmax-pmin)):0,no1:x.no1/MX.no1,t3:x.t3/MX.t3,wins:x.wins/MX.wins};});
+    let w=0,dm=0,ot=0,dadj=0;tl.forEach(c=>{const ct=gcat[c.g],y=(c.d/10000)|0;if(ct==='세계기전')w++;else if(ct==='국내기전'){dm++;dadj+=ef(y);}else{ot++;dadj+=0.3*ef(y);}});
+    let no1=0,no1n=0,t3=0;for(const y of yrs){const rk=yr[y][k];if(rk===1){no1+=ef(y);no1n++;}if(rk&&rk<=3)t3+=ef(y);}
+    rows.push({k,w,dm,ot,dadj,peak:s&&s[7]>=100?s[3]:0,pkym:s?s[4]:0,no1,no1n,t3,wins:r.w,g:r.g});}
+  // 정상급 맞대결: 우승·정점 기준 상위 25명끼리의 승률
+  const E=new Set(rows.slice().sort((a,b)=>(b.w*8+b.dadj+(b.peak-3000)/20)-(a.w*8+a.dadj+(a.peak-3000)/20)).slice(0,25).map(x=>x.k));
+  const hw={},hn={};for(const k of E){for(const g of BYK[k]||[]){if(g.j)continue;const o=g.wk===k?g.lk:g.wk;if(!E.has(o)||o===k)continue;hn[k]=(hn[k]||0)+1;if(g.wk===k)hw[k]=(hw[k]||0)+1;}}
+  rows.forEach(x=>{x.hw=hw[x.k]||0;x.hn=hn[x.k]||0;x.h2h=E.has(x.k)?(x.hw+5)/(x.hn+10):0;});
+  const mx=f=>Math.max(1e-9,...rows.map(f));const MX={w:mx(x=>x.w),dadj:mx(x=>x.dadj),no1:mx(x=>x.no1),t3:mx(x=>x.t3),wins:mx(x=>x.wins),h2h:mx(x=>x.h2h)};
+  const pk=rows.map(x=>x.peak).filter(Boolean);const pmax=Math.max(...pk),pmin=pmax-900;
+  rows.forEach(x=>{x.n={w:x.w/MX.w,d:x.dadj/MX.dadj,peak:x.peak?Math.max(0,(x.peak-pmin)/(pmax-pmin)):0,no1:x.no1/MX.no1,t3:x.t3/MX.t3,wins:x.wins/MX.wins,h2h:x.h2h/MX.h2h};});
   return GOATC=rows;
 }
-const GOATW={bal:['균형',{ts:35,peak:25,no1:15,t3:10,wins:15}],title:['우승 중심',{ts:55,peak:15,no1:10,t3:5,wins:15}],peak:['정점 중심',{ts:20,peak:45,no1:20,t3:10,wins:5}]};
+const GOATW={bal:['균형',{w:30,d:15,peak:15,no1:15,t3:5,wins:10,h2h:10}],title:['우승 중심',{w:40,d:25,peak:10,no1:10,t3:5,wins:5,h2h:5}],peak:['정점 중심',{w:15,d:5,peak:30,no1:20,t3:10,wins:5,h2h:15}]};
+const GOATL={w:'세계대회 우승',d:'국내 기전 우승(시대 보정)',peak:'최고 실력 점수',no1:'연말 1위(시대 보정)',t3:'연말 3위 안(시대 보정)',wins:'통산 승수',h2h:'정상급 맞대결 승률'};
 function rkGoat(el,q){
   const st={w:GOATW[q.w]?q.w:'bal',c:q.c||'all'};
   el.innerHTML=`<div class="fbar"><div class="fg"><span class="fl">가중치</span><div class="pills" id="gw">${Object.entries(GOATW).map(([v,[l]])=>`<button class="pill" data-v="${v}" aria-pressed="${st.w===v}">${l}</button>`).join('')}</div></div>
@@ -1274,10 +1282,13 @@ function rkGoat(el,q){
     let rows=goatData().map(x=>({...x,sc:Object.keys(W8).reduce((a,f)=>a+W8[f]*x.n[f],0)}));
     if(st.c!=='all')rows=rows.filter(x=>(PBY[x.k]||{}).c===st.c);
     rows.sort((a,b)=>b.sc-a.sc);rows=rows.slice(0,100);
-    const line=x=>[x.w?`세계대회 우승 ${x.w}회`:'',x.dm?`국내 기전 우승 ${x.dm}회`:'',x.peak?`최고 실력 점수 ${fmt(x.peak)}(${ymstr(x.pkym)})`:'',x.no1?`연말 실력 점수 1위 ${x.no1}회`:'',`통산 ${fmt(x.wins)}승`].filter(Boolean).join(' · ');
+    const line=x=>[x.w?`세계대회 우승 ${x.w}회`:'',x.dm?`국내 기전 우승 ${x.dm}회`:'',x.peak?`최고 실력 점수 ${fmt(x.peak)}(${ymstr(x.pkym)})`:'',x.no1n?`연말 1위 ${x.no1n}회`:'',x.hn?`정상급 맞대결 ${x.hw}승 ${x.hn-x.hw}패`:'',`통산 ${fmt(x.wins)}승`].filter(Boolean).join(' · ');
     $('gtop').innerHTML=rows.slice(0,3).map((x,i)=>{const p=PBY[x.k];return `<a class="gcard" href="#/players/${encodeURIComponent(x.k)}"><span class="gr">${i+1}</span><div class="ph">${photo(p,nameOf(x.k))}</div><div class="gk-b"><div class="gk-n">${flag((p||{}).c)} ${esc(nameOf(x.k))}</div><div class="gk-s">${x.sc.toFixed(1)}<small>점</small></div><div class="gk-l">${line(x)}</div></div></a>`;}).join('');
-    pagedTable($('gt'),rows,['순위','기사','국가','GOAT 점수','세계 우승','국내 우승','최고 실력 점수','연말 1위','연말 3위 안','통산 승'],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td><td>${plink(r.k)}</td><td class="d">${cflag((PBY[r.k]||{}).c)}</td><td class="n r"><b>${r.sc.toFixed(1)}</b></td><td class="n r">${r.w||''}</td><td class="n r">${r.dm||''}</td><td class="n r">${r.peak?fmt(r.peak):''}</td><td class="n r">${r.no1||''}</td><td class="n r">${r.t3||''}</td><td class="n r">${fmt(r.wins)}</td></tr>`;}).join(''),50,{sticky:true});
-    $('gn').innerHTML=`GOAT 점수 ${calc('각 항목을 최고 기록 대비 0~1로 바꾼 뒤 가중치를 곱해 더한 값(100점 만점)')} = 우승 ${W8.ts}% + 최고 실력 점수 ${W8.peak}% + 연말 1위 횟수 ${W8.no1}% + 연말 3위 안 횟수 ${W8.t3}% + 통산 승수 ${W8.wins}%. 우승은 세계기전 5점·국내기전 2점·그 밖의 대회 1점으로 셉니다(결승 대국으로 판정한 우승, 대회 등급은 아직 확정 전). 최고 실력 점수와 연말 순위는 WHR 계산값이며, 한국기원 기록에 실린 대국만 반영해 중국·일본 기사는 낮게 나올 수 있습니다. 통산 300국 이상이거나 우승이 있는 기사만 넣었습니다.`;
+    pagedTable($('gt'),rows,['순위','기사','국가','GOAT 점수','세계 우승','국내 우승','최고 실력 점수','연말 1위','정상급 맞대결','통산 승'],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td><td>${plink(r.k)}</td><td class="d">${cflag((PBY[r.k]||{}).c)}</td><td class="n r"><b>${r.sc.toFixed(1)}</b></td><td class="n r">${r.w||''}</td><td class="n r">${r.dm||''}</td><td class="n r">${r.peak?fmt(r.peak):''}</td><td class="n r">${r.no1n||''}</td><td class="n r">${r.hn?r.hw+'-'+(r.hn-r.hw):''}</td><td class="n r">${fmt(r.wins)}</td></tr>`;}).join(''),50,{sticky:true});
+    $('gn').innerHTML=`GOAT 점수 ${calc('각 항목을 최고 기록 대비 0~1로 바꾼 뒤 가중치를 곱해 더한 값(100점 만점)')} = ${Object.entries(W8).map(([f,v])=>GOATL[f]+' '+v+'%').join(' + ')}.<br>
+    <b>시대 보정</b> — 그해 연말 실력 점수 상위 10명의 평균으로 경쟁 수준을 재서, 국내 기전 우승과 연말 순위에 0.5~1.0배를 곱합니다(1960~80년대 약 0.6, 지금 1.0). 국내 경쟁자가 적던 시절의 우승·1위가 지금과 같은 무게로 쌓이지 않게 하기 위해서입니다.<br>
+    <b>정상급 맞대결</b> — 우승·최고 점수 기준 상위 25명끼리 둔 대국의 승률입니다. 세계 우승은 시대 보정 없이 그대로 셉니다.<br>
+    우승은 결승 대국으로 판정한 계산값이고 대회 등급은 아직 확정 전입니다. 실력 점수·연말 순위는 WHR 계산값이며, 한국기원 기록에 실린 대국만 반영해 중국·일본 기사는 낮게 나올 수 있습니다. 통산 300국 이상이거나 우승이 있는 기사만 넣었습니다.`;
   }
 }
 function rkLegacy(el){
