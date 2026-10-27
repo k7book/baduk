@@ -699,7 +699,7 @@ table.fx{table-layout:fixed}table.fx td,table.fx th{overflow:hidden;text-overflo
 .hn-list li:first-child{padding-top:0}
 .hn-list a{color:var(--ink);text-decoration:none;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .hn-list a:hover{color:var(--link);text-decoration:underline}.hn-list .src{white-space:nowrap;flex:none}
-.hbottom{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:start}
+.hbottom{margin-top:24px;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:start}
 .hside{display:grid;gap:24px}
 .hlist{list-style:none;margin:0;padding:0}
 .hlist li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--rule-2);font-size:14px}
@@ -1802,15 +1802,13 @@ function pNews(q){
 }
 function homeNews(){
   if(!NEWSL.length)return '';
-  // 사진이 있는 기사 하나만 크게, 나머지는 제목 목록. 사진이 없으면 목록만
-  const lead=NEWSL.find(n=>n.s!=='ggl'&&n.img);
-  const pool={};NEWSL.filter(n=>n!==lead).forEach(n=>(pool[n.s]=pool[n.s]||[]).push(n));
-  const rest=[];for(let i=0;rest.length<10&&i<20;i++)for(const sc of ['oro','tyg','han','ggl']){const x=(pool[sc]||[])[i];if(x&&rest.length<10)rest.push(x);}
+  const pic=[];const seen=new Set();
+  for(const n of NEWSL){if(n.s==='ggl'||!n.img)continue;if(seen.has(n.s)&&pic.length<3)continue;seen.add(n.s);pic.push(n);if(pic.length>=4)break;}
+  const pool={};NEWSL.filter(n=>!pic.includes(n)).forEach(n=>(pool[n.s]=pool[n.s]||[]).push(n));
+  const rest=[];for(let i=0;rest.length<8&&i<20;i++)for(const sc of ['oro','tyg','han','ggl']){const x=(pool[sc]||[])[i];if(x&&rest.length<8)rest.push(x);}
   rest.sort((a,b)=>b.d-a.d);
-  const li=n=>`<li><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(nTitle(n).t)}</a><span class="src">${NSRC[n.s][0]}${n.pub?' '+esc(n.pub):''}, ${nWhen(n.d)}</span></li>`;
-  return `<section class="hsec hnews"><header><h2>바둑 뉴스</h2><a href="#/news">뉴스 전체</a></header>
-    <div class="hn-in ${lead?'':'nolead'}">${lead?`<a class="hn-lead" href="${esc(lead.u)}" target="_blank" rel="noopener noreferrer"><span class="img"><img src="${esc(lead.img)}"${lead.fb?` data-fb="${esc(lead.fb)}"`:''} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}else this.parentElement.remove()"></span><b>${esc(nTitle(lead).t)}</b><span class="src">${NSRC[lead.s][0]}, ${nWhen(lead.d)}</span></a>`:''}
-    <ul class="hn-list">${rest.map(li).join('')}</ul></div></section>`;
+  return `<div class="mod" style="margin-top:16px"><div class="hd"><span>바둑 뉴스</span><span class="desc">${nUpd()}</span><a class="more" href="#/news">뉴스 전체 →</a></div><div class="bd"><div class="ncards">${pic.map(n=>{const tt=nTitle(n);return `<a class="ncard" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer"><span class="nth">${nImg(n)}<span class="ph">${NSRC[n.s][0].slice(0,1)}</span></span><span class="nmeta">${nsBadge(n.s)}<span class="d">${nWhen(n.d)}</span></span><b>${esc(tt.t)}</b></a>`;}).join('')}</div>
+  <ul class="nlines">${rest.map(n=>{const tt=nTitle(n);return `<li><span class="d">${nWhen(n.d)}</span>${nsBadge(n.s)}<a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(tt.t)}</a>${n.pub?`<span class="npub">${esc(n.pub)}</span>`:''}</li>`;}).join('')}</ul></div></div>`;
 }
 function playerNews(k){
   const a=NEWS_BY[k];if(!a||!a.length)return '';
