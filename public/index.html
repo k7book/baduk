@@ -637,6 +637,79 @@ table.fx{table-layout:fixed}table.fx td,table.fx th{overflow:hidden;text-overflo
 .kbal b{font-family:var(--font-num);font-feature-settings:"tnum" 1;color:var(--ink)}
 :root[data-theme="dark"] .kbal .ok{color:#4ac26b}:root[data-theme="dark"] .kbal .ng{color:#f0a050}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kbal .ok{color:#4ac26b}:root:not([data-theme="light"]) .kbal .ng{color:#f0a050}}
+
+/* ===== 홈 (2026-10 개편) ===== */
+.hhero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:44px;align-items:stretch;background:var(--navy);color:#fff;border-radius:var(--radius);padding:40px 44px;margin-bottom:24px}
+.hh-l{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.hh-l h1{font-family:"IBM Plex Sans KR",sans-serif;font-weight:700;font-size:clamp(32px,3.9vw,50px);line-height:1.15;letter-spacing:-.03em;margin:0 0 14px;word-break:keep-all}
+.hh-l h1 .nw{white-space:nowrap;font-family:var(--font-num);font-feature-settings:"tnum" 1;letter-spacing:-.035em}
+.hh-l p{margin:0 0 24px;color:#c9d4e6;font-size:15.5px;line-height:1.7;max-width:34em;word-break:keep-all}
+.hsearch{position:relative;max-width:520px}
+.hsearch input{width:100%;box-sizing:border-box;height:50px;border:0;border-radius:8px;padding:0 16px;font-size:16px;background:#fff;color:#0b1a33}
+.hsearch input::placeholder{color:#7a8496}
+.hsearch input:focus{outline:3px solid #ff5a6a;outline-offset:2px}
+.hsl{position:absolute;left:0;right:0;top:56px;z-index:30;background:#fff;color:#0b1a33;border-radius:8px;box-shadow:0 12px 32px rgba(3,10,24,.35);overflow:hidden}
+.hsl a{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;text-decoration:none;color:#0b1a33;font-weight:600;font-size:14px}
+.hsl a span{font-weight:400;color:#6b7380;font-size:12.5px}.hsl a.on,.hsl a:hover{background:#eef3fb}.hsl .none{padding:12px 14px;color:#6b7380;font-size:13px}
+.hlinks{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:16px}
+.hlinks a{color:#fff;text-decoration:none;font-size:14px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:1px}
+.hlinks a:hover{border-bottom-color:#ff5a6a}
+.hh-r{position:relative;border-radius:10px;padding:18px 20px 10px;background-color:rgba(255,255,255,.03);
+  background-image:linear-gradient(rgba(255,255,255,.065) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.065) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px;border:1px solid rgba(255,255,255,.1);min-width:0}
+.hled-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.hled-h h2{margin:0;font-size:15px;font-weight:700;color:#fff}
+.hled-h a,.hsec header a,.hcol header a{font-size:13px;color:var(--link);text-decoration:none}.hled-h a{color:#9cc6ff}
+.hled-h a:hover,.hsec header a:hover,.hcol header a:hover{text-decoration:underline}
+.hled{list-style:none;margin:0;padding:0}
+.hled li{display:grid;grid-template-columns:44px minmax(0,1fr) minmax(0,38%);gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.08);font-size:14px;background:var(--navy)}
+.hled li:first-child{border-top:0}
+.hled .d{font-family:var(--font-num);font-size:12.5px;color:#8fa0bb;font-feature-settings:"tnum" 1}
+.hled .who{display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden}
+.hled .who a{color:#fff;text-decoration:none;font-weight:700}.hled .who a.l{color:#b9c6da;font-weight:500}.hled .who a:hover{text-decoration:underline}
+.hled .vs{font-size:12px;color:#8fa0bb}
+.hled .t{font-size:12.5px;color:#8fa0bb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.hled .stone{border-color:#c9d4e6;margin-right:2px}.hled .stone.b{background:#02060e}.hled .stone.none{border-style:dashed}
+.hrank{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:var(--card);border-radius:var(--radius);padding:26px 0 18px;margin-bottom:24px}
+.hcol{padding:0 28px;min-width:0}.hcol+.hcol{border-left:1px solid var(--rule-2)}
+.hcol header,.hsec header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.hcol h3{margin:0;font-size:16px;font-weight:700}
+.hlead{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:2px 12px;text-decoration:none;color:var(--ink);padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.hlead .hn{font-size:24px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hlead .hv{font-family:var(--font-num);font-size:30px;font-weight:800;letter-spacing:-.03em;font-feature-settings:"tnum" 1;line-height:1}
+.hlead .hs{grid-column:1/-1;font-size:12.5px;color:var(--muted-2)}
+.hlead:hover .hn{color:var(--link)}
+.hcol ol{list-style:none;margin:0;padding:0;counter-reset:r 1}
+.hcol li{counter-increment:r;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--rule-2);font-size:14px}
+.hcol li::before{content:counter(r);font-family:var(--font-num);font-size:12.5px;color:var(--muted);font-feature-settings:"tnum" 1}
+.hcol li .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.hcol li .v{font-family:var(--font-num);font-feature-settings:"tnum" 1;font-weight:600}
+.hfoot{grid-column:1/-1;margin:14px 28px 0;font-size:12.5px;color:var(--muted)}.hsec .hfoot{margin:12px 0 0}
+.hfoot a{color:var(--muted-2)}
+.hsec{background:var(--card);border-radius:var(--radius);padding:22px 26px;min-width:0}
+.hsec header h2{margin:0;font-size:17px;font-weight:700}
+.hnews{margin-bottom:24px}
+.hn-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:28px}.hn-in.nolead{grid-template-columns:1fr}
+.hn-lead{display:grid;gap:8px;text-decoration:none;color:var(--ink);align-content:start}
+.hn-lead .img{display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--card-3)}
+.hn-lead .img img{width:100%;height:100%;object-fit:cover;display:block}
+.hn-lead b{font-size:17px;line-height:1.45;word-break:keep-all}.hn-lead:hover b{color:var(--link);text-decoration:underline}
+.hn-lead .src,.hn-list .src{font-size:12.5px;color:var(--muted)}
+.hn-list{list-style:none;margin:0;padding:0;columns:1}
+.hn-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:8px 0;border-bottom:1px solid var(--rule-2);min-width:0}
+.hn-list li:first-child{padding-top:0}
+.hn-list a{color:var(--ink);text-decoration:none;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.hn-list a:hover{color:var(--link);text-decoration:underline}.hn-list .src{white-space:nowrap;flex:none}
+.hbottom{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:start}
+.hside{display:grid;gap:24px}
+.hlist{list-style:none;margin:0;padding:0}
+.hlist li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--rule-2);font-size:14px}
+.hlist li:last-child{border-bottom:0}
+.hlist .d{font-family:var(--font-num);font-size:12.5px;color:var(--muted);font-feature-settings:"tnum" 1;padding-top:2px}
+.hlist .t{display:block;font-size:12.5px;color:var(--muted-2);text-decoration:none;margin-top:1px}.hlist .t:hover{text-decoration:underline}
+.hseason th,.hseason td{padding:8px 8px}
+.hseason th.c,.hseason td.c{text-align:center}.hseason td,.hseason th{white-space:nowrap}
+@media (max-width:1023px){.hhero{grid-template-columns:1fr;gap:26px;padding:30px 24px}.hrank{grid-template-columns:1fr;padding:6px 0 16px}.hcol{padding:20px 22px 4px}.hcol+.hcol{border-left:0;border-top:1px solid var(--rule-2)}.hfoot{margin:12px 22px 0}.hn-in{grid-template-columns:1fr}.hbottom{grid-template-columns:1fr}}
+@media (max-width:640px){.hhero{padding:24px 18px;border-radius:0;margin:-16px calc(-1 * var(--gutter)) 20px}.hh-l h1{font-size:30px}.hh-l p{font-size:14.5px;margin-bottom:18px}.hled li:nth-child(n+6){display:none}.hled li{grid-template-columns:40px minmax(0,1fr)}.hled .t{display:none}.hsec{padding:18px 16px}.hn-list a{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.hn-list li{flex-direction:column;gap:2px}}
 </style>
 </head>
 <body>
@@ -890,41 +963,57 @@ function pHome(){
   const bday=P.filter(p=>p.b&&p.b.slice(5)===mmdd&&(p.st||'').includes('현역'));
   const yr=YEARS[YEARS.length-1];const A=yagg()[yr]||{w:{},n:{}};
   const champTop=Object.entries(CHB).map(([k,v])=>[k,v.length]).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  const yChamps=CHAMP.filter(c=>c.st===0&&((c.d/10000)|0)===yr).sort((a,b)=>b.d-a.d).slice(0,10);
-  const prevYm=((LASTD/100|0)-100);const rNow=rankAt(LASTD/100|0),rPrev=rankAt(prevYm);
+  const yChamps=CHAMP.filter(c=>c.st===0&&((c.d/10000)|0)===yr).sort((a,b)=>b.d-a.d).slice(0,8);
+  const rNow=rankAt(LASTD/100|0),rPrev=rankAt((LASTD/100|0)-100);
   const top=currentTop(null,10);
-  // season table: top by wins this year, standings style
-  const season=Object.keys(A.n).map(k=>{let w=A.w[k]||0,n=A.n[k];const st=streaks(k);return {k,w,l:n-w,n,p:w/n,cur:st.cur};}).filter(x=>x.n>=10).sort((a,b)=>b.w-a.w||b.p-a.p).slice(0,30);
-  const recent=GAMES.slice(-10).reverse();
-  const k1=top.length?top[0][0]:null;const p1=k1?PBY[k1]:null;const r1=k1?rec(k1):null;const y1=k1?{w:A.w[k1]||0,n:A.n[k1]||0}:null;
-  const lastCh=CHAMP.filter(c=>c.st===0).sort((a,b)=>b.d-a.d)[0];
+  const wins=Object.entries(A.w).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const season=Object.keys(A.n).map(k=>{const w=A.w[k]||0,n=A.n[k];return {k,w,l:n-w,n,p:w/n,cur:streaks(k).cur};}).filter(x=>x.n>=10).sort((a,b)=>b.w-a.w||b.p-a.p).slice(0,15);
+  const recent=GAMES.filter(g=>!g.j).slice(-8).reverse();
+  const ld=dstr(LASTD);const [ly,lm,ldd]=ld.split('-').map(Number);
+  // 순위 열: 1위는 크게, 나머지는 한 줄씩
+  const col=(title,href,rows,val,sub)=>`<section class="hcol"><header><h3>${title}</h3><a href="${href}">전체 보기</a></header>
+    ${rows.length?`<a class="hlead" href="#/players/${encodeURIComponent(rows[0][0])}"><span class="hn">${flag((PBY[rows[0][0]]||{}).c)} ${esc(nameOf(rows[0][0]))}</span><span class="hv">${val(rows[0])}</span>${sub?`<span class="hs">${sub(rows[0])}</span>`:''}</a>
+    <ol start="2">${rows.slice(1).map(r=>`<li><span class="nm">${plink(r[0])}</span><span class="v">${val(r)}</span></li>`).join('')}</ol>`:'<div class="empty">아직 기록이 없습니다</div>'}</section>`;
   app.innerHTML=`
-  <section class="hero">
-    <div class="hl"><div class="kick">한국기원 기록 기반 · ${YEARS[0]}–${yr}</div><h2>프로 바둑 <span class="nw"><em>${(()=>{const k=Math.round(GAMES.length/1000),m=Math.floor(k/10),r=k%10;return (m?m+'만':'')+(r?' '+r+'천':'');})()} 대국</em>의 기록</span></h2><p>기사 ${fmt(P.length)}명의 통산 성적과 실력 점수, 대회별 우승, 상대전적을 한곳에서 봅니다.</p>
-    <div class="cta"><a href="#/players">기사 찾기</a><a href="#/rankings/all">실력 점수 랭킹</a><a class="ghost" href="#/players/compare">상대전적</a><a class="ghost" href="#/records">기록실</a><a class="ghost" href="#/search">자유 검색</a></div></div>
-    <div class="htiles">${(()=>{const nOf=GAMES.filter(g=>g.of===1).length;const cc={};P.forEach(p=>{cc[p.c]=(cc[p.c]||0)+1;});
-      const tile=(href,v,k,sub)=>`<a class="ht" href="${href}"><b>${v}</b><span class="k">${k}</span><span class="s">${sub}</span></a>`;
-      return tile('#/games',fmt(GAMES.length),'대국',`공식 ${fmt(nOf)} · 비공식 ${fmt(GAMES.length-nOf)}`)
-        +tile('#/players',fmt(P.length),'기사',`한국 ${fmt(cc['한국']||0)} · 중국 ${fmt(cc['중국']||0)} · 일본 ${fmt(cc['일본']||0)}`)
-        +tile('#/tournaments',fmt(G.length),'대회',`${YEARS[0]}년부터 ${dstr(LASTD).replace(/-/g,'.')}까지`)
-        +tile('#/rankings/overall?by=titles',fmt(CHAMP.filter(c=>c.st===0).length),'우승 기록',`결승 대국으로 판정한 우승`);})()}</div>
-  </section>
-  <div class="grid g3">
-    <div class="mod dark"><div class="hd"><span>실력 점수 리더 ${calc('WHR(w²='+META.whr.w2+'), 통산 '+RANK_MIN+'국 이상, 최근 활동 기사')}</span><a class="more" href="#/rankings/all">전체 →</a></div><div class="bd">${top.map(([k,v],i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(k)}<small>${cflag((PBY[k]||{}).c)}</small></span><span class="v">${fmt(v)} ${mvHtml(rNow[k],rPrev[k])}</span></div>`).join('')}<div class="note" style="margin-top:8px">변동은 1년 전 순위 대비입니다.</div></div></div>
-    <div class="mod"><div class="hd"><span>${yr} 다승 리더</span><a class="more" href="#/seasons/${yr}">시즌 →</a></div><div class="bd">${rankList(Object.entries(A.w).sort((a,b)=>b[1]-a[1]),10,v=>v+'승')}</div></div>
-    <div class="mod"><div class="hd"><span>통산 우승 ${calc('결승·도전기 다승자 판정, 동점 미확정 제외')}</span><a class="more" href="#/rankings/overall?by=titles">전체 →</a></div><div class="bd">${rankList(champTop,10,v=>v+'회')}</div></div>
-  </div>
-  ${homeNews()}
-  <div class="mod" style="margin-top:16px"><div class="hd"><span>최근 대국</span><span class="desc">마지막 기록일 ${dstr(LASTD)}</span><a class="more" href="#/games">대국 목록 →</a></div><div class="bd flush"><div class="tw"><table><thead><tr><th>날짜</th><th>대회</th><th>승</th><th>패</th><th>내용</th><th>통산 맞대결</th></tr></thead><tbody>${recent.map(g=>`<tr><td class="d">${dstr(g.d)}</td><td class="tname" title="${esc(T[g.ti])}">${badge(g.c)} ${esc(T[g.ti])}</td><td>${plink(g.wk,'w')}</td><td>${plink(g.lk)}</td><td class="n">${stone(g)}${resText(g)}</td><td>${h2hBadge(g.wk,g.lk)}</td></tr>`).join('')}</tbody></table></div></div></div>
-  <div class="grid g31" style="margin-top:16px">
-    <div class="mod fill"><div class="hd"><span>${yr} 시즌 테이블</span><span class="desc">상위 30 · 10국 이상 · 다승순 · 무승부·무효 제외</span></div><div class="bd flush"><div class="tw sticky"><table><thead><tr><th>#</th><th>기사</th><th>국가</th><th class="r">국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>연속</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n">${i+1}</td><td>${plink(x.k)}</td><td class="d">${cflag((PBY[x.k]||{}).c)}</td><td class="n r">${x.n}</td><td class="n r">${x.w}</td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}</td><td class="n ${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]?x.cur[1]+x.cur[0].slice(1):''}</td><td class="n r">${s&&s[7]>=RANK_MIN?fmt(s[0]):'–'}</td></tr>`;}).join('')}</tbody></table></div></div></div>
-    <div style="display:grid;gap:16px;align-content:start">
-      <div class="mod"><div class="hd"><span>${yr} 우승 ${calc('결승·도전기 다승자 판정')}</span><a class="more" href="#/tournaments">대회 →</a></div><div class="bd">${yChamps.length?yChamps.map(c=>`<div class="gl"><span class="d">${dstr(c.d).slice(5)}</span><span>${plink(c.ck,'w')}<div class="t"><a class="pl" style="color:inherit;font-weight:400" href="#/tournaments/${c.g}">${esc(G[c.g])}</a> ${esc(c.ed)}</div></span></div>`).join(''):'<div class="empty">판정된 우승이 없습니다</div>'}</div></div>
-      ${bday.length?`<div class="mod"><div class="hd"><span>오늘 생일</span><span class="desc">KST ${t.m}.${t.d} · 현역</span></div><div class="bd">${bday.map(p=>`<div class="gl"><span class="d">${p.b.slice(0,4)}</span><span>${plink(p.k)} <span class="muted small">만 ${ageNow(p.b)}세</span></span></div>`).join('')}</div></div>`:''}
-      <div class="mod"><div class="hd"><span>갱신 이력</span><a class="more" href="#/about/changelog">전체 →</a></div><div class="bd">${META.changelog.slice(0,3).map(c=>`<div class="gl"><span class="d">${esc(c[0].slice(5))}</span><span class="small">${esc(c[1])}</span></div>`).join('')}</div></div>
+  <section class="hhero">
+    <div class="hh-l">
+      <h1>프로 바둑 기록 <span class="nw">${fmt(GAMES.length)}국</span></h1>
+      <p>${YEARS[0]}년부터 ${ly}년 ${lm}월 ${ldd}일까지 한국기원 기록실에 남은 대국과 기사 ${fmt(P.length)}명의 성적, 우승, 상대전적입니다.</p>
+      <div class="hsearch" role="search"><label class="sr" for="hq">기사·대회 이름으로 찾기</label><input id="hq" type="search" placeholder="기사·대회 이름 (예: 이창호, 응씨배)" autocomplete="off"><div class="hsl" id="hsl" hidden></div></div>
+      <nav class="hlinks" aria-label="바로 가기"><a href="#/players">기사 목록</a><a href="#/rankings">랭킹</a><a href="#/players/compare">상대전적</a><a href="#/records">기록실</a><a href="#/search">조건 검색</a></nav>
     </div>
-  </div>
-`;
+    <div class="hh-r">
+      <div class="hled-h"><h2>최근 대국</h2><a href="#/games">대국 목록</a></div>
+      <ul class="hled">${recent.map(g=>`<li><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="who">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><span class="vs">승</span><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="t" title="${esc(T[g.ti])}">${esc(G[g.g]||T[g.ti])}</span></li>`).join('')}</ul>
+    </div>
+  </section>
+  <section class="hrank">
+    ${col('실력 점수','#/rankings/all',top.map(([k,v])=>[k,v]),r=>fmt(r[1]),r=>{const m=rPrev[r[0]];return m&&m!==1?`1년 전 ${m}위`:'1년 전에도 1위';})}
+    ${col(`${yr}년 다승`,'#/seasons/'+yr,wins,r=>r[1]+'승',r=>{const n=A.n[r[0]]||0;return `${n}국 중, 승률 ${pct(r[1],n)}`;})}
+    ${col('통산 우승','#/rankings/overall?by=titles',champTop,r=>r[1]+'회',r=>{const l=(CHB[r[0]]||[]).reduce((a,c)=>Math.max(a,c.d),0);return l?`마지막 우승 ${String(l).slice(0,4)}년`:'';})}
+    <p class="hfoot">실력 점수와 우승 횟수는 이 사이트가 한국기원 기록으로 계산한 값입니다. <a href="#/about">계산 방법</a></p>
+  </section>
+  ${homeNews()}
+  <div class="hbottom">
+    <section class="hsec"><header><h2>${yr} 시즌</h2><a href="#/seasons/${yr}">시즌 전체</a></header>
+      <div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>최근 흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div>
+      <p class="hfoot">${yr}년에 10국 이상 둔 기사를 승수 순으로 놓았습니다. 무승부·무효는 뺐습니다.</p></section>
+    <aside class="hside">
+      <section class="hsec"><header><h2>${yr} 우승</h2><a href="#/tournaments">대회 전체</a></header>${yChamps.length?`<ul class="hlist">${yChamps.map(c=>`<li><span class="d">${dstr(c.d).slice(5).replace('-','.')}</span><span>${plink(c.ck,'w')}<a class="t" href="#/tournaments/${c.g}">${esc(G[c.g])} ${esc(c.ed)}</a></span></li>`).join('')}</ul>`:'<div class="empty">올해 판정된 우승이 아직 없습니다</div>'}</section>
+      ${bday.length?`<section class="hsec"><header><h2>오늘 생일</h2></header><ul class="hlist">${bday.map(p=>`<li><span class="d">${p.b.slice(0,4)}</span><span>${plink(p.k)} <span class="muted small">만 ${ageNow(p.b)}세</span></span></li>`).join('')}</ul></section>`:''}
+      <section class="hsec"><header><h2>최근 갱신</h2><a href="#/about/changelog">갱신 이력</a></header><ul class="hlist">${META.changelog.slice(0,2).map(c=>`<li><span class="d">${esc(c[0].slice(5).replace('-','.'))}</span><span class="small">${esc(c[1])}</span></li>`).join('')}</ul></section>
+    </aside>
+  </div>`;
+  homeSearch();
+}
+// 홈 검색창: 머리글 검색과 같은 목록(QS)에서 찾기
+function homeSearch(){
+  const inp=document.getElementById('hq'),box=document.getElementById('hsl');if(!inp)return;let sel=-1,items=[],tmr;
+  const draw=()=>{box.innerHTML=items.map((x,i)=>`<a href="${x.href}" class="${i===sel?'on':''}">${esc(x.label)}<span>${esc(x.sub)}</span></a>`).join('')||'<div class="none">일치하는 기사·대회가 없습니다</div>';box.hidden=false;};
+  inp.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{const q=inp.value.trim().toLowerCase();if(!q){box.hidden=true;return;}
+    items=QS.filter(x=>x.hay.includes(q)).sort((a,b)=>(a.label.toLowerCase().startsWith(q)?0:1)-(b.label.toLowerCase().startsWith(q)?0:1)||(rec(b.k).g||0)-(rec(a.k).g||0)).slice(0,8);sel=-1;draw();},180);});
+  inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Enter'){const x=items[Math.max(0,sel)];if(x)location.hash=x.href;}else if(e.key==='Escape')box.hidden=true;});
+  document.addEventListener('click',e=>{if(!e.target.closest('.hsearch'))box.hidden=true;});
 }
 
 /* =============== PLAYERS LIST =============== */
@@ -1713,13 +1802,15 @@ function pNews(q){
 }
 function homeNews(){
   if(!NEWSL.length)return '';
-  const pic=[];const seen=new Set();
-  for(const n of NEWSL){if(n.s==='ggl'||!n.img)continue;if(seen.has(n.s)&&pic.length<3)continue;seen.add(n.s);pic.push(n);if(pic.length>=4)break;}
-  const pool={};NEWSL.filter(n=>!pic.includes(n)).forEach(n=>(pool[n.s]=pool[n.s]||[]).push(n));
-  const rest=[];for(let i=0;rest.length<8&&i<20;i++)for(const sc of ['oro','tyg','han','ggl']){const x=(pool[sc]||[])[i];if(x&&rest.length<8)rest.push(x);}
+  // 사진이 있는 기사 하나만 크게, 나머지는 제목 목록. 사진이 없으면 목록만
+  const lead=NEWSL.find(n=>n.s!=='ggl'&&n.img);
+  const pool={};NEWSL.filter(n=>n!==lead).forEach(n=>(pool[n.s]=pool[n.s]||[]).push(n));
+  const rest=[];for(let i=0;rest.length<10&&i<20;i++)for(const sc of ['oro','tyg','han','ggl']){const x=(pool[sc]||[])[i];if(x&&rest.length<10)rest.push(x);}
   rest.sort((a,b)=>b.d-a.d);
-  return `<div class="mod" style="margin-top:16px"><div class="hd"><span>바둑 뉴스</span><span class="desc">${nUpd()}</span><a class="more" href="#/news">뉴스 전체 →</a></div><div class="bd"><div class="ncards">${pic.map(n=>{const tt=nTitle(n);return `<a class="ncard" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer"><span class="nth">${nImg(n)}<span class="ph">${NSRC[n.s][0].slice(0,1)}</span></span><span class="nmeta">${nsBadge(n.s)}<span class="d">${nWhen(n.d)}</span></span><b>${esc(tt.t)}</b></a>`;}).join('')}</div>
-  <ul class="nlines">${rest.map(n=>{const tt=nTitle(n);return `<li><span class="d">${nWhen(n.d)}</span>${nsBadge(n.s)}<a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(tt.t)}</a>${n.pub?`<span class="npub">${esc(n.pub)}</span>`:''}</li>`;}).join('')}</ul></div></div>`;
+  const li=n=>`<li><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(nTitle(n).t)}</a><span class="src">${NSRC[n.s][0]}${n.pub?' '+esc(n.pub):''}, ${nWhen(n.d)}</span></li>`;
+  return `<section class="hsec hnews"><header><h2>바둑 뉴스</h2><a href="#/news">뉴스 전체</a></header>
+    <div class="hn-in ${lead?'':'nolead'}">${lead?`<a class="hn-lead" href="${esc(lead.u)}" target="_blank" rel="noopener noreferrer"><span class="img"><img src="${esc(lead.img)}"${lead.fb?` data-fb="${esc(lead.fb)}"`:''} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}else this.parentElement.remove()"></span><b>${esc(nTitle(lead).t)}</b><span class="src">${NSRC[lead.s][0]}, ${nWhen(lead.d)}</span></a>`:''}
+    <ul class="hn-list">${rest.map(li).join('')}</ul></div></section>`;
 }
 function playerNews(k){
   const a=NEWS_BY[k];if(!a||!a.length)return '';
