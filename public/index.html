@@ -612,6 +612,16 @@ a.ypk-btn:hover{background:rgba(255,255,255,.18)}.ypk-btn.off{opacity:.3}
 .bdont figcaption{font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}.bx{color:#D62839;font-weight:800}
 @media (max-width:900px){.bgrid.b4{grid-template-columns:repeat(2,minmax(0,1fr))}.bsws{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.bhero,.bgrid{grid-template-columns:1fr}.bpv.big{height:150px}}
+.goat3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.gcard{position:relative;display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;align-items:center;padding:14px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--card);text-decoration:none;color:var(--ink)}
+.gcard:hover{border-color:var(--ink-soft)}
+.gcard .ph{width:88px;border-radius:50%}.gcard .ph .ini{font-size:34px}
+.gcard .gr{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:13px;background:#e3b341;color:#1a1300}
+.gcard:nth-child(2) .gr{background:#b9c1cb;color:#14181d}.gcard:nth-child(3) .gr{background:#cf8a52;color:#1d0f04}
+.gk-n{font-weight:700;font-size:17px}.gk-s{font-family:var(--font-num);font-size:26px;font-weight:800;line-height:1.1}.gk-s small{font-size:13px;font-weight:600;margin-left:2px;color:var(--muted-2)}
+.gk-l{font-size:12px;color:var(--muted-2);line-height:1.5;margin-top:4px;word-break:keep-all}
+#gt td:nth-child(2){white-space:nowrap}
+@media (max-width:900px){.goat3{grid-template-columns:1fr}}
 .unof{display:inline-block;font-size:10.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:5px;line-height:16px;vertical-align:1px}
 .kbal{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:10px;font-size:12.5px;color:var(--ink-soft)}
 .kbal .ok{color:#1a7f37;font-weight:700}.kbal .ng{color:#b54708;font-weight:700}
@@ -1147,12 +1157,13 @@ const RCTRY={kr:'한국',cn:'중국',jp:'일본'};
 function rankingCalcBox(extra){return `<div class="note">계산 조건 — 실력 점수는 WHR(w²=${META.whr.w2}) 계산값이며, 통산 ${RANK_MIN}국 이상·오차 ±${UNC_MAX} 이내 기사만 순위에 넣습니다. 실력 점수 계산 기준일 ${dstr(META.whr.asof||LASTD)}. 한국기원에 기록된 공인전 기준이라 중국·일본 국내 대회는 일부만 반영됩니다. ${extra||''}</div>`;}
 function pRankings(sub,q){
   sub=sub||'';
-  app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1>${sub===''?'':rankHero()}<p class="lede">${sub===''?'한국기원이 매달 발표하는 공식 랭킹과, 같은 방식으로 최근 대국까지 반영해 계산한 실시간 환산 순위입니다.':'실력 점수는 시대가 다른 기사도 비교할 수 있게 전체 기록을 한꺼번에 계산한 WHR 값입니다. 국가별 탭은 같은 점수에서 그 나라 기사만 다시 줄 세운 것입니다.'}</p><nav class="tabs">${RSUB.map(([s,l])=>s==='goat'?`<span title="대회 등급 확정 후 공개">${l} · 준비 중</span>`:`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav><div id="rk"></div>`;
+  app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1>${sub===''||sub==='goat'?'':rankHero()}<p class="lede">${sub==='goat'?'역대 최고의 기사(GOAT)를 우승·최고 실력 점수·전성기 길이·통산 승수로 함께 따져 본 계산값 순위입니다. 가중치를 바꿔 보면 순위가 어떻게 달라지는지 볼 수 있습니다.':sub===''?'한국기원이 매달 발표하는 공식 랭킹과, 같은 방식으로 최근 대국까지 반영해 계산한 실시간 환산 순위입니다.':'실력 점수는 시대가 다른 기사도 비교할 수 있게 전체 기록을 한꺼번에 계산한 WHR 값입니다. 국가별 탭은 같은 점수에서 그 나라 기사만 다시 줄 세운 것입니다.'}</p><nav class="tabs">${RSUB.map(([s,l])=>`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav><div id="rk"></div>`;
   const el=document.getElementById('rk');
   if(sub==='')return rkKba(el,q);
   if(sub==='all'||sub==='women'||RCTRY[sub]){if(RCTRY[sub])q={...q,c:RCTRY[sub],lock:1};return rkSkill(el,sub==='women',q);}
   if(sub==='overall')return rkOverall(el,q);
   if(sub==='legacy')return rkLegacy(el,q);
+  if(sub==='goat')return rkGoat(el,q);
 }
 function rkKba(el,q){
   const months=Object.keys(KO).sort();const latest=months[months.length-1];
@@ -1229,6 +1240,44 @@ function rkOverall(el,q){
     const val={wins:k=>rec(k).w,games:k=>rec(k).g,pct:k=>{const r=rec(k);return r.w+r.l>=RANK_MIN?r.w/(r.w+r.l):-1;},titles:k=>(CHB[k]||[]).length}[st.by];
     const rows=keys.map(k=>[k,val(k)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
     pagedTable($('ot'),rows,['순위','기사','국가','통산 대국','승','패','승률','우승'],x=>x.map(([k])=>{const r=rec(k);return `${(()=>{const i=rows.findIndex(z=>z[0]===k)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td>`;})()}<td>${plink(k)}</td><td class="d">${cflag((PBY[k]||{}).c)}</td><td class="n r">${fmt(r.g)}</td><td class="n r">${fmt(r.w)}</td><td class="n r">${fmt(r.l)}</td><td class="n r">${wpct(r)}</td><td class="n r">${(CHB[k]||[]).length||''}</td></tr>`;}).join(''),50,{sticky:true});
+  }
+}
+/* GOAT — 우승·정점·전성기·통산을 합친 역대 순위(계산값) */
+let GOATC=null;
+function goatData(){
+  if(GOATC)return GOATC;
+  const gcat={};{const cnt={};for(let t=0;t<T.length;t++){const g=TG[t],c=CATS[TC[t]];(cnt[g]=cnt[g]||{})[c]=(cnt[g][c]||0)+1;}for(const g in cnt)gcat[g]=Object.entries(cnt[g]).sort((a,b)=>b[1]-a[1])[0][0];}
+  const yrs=YEARS.filter(y=>y>=1956&&y<YEARS[YEARS.length-1]);const top3={},top10={};
+  for(const y of yrs){const m=rankAt(y*100+12);for(const k in m){if(m[k]<=3)top3[k]=(top3[k]||0)+1;if(m[k]<=10)top10[k]=(top10[k]||0)+1;}}
+  const no1={};LEG.forEach(([y,k])=>{if(k&&y<YEARS[YEARS.length-1])no1[k]=(no1[k]||0)+1;});
+  const rows=[];
+  for(const k in BYK){const s=WS[k];const r=rec(k);const tl=CHB[k]||[];if(r.g<300&&!tl.length)continue;
+    let w=0,dm=0,ot=0;tl.forEach(c=>{const ct=gcat[c.g];if(ct==='세계기전')w++;else if(ct==='국내기전')dm++;else ot++;});
+    rows.push({k,w,dm,ot,ts:w*5+dm*2+ot,peak:s&&s[7]>=100?s[3]:0,pkym:s?s[4]:0,no1:no1[k]||0,t3:top3[k]||0,t10:top10[k]||0,wins:r.w,g:r.g});}
+  const mx=f=>Math.max(1,...rows.map(f));const MX={ts:mx(x=>x.ts),no1:mx(x=>x.no1),t3:mx(x=>x.t3),wins:mx(x=>x.wins)};
+  const pk=rows.map(x=>x.peak).filter(Boolean);const pmax=Math.max(...pk),pmin=Math.min(...pk.filter(v=>v>pmax-900));
+  rows.forEach(x=>{x.n={ts:x.ts/MX.ts,peak:x.peak?Math.max(0,(x.peak-pmin)/(pmax-pmin)):0,no1:x.no1/MX.no1,t3:x.t3/MX.t3,wins:x.wins/MX.wins};});
+  return GOATC=rows;
+}
+const GOATW={bal:['균형',{ts:35,peak:25,no1:15,t3:10,wins:15}],title:['우승 중심',{ts:55,peak:15,no1:10,t3:5,wins:15}],peak:['정점 중심',{ts:20,peak:45,no1:20,t3:10,wins:5}]};
+function rkGoat(el,q){
+  const st={w:GOATW[q.w]?q.w:'bal',c:q.c||'all'};
+  el.innerHTML=`<div class="fbar"><div class="fg"><span class="fl">가중치</span><div class="pills" id="gw">${Object.entries(GOATW).map(([v,[l]])=>`<button class="pill" data-v="${v}" aria-pressed="${st.w===v}">${l}</button>`).join('')}</div></div>
+  <div class="fg"><span class="fl">국가</span><select class="q" id="gc" style="min-width:90px"><option value="all">전체</option>${['한국','중국','일본','대만'].map(c=>`<option ${st.c===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
+  <div id="gtop" class="goat3"></div><div id="gt" style="margin-top:12px"></div><div class="note" id="gn"></div>`;
+  const $=id=>document.getElementById(id);
+  $('gw').onclick=e=>{const b=e.target.closest('button');if(!b)return;st.w=b.dataset.v;$('gw').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();};
+  $('gc').onchange=()=>{st.c=$('gc').value;draw();};
+  draw();
+  function draw(){
+    const W8=GOATW[st.w][1];
+    let rows=goatData().map(x=>({...x,sc:Object.keys(W8).reduce((a,f)=>a+W8[f]*x.n[f],0)}));
+    if(st.c!=='all')rows=rows.filter(x=>(PBY[x.k]||{}).c===st.c);
+    rows.sort((a,b)=>b.sc-a.sc);rows=rows.slice(0,100);
+    const line=x=>[x.w?`세계대회 우승 ${x.w}회`:'',x.dm?`국내 기전 우승 ${x.dm}회`:'',x.peak?`최고 실력 점수 ${fmt(x.peak)}(${ymstr(x.pkym)})`:'',x.no1?`연말 실력 점수 1위 ${x.no1}회`:'',`통산 ${fmt(x.wins)}승`].filter(Boolean).join(' · ');
+    $('gtop').innerHTML=rows.slice(0,3).map((x,i)=>{const p=PBY[x.k];return `<a class="gcard" href="#/players/${encodeURIComponent(x.k)}"><span class="gr">${i+1}</span><div class="ph">${photo(p,nameOf(x.k))}</div><div class="gk-b"><div class="gk-n">${flag((p||{}).c)} ${esc(nameOf(x.k))}</div><div class="gk-s">${x.sc.toFixed(1)}<small>점</small></div><div class="gk-l">${line(x)}</div></div></a>`;}).join('');
+    pagedTable($('gt'),rows,['순위','기사','국가','GOAT 점수','세계 우승','국내 우승','최고 실력 점수','연말 1위','연말 3위 안','통산 승'],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr><td class="n rkn${i<=3?' t'+i:''}"><i>${i}</i></td><td>${plink(r.k)}</td><td class="d">${cflag((PBY[r.k]||{}).c)}</td><td class="n r"><b>${r.sc.toFixed(1)}</b></td><td class="n r">${r.w||''}</td><td class="n r">${r.dm||''}</td><td class="n r">${r.peak?fmt(r.peak):''}</td><td class="n r">${r.no1||''}</td><td class="n r">${r.t3||''}</td><td class="n r">${fmt(r.wins)}</td></tr>`;}).join(''),50,{sticky:true});
+    $('gn').innerHTML=`GOAT 점수 ${calc('각 항목을 최고 기록 대비 0~1로 바꾼 뒤 가중치를 곱해 더한 값(100점 만점)')} = 우승 ${W8.ts}% + 최고 실력 점수 ${W8.peak}% + 연말 1위 횟수 ${W8.no1}% + 연말 3위 안 횟수 ${W8.t3}% + 통산 승수 ${W8.wins}%. 우승은 세계기전 5점·국내기전 2점·그 밖의 대회 1점으로 셉니다(결승 대국으로 판정한 우승, 대회 등급은 아직 확정 전). 최고 실력 점수와 연말 순위는 WHR 계산값이며, 한국기원 기록에 실린 대국만 반영해 중국·일본 기사는 낮게 나올 수 있습니다. 통산 300국 이상이거나 우승이 있는 기사만 넣었습니다.`;
   }
 }
 function rkLegacy(el){
