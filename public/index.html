@@ -896,6 +896,7 @@ input.q,select.q{border-radius:4px}
 .ehl li:last-child{border-bottom:0}
 .ehl li>a{font-size:14px;font-weight:700;line-height:1.4;color:var(--ink);text-decoration:none}
 .ehl li>a:hover{text-decoration:underline}
+.ehl.ehn li>a{font-weight:400}
 .ehl .s{font-size:11.5px;color:var(--muted)}
 /* 올해 우승 */
 .ech{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -938,7 +939,6 @@ input.q,select.q{border-radius:4px}
   </div>
   <div class="wrap" id="favpop" hidden></div>
 </header>
-<div class="board" id="board" aria-label="최근 대국 결과"></div>
 <main class="wrap page" id="app"><div class="skel"></div></main>
 <footer class="wrap foot">
   <span id="dl"></span>
@@ -1195,7 +1195,7 @@ function pHome(){
       ${card(`${yr} 시즌 다승`,'#/seasons/'+yr,`<div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div><p class="efoot">${yr}년 10국 이상 · 무승부·무효 제외</p>`,'시즌 전체')}
     </div>
     <aside class="e3-r">
-      ${heads.length?card('헤드라인','#/news','<ul class="ehl">'+heads.map(n=>`<li>${nlink(n,esc(nTitle(n).t))}<span class="s">${NSRC[n.s][0]}${n.pub?' · '+esc(n.pub):''} · ${nWhen(n.d)}</span></li>`).join('')+`</ul><p class="efoot">${nUpd()}</p>`,'뉴스 전체'):''}
+      ${heads.length?card('헤드라인','#/news','<ul class="ehl ehn">'+heads.map(n=>`<li>${nlink(n,esc(nTitle(n).t))}</li>`).join('')+'</ul>','뉴스 전체'):''}
       ${card(`${yr} 다승`,'#/seasons/'+yr,rk(wins,r=>r[1]+'승'))}
       ${card('통산 우승','#/rankings/overall?by=titles',rk(champTop.slice(0,8),r=>r[1]+'회'))}
       ${bday.length?card('오늘 생일','','<ul class="ehl">'+bday.slice(0,8).map(p=>`<li>${plink(p.k)} <span class="s">${p.b.slice(0,4)}년생 · 만 ${ageNow(p.b)}세</span></li>`).join('')+'</ul>'):''}
@@ -2546,7 +2546,6 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 document.getElementById('dl').textContent=`바둑DB · 기준일 ${dstr(LASTD).replace(/-/g,'.')} · 대국 ${fmt(GAMES.length)} · 기사 정보 ${fmt(P.length)} · ${YEARS[0]}년부터`;
-renderBoard();
 route();
 loadLiveNews();
 })();
