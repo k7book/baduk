@@ -925,38 +925,6 @@ input.q,select.q{border-radius:4px}
 .egm .p em{font-style:normal;font-size:11.5px;color:var(--accent);font-weight:700}
 .egm .r{text-align:right;color:var(--muted-2);font-size:12.5px;white-space:nowrap}
 @media (max-width:860px){.egm li{grid-template-columns:40px minmax(0,1fr) auto}.egm .t{display:none}}
-
-/* 머리글 아래 정보 줄 */
-.subbar{background:var(--card);border-bottom:1px solid var(--rule)}
-.subbar .in{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter);height:38px;display:flex;align-items:center;gap:14px;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden}
-.subbar .dt{font-weight:800;color:var(--ink);font-size:13px}
-.subbar .sep{width:1px;height:14px;background:var(--rule)}
-.subbar b{color:var(--ink-soft);font-weight:700;font-family:var(--font-cond);font-size:14px}
-.subbar .ch{margin-left:auto;overflow:hidden;text-overflow:ellipsis}
-.subbar .ch em{font-style:normal;color:var(--accent);font-weight:800;margin-right:6px}
-.subbar .ch a{color:var(--ink);font-weight:700;text-decoration:none}.subbar .ch a:hover{text-decoration:underline}
-@media (max-width:860px){.subbar .st,.subbar .sep{display:none}.subbar .ch{margin-left:0}}
-/* 홈 히어로 */
-.ehero{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;margin:0 0 16px}
-.ehm{position:relative;display:block;height:440px;border-radius:var(--radius);overflow:hidden;background:var(--navy-2);color:#fff;text-decoration:none}
-.ehm .img,.ehi .img{position:absolute;inset:0;display:block;overflow:hidden;background:var(--navy-2)}
-.ehm .img img,.ehi .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.ehm .eph,.ehi .eph{position:absolute;inset:0;display:grid;place-items:center;color:#6b6f76;font-size:15px;font-weight:700;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(255,255,255,.05) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(255,255,255,.05) 23px 24px)}
-.ehm .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:80px 26px 24px;background:linear-gradient(to top,rgba(0,0,0,.88) 0,rgba(0,0,0,.6) 55%,transparent 100%);display:flex;flex-direction:column;gap:8px}
-.ehm .meta{display:flex;gap:8px;align-items:center;font-size:12.5px;color:#d6d8db}
-.ehm b{font-size:clamp(24px,2.6vw,34px);line-height:1.22;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
-.ehm .sm{font-size:14.5px;line-height:1.55;color:#e3e5e8;max-width:62ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ehm:hover b{text-decoration:underline}
-.ehs{display:grid;grid-template-rows:repeat(3,1fr);gap:12px;height:440px}
-.ehi{position:relative;display:grid;grid-template-columns:42% minmax(0,1fr);background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:var(--ink);min-height:0}
-.ehi .img{position:relative;inset:auto;height:100%}
-.ehi .img.none{background:var(--card-3)}.ehi .img.none .eph{color:var(--muted);background:none}
-.ehi .tx{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:10px 14px;min-width:0}
-.ehi .meta{display:flex;gap:6px;align-items:center;font-size:11.5px;color:var(--muted)}
-.ehi b{font-size:15px;line-height:1.38;font-weight:700;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.ehi:hover b{text-decoration:underline}
-@media (max-width:1180px){.ehm{height:380px}.ehs{height:380px}}
-@media (max-width:860px){.ehero{grid-template-columns:minmax(0,1fr)}.ehm{height:300px}.ehm .cap{padding:60px 16px 16px}.ehm .sm{display:none}.ehs{height:auto;grid-template-rows:none}.ehi{grid-template-columns:120px minmax(0,1fr);height:96px}}
 </style>
 </head>
 <body>
@@ -985,7 +953,6 @@ input.q,select.q{border-radius:4px}
   </div>
   <div class="wrap" id="favpop" hidden></div>
 </header>
-<div class="subbar"><div class="in" id="subbar"></div></div>
 <main class="wrap page" id="app"><div class="skel"></div></main>
 <footer class="wrap foot">
   <span id="dl"></span>
@@ -1226,19 +1193,12 @@ function pHome(){
   const xf=(i,base)=>i>=base?' class="xf"':'';
   const grRows=(typeof GR!=='undefined'&&GR&&GR.rows)?GR.rows.slice(0,50):[];
   const lead=pic[0],subs=pic.slice(1);
-  // 사진 기사가 모자라면 사진 없는 기사로 오른쪽 세 칸을 채움
-  const side=subs.concat(NEWSL.filter(n=>n!==lead&&!subs.includes(n))).slice(0,3);
-  const heads2=heads.filter(n=>!side.includes(n));
   const nlink=(n,inner,cls='')=>`<a class="${cls}" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
   const card=(title,href,body,more)=>`<section class="ec"><header><h2>${title}</h2>${href?`<a href="${href}">${more||'전체 보기'}</a>`:''}</header>${body}</section>`;
   const rk=(rows,val,mv)=>`<ol class="erk">${rows.map((r,i)=>`<li><span class="i">${i+1}</span><span class="f">${flag((PBY[r[0]]||{}).c)||'<i></i>'}</span><span class="nm">${plink(r[0])}</span>${mv?mv(r,i):''}<span class="v">${val(r)}</span></li>`).join('')}</ol>`;
   const mv=(r,i)=>{const m=rPrev[r[0]];return `<span class="m">${m==null?'<span class="mv new">NEW</span>':m>i+1?`<span class="mv up">▲${m-i-1}</span>`:m<i+1?`<span class="mv dn">▼${i+1-m}</span>`:'<span class="mv">–</span>'}</span>`;};
   const links=[['#/players','기사 목록','👤'],['#/rankings','랭킹','🏅'],['#/players/compare','상대전적','⚔'],['#/records','기록실','📋'],['#/tournaments','대회','🏆'],['#/seasons/'+yr,yr+' 시즌','📅'],['#/schedule','일정','🗓'],['#/search','조건 검색','🔎'],['#/news','뉴스','📰']];
   app.innerHTML=`<h1 class="sr">바둑DB 홈</h1>
-  ${lead?`<section class="ehero" aria-label="톱 뉴스">
-    ${nlink(lead,`<span class="img">${nImg(lead)}<span class="eph">${NSRC[lead.s][0]}</span></span><span class="cap"><span class="meta">${nsBadge(lead.s)}<span>${dstr(lead.d).replace(/-/g,'.')}</span></span><b>${esc(nTitle(lead).t)}</b>${lead.sm?`<span class="sm">${esc(lead.sm)}</span>`:''}</span>`,'ehm')}
-    <div class="ehs">${side.map(n=>nlink(n,`<span class="img${n.img?'':' none'}">${nImg(n)}<span class="eph">${NSRC[n.s][0]}</span></span><span class="tx"><span class="meta">${nsBadge(n.s)}<span>${nWhen(n.d)}</span></span><b>${esc(nTitle(n).t)}</b></span>`,'ehi')).join('')}</div>
-  </section>`:''}
   <div class="e3">
     <aside class="e3-l">
       ${card('바로 가기','','<nav class="eql">'+links.map(([h,l,ic])=>`<a href="${h}"><span class="ic" aria-hidden="true">${ic}</span>${l}</a>`).join('')+'</nav>')}
@@ -1248,12 +1208,14 @@ function pHome(){
       ${bday.length?card('오늘 생일','','<ul class="ehl">'+bday.slice(0,8).map(p=>`<li>${plink(p.k)} <span class="s">${p.b.slice(0,4)}년생 · 만 ${ageNow(p.b)}세</span></li>`).join('')+'</ul>'):''}
     </aside>
     <div class="e3-c">
+      ${lead?`<article class="etop">${nlink(lead,`<span class="img">${nImg(lead)}<span class="eph">${NSRC[lead.s][0]}</span></span>`,'eimg')}<div class="tx"><div class="meta">${nsBadge(lead.s)}<span>${dstr(lead.d).replace(/-/g,'.')}</span></div><h2>${nlink(lead,esc(nTitle(lead).t))}</h2>${lead.sm?`<p>${esc(lead.sm)}</p>`:''}</div></article>`:''}
+      ${subs.length?`<div class="esubs">${subs.map(n=>nlink(n,`<span class="img">${nImg(n)}<span class="eph">${NSRC[n.s][0]}</span></span><span class="meta">${nsBadge(n.s)}<span>${nWhen(n.d)}</span></span><b>${esc(nTitle(n).t)}</b>`,'esub')).join('')}</div>`:''}
       ${card(`${yr} 우승`,'#/tournaments','<div class="ech">'+(yChamps.length?yChamps.map(c=>`<a class="echc" href="#/tournaments/${c.g}"><span class="t">${esc(G[c.g])}</span><span class="ed">${esc(c.ed)} · ${dstr(c.d).slice(5).replace('-','.')}</span><span class="w">${flag((PBY[c.ck]||{}).c)} ${esc(nameOf(c.ck))}</span></a>`).join(''):'<div class="empty">올해 판정된 우승이 아직 없습니다</div>')+'</div>','대회 전체')}
       ${card(`${yr} 시즌 다승`,'#/seasons/'+yr,`<div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div><p class="efoot">${yr}년 10국 이상 · 무승부·무효 제외</p>`,'시즌 전체')}
       ${card('최근 대국','#/records','<ul class="egm efill">'+recentG.map((g,i)=>`<li${xf(i,6)}><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="t" title="${esc(T[g.ti])}">${esc(T[g.ti])}</span><span class="p">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><em>승</em><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="r">${resText(g).replace(/^\d+수 /,"")}</span></li>`).join('')+'</ul>','대국 목록')}
     </div>
     <aside class="e3-r">
-      ${heads.length?card('헤드라인','#/news','<ul class="ehl ehn efill">'+heads2.map((n,i)=>`<li${xf(i,8)}>${nlink(n,esc(nTitle(n).t))}</li>`).join('')+'</ul>','뉴스 전체'):''}
+      ${heads.length?card('헤드라인','#/news','<ul class="ehl ehn efill">'+heads.map((n,i)=>`<li${xf(i,8)}>${nlink(n,esc(nTitle(n).t))}</li>`).join('')+'</ul>','뉴스 전체'):''}
       ${card(`${yr} 다승`,'#/seasons/'+yr,rk(wins,r=>r[1]+'승'))}
       ${card('통산 우승','#/rankings/overall?by=titles',rk(champTop.slice(0,8),r=>r[1]+'회'))}
       ${card('최근 갱신','#/about/changelog','<ul class="ehl">'+META.changelog.slice(0,3).map(c=>`<li><span class="small">${esc(c[1])}</span><span class="s">${esc(c[0])}</span></li>`).join('')+'</ul>','갱신 이력')}
@@ -2615,10 +2577,6 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 document.getElementById('dl').textContent=`바둑DB · 기준일 ${dstr(LASTD).replace(/-/g,'.')} · 대국 ${fmt(GAMES.length)} · 기사 정보 ${fmt(P.length)} · ${YEARS[0]}년부터`;
-// 머리글 아래 정보 줄: 오늘 날짜 · 기록 기준일 · 최근 우승
-(function(){const el=document.getElementById('subbar');if(!el)return;const t=kst();const wd='일월화수목금토'[new Date(Date.UTC(t.y,t.m-1,t.d)).getUTCDay()];
-  const c=CHAMP.filter(c=>c.st===0).sort((a,b)=>b.d-a.d)[0];
-  el.innerHTML=`<span class="dt">${t.m}월 ${t.d}일 ${wd}요일</span><span class="sep"></span><span class="st">기록 기준 <b>${dstr(LASTD).replace(/-/g,'.')}</b> · 대국 <b>${fmt(GAMES.length)}</b> · 기사 <b>${fmt(P.length)}</b></span>${c?`<span class="ch"><em>최근 우승</em><a href="#/players/${encodeURIComponent(c.ck)}">${esc(nameOf(c.ck))}</a> · <a href="#/tournaments/${c.g}" style="font-weight:400">${esc(G[c.g])} ${esc(c.ed)}</a> <span>${dstr(c.d).slice(5).replace('-','.')}</span></span>`:''}`;})();
 route();
 loadLiveNews();
 })();
