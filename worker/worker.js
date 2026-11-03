@@ -3,6 +3,7 @@
 import { CP949 } from './cp949.js';
 import { NAMES } from './names.js';
 import SEED from './news_seed.json';
+import { ART_HOSTS, extractArticle } from './article.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 const KEEP_DAYS = 120, KEEP_MAX = 900, HAN_VIEW_MAX = 12;
@@ -197,6 +198,27 @@ async function refresh(env) {
   return meta;
 }
 
+/* ---------- 기사 본문 (뉴스 드로어용) ---------- */
+// /api/news/article?u=<기사 주소> → 사이버오로·타이젬·한게임바둑 기사 본문을 문단·사진으로. 하루 동안 캐시.
+const ART_PATH = { oro: /^\/news\/N_news_view\.oro$/, tyg: /^\/news\/tnews\/view(page)?\.asp$/, han: /^\/news\.nhn$/ };
+async function article(u, ctx) {
+  let t; try { t = new URL(u.searchParams.get('u') || ''); } catch (e) { return J({ ok: false, error: '주소가 올바르지 않음' }, 400); }
+  const h = ART_HOSTS[t.hostname];
+  if (!h || !/^https?:$/.test(t.protocol) || !ART_PATH[h.s].test(t.pathname)) return J({ ok: false, error: '본문을 보여 줄 수 없는 사이트' }, 400);
+  t.protocol = 'https:';
+  const key = new Request(u.origin + '/api/news/article?u=' + encodeURIComponent(t.href));
+  const cache = caches.default;
+  const hit = await cache.match(key); if (hit) return hit;
+  let body, st = 200;
+  try {
+    const a = extractArticle(h.s, await get(t.href, h.kr), t.href);
+    if (a) body = { ok: true, ...a }; else { body = { ok: false, error: '본문을 찾지 못함' }; st = 404; }
+  } catch (e) { body = { ok: false, error: String(e.message || e).slice(0, 80) }; st = 502; }
+  const res = J(body, st, { 'cache-control': 'public, max-age=' + (st === 200 ? 86400 : 300) });
+  if (st === 200) ctx.waitUntil(cache.put(key, res.clone()));
+  return res;
+}
+
 const J = (o, s = 200, extra = {}) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json; charset=utf-8', ...extra } });
 
 export default {
@@ -207,6 +229,7 @@ export default {
       const body = '{"meta":' + (meta || 'null') + ',"items":' + (list || JSON.stringify(SEED)) + '}';
       return new Response(body, { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=300' } });
     }
+    if (u.pathname === '/api/news/article') return article(u, ctx);
     if (u.pathname === '/api/news/status') return J(JSON.parse((await env.NEWS_KV.get('meta')) || 'null'));
     if (u.pathname === '/api/news/refresh') {
       // 수동 갱신(첫 배포 확인용). 너무 잦은 호출은 막습니다.

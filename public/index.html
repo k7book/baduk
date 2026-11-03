@@ -1172,32 +1172,46 @@ input.q,select.q{border-radius:8px;border-color:var(--rule)}
 /* 뉴스 드로어 */
 .ndr{position:fixed;inset:0;z-index:120}
 .ndr-scrim{position:absolute;inset:0;background:rgba(10,12,14,.38);opacity:0;transition:opacity .28s ease}
-.ndr-panel{position:absolute;top:0;right:0;bottom:0;width:min(460px,92vw);background:var(--card);border-left:1px solid var(--rule);box-shadow:-12px 0 32px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,0,1);overflow-y:auto;outline:0;display:flex;flex-direction:column}
+.ndr-panel{position:absolute;top:0;right:0;bottom:0;width:min(660px,94vw);background:var(--card);border-left:1px solid var(--rule);box-shadow:-12px 0 32px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,0,1);overflow-y:auto;overscroll-behavior:contain;outline:0;display:flex;flex-direction:column}
 .ndr.show .ndr-scrim{opacity:1}.ndr.show .ndr-panel{transform:none}
 html.ndr-on{overflow:hidden}
-.ndr-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px 12px 20px;background:var(--card);border-bottom:1px solid var(--rule)}
-.ndr-h .nmeta{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}
+.ndr-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px 10px 24px;background:var(--card);border-bottom:1px solid var(--rule)}
+.ndr-h .nmeta{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);min-width:0}
+.ndr-hr{display:flex;align-items:center;gap:8px;flex:none}
+.ndr-orig{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:16px;border:1px solid var(--rule)}
+.ndr-orig:hover{color:var(--accent);border-color:var(--accent)}
 .ndr-x{width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
 .ndr-x:hover{background:var(--card-2)}
-.ndr-b{padding:18px 20px 28px}
-.ndr-img{margin:-18px -20px 16px;aspect-ratio:16/9;background:var(--card-2);overflow:hidden}
-.ndr-img img{width:100%;height:100%;object-fit:cover;display:block}
-.ndr-b h2{margin:0 0 6px;font-size:22px;line-height:1.35;font-weight:700;color:var(--ink);letter-spacing:-.01em}
-.ndr-pub{font-size:12.5px;color:var(--muted);margin-bottom:10px}
-.ndr-sm{margin:10px 0 18px;font-size:15px;line-height:1.75;color:var(--ink-soft)}
-.ndr-go{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:20px;background:var(--accent);color:#fff!important;font-weight:700;font-size:14px;text-decoration:none}
-.ndr-go:hover{filter:brightness(1.08)}
-.ndr-sec{margin-top:24px;border-top:1px solid var(--rule-2);padding-top:14px}
+.ndr-b{padding:22px 28px 36px}
+.ndr-b h2{margin:0 0 8px;font-size:24px;line-height:1.38;font-weight:700;color:var(--ink);letter-spacing:-.015em;word-break:keep-all}
+.ndr-by{display:flex;gap:6px;font-size:13px;color:var(--muted);padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--rule-2)}
+.ndr-by .ndr-w:not(:empty)::before{content:"·";margin-right:6px}
+.ndr-art{font-size:16.5px;line-height:1.85;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
+.ndr-art p{margin:0 0 1.05em}
+.ndr-art .ndr-lede{font-size:17px;font-weight:600;color:var(--ink-soft);margin-bottom:1.2em}
+.ndr-art .ndr-hd{font-weight:700;white-space:pre-line;color:var(--ink);font-size:16.5px;line-height:1.6;padding-left:12px;border-left:3px solid var(--accent)}
+.ndr-art .ndr-cap{font-size:13.5px;line-height:1.6;color:var(--muted)}
+.ndr-fig{margin:6px 0 20px}
+.ndr-fig img{display:block;width:100%;height:auto;border-radius:8px;background:var(--card-2)}
+.ndr-fig figcaption{margin-top:8px;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.ndr-lead img{aspect-ratio:16/9;object-fit:cover}
+.ndr-sm{margin:0 0 14px;color:var(--ink-soft)}
+.ndr-miss{font-size:14px;color:var(--muted);background:var(--card-2);border-radius:8px;padding:12px 14px;line-height:1.65}
+.ndr-miss a{color:var(--accent)}
+.ndr-load{display:flex;flex-direction:column;gap:10px;padding:4px 0 10px}
+.ndr-load i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--card-2),var(--rule-2),var(--card-2));background-size:200% 100%;animation:ndrsh 1.2s linear infinite}
+.ndr-load i:nth-child(2){width:92%}.ndr-load i:nth-child(3){width:70%}
+.ndr-load span{font-size:13px;color:var(--muted)}
+@keyframes ndrsh{to{background-position:-200% 0}}
+.ndr-sec{margin-top:26px;border-top:1px solid var(--rule-2);padding-top:14px}
 .ndr-sec h3{margin:0 0 10px;font-size:13px;font-weight:700;color:var(--muted-2)}
 .ndr-chips{display:flex;flex-wrap:wrap;gap:6px}.ndr-chips .nchip small{color:var(--muted);font-family:var(--font-num)}
-.ndr-list{list-style:none;margin:0;padding:0}
-.ndr-list li{padding:8px 0;border-bottom:1px solid var(--rule-2);display:flex;flex-direction:column;gap:2px}
-.ndr-list li:last-child{border-bottom:0}
-.ndr-list a{color:var(--ink);font-size:14px;font-weight:600;text-decoration:none;line-height:1.45}.ndr-list a:hover{text-decoration:underline}
-.ndr-list span{font-size:12px;color:var(--muted)}
-.ndr-note{margin-top:22px;font-size:12px;color:var(--muted);line-height:1.6}
-@media (max-width:560px){.ndr-panel{width:100vw;border-left:0}}
-@media (prefers-reduced-motion:reduce){.ndr-panel,.ndr-scrim{transition:none}}
+.ndr-foot{margin-top:24px;border-top:1px solid var(--rule-2);padding-top:18px}
+.ndr-go{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:20px;background:var(--accent);color:#fff!important;font-weight:700;font-size:14px;text-decoration:none}
+.ndr-go:hover{filter:brightness(1.08)}
+.ndr-note{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6}
+@media (max-width:560px){.ndr-panel{width:100vw;border-left:0}.ndr-b{padding:18px 18px 32px}.ndr-b h2{font-size:21px}.ndr-art{font-size:16px}}
+@media (prefers-reduced-motion:reduce){.ndr-panel,.ndr-scrim{transition:none}.ndr-load i{animation:none}}
 </style>
 </head>
 <body>
@@ -2344,38 +2358,65 @@ function playerNews(k){
   return `<div class="mod"><div class="hd"><span>관련 뉴스</span><a class="more" href="#/news?p=${encodeURIComponent(k)}">${a.length}건 →</a></div><div class="bd">${a.slice(0,5).map(n=>{const tt=nTitle(n);return `<div class="nline2"><div class="nmeta">${nsBadge(n.s)}<span class="d">${dstr(n.d)}</span></div><a href="${esc(n.u)}" target="_blank" rel="noopener noreferrer">${esc(tt.t)}</a></div>`;}).join('')}</div></div>`;
 }
 
-/* ---------- 뉴스 드로어: 뉴스 제목을 누르면 오른쪽에서 열림 ---------- */
-// 원문은 각 언론사 사이트에 있어 여기서는 제목·요약·사진·관련 기사(棋士)를 보여 주고 '원문 보기'로 넘깁니다.
-let NDR=null,NDR_LAST=null;
+/* ---------- 뉴스 드로어: 뉴스 제목을 누르면 오른쪽에서 열리고 기사 본문을 바로 보여 줌 ---------- */
+// 사이버오로·타이젬·한게임바둑 기사는 /api/news/article 이 원문 페이지에서 본문(문단·사진)을 뽑아 줍니다.
+// 구글 뉴스(언론사) 기사나 본문을 못 가져온 경우에는 요약과 '원문 기사 보기'를 보여 줍니다.
+let NDR=null,NDR_LAST=null,NDR_CUR=null;const NART=new Map();
 function newsByUrl(u){for(const n of NEWSL)if(n.u===u)return n;return null;}
 function ndrOpen(n){
   if(!NDR){NDR=document.createElement('div');NDR.className='ndr';NDR.hidden=true;
     NDR.innerHTML='<div class="ndr-scrim" data-x="1"></div><aside class="ndr-panel" role="dialog" aria-modal="true" aria-labelledby="ndr-t" tabindex="-1"></aside>';
     document.body.appendChild(NDR);
     NDR.addEventListener('click',e=>{if(e.target.closest('[data-x]')){ndrClose();return;}
-      const o=e.target.closest('[data-nu]');if(o){e.preventDefault();const m=newsByUrl(o.dataset.nu);if(m)ndrFill(m);return;}
+      if(e.target.closest('[data-retry]')){e.preventDefault();if(NDR_CUR){NART.delete(NDR_CUR.u);ndrFill(NDR_CUR);}return;}
       if(e.target.closest('a[href^="#/"]'))ndrClose();});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&NDR&&!NDR.hidden)ndrClose();});}
   NDR_LAST=document.activeElement;ndrFill(n);NDR.hidden=false;document.documentElement.classList.add('ndr-on');
   requestAnimationFrame(()=>{NDR.classList.add('show');NDR.querySelector('.ndr-panel').focus();});
 }
 function ndrClose(){if(!NDR||NDR.hidden)return;NDR.classList.remove('show');document.documentElement.classList.remove('ndr-on');setTimeout(()=>{NDR.hidden=true;},280);if(NDR_LAST&&NDR_LAST.focus)NDR_LAST.focus();}
+const NART_OK={oro:1,tyg:1,han:1};
+function ndrArt(n){
+  if(!NART_OK[n.s])return Promise.resolve(null);
+  if(!NART.has(n.u))NART.set(n.u,fetch('/api/news/article?u='+encodeURIComponent(n.u)).then(r=>r.ok?r.json():null).then(j=>j&&j.ok?j:null).catch(()=>null));
+  return NART.get(n.u);
+}
+function ndrBlocks(a){
+  return a.blocks.map(b=>b[0]==='img'?`<figure class="ndr-fig"><img src="${esc(b[1])}" alt="${esc(b[2]||'')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()">${b[2]?`<figcaption>${esc(b[2])}</figcaption>`:''}</figure>`
+    :b[0]==='h'?`<p class="ndr-hd">${esc(b[1])}</p>`
+    :b[0]==='cap'?`<p class="ndr-cap">${esc(b[1])}</p>`
+    :`<p>${esc(b[1])}</p>`).join('');
+}
+function ndrFallback(n,why){
+  return `${n.img?`<figure class="ndr-fig ndr-lead">${nImg(n)}</figure>`:''}
+    ${n.sm?`<p class="ndr-sm">${esc(n.sm)}</p>`:''}
+    <p class="ndr-miss">${why}</p>`;
+}
 function ndrFill(n){
-  const tt=nTitle(n),p=NDR.querySelector('.ndr-panel');
-  const same=[];for(const k of n.k)for(const m of (NEWS_BY[k]||[])){if(m!==n&&!same.includes(m))same.push(m);if(same.length>=6)break;}
-  const d=String(n.d);
-  p.innerHTML=`<header class="ndr-h"><span class="nmeta">${nsBadge(n.s)}${tt.tag?`<span class="ntag">${esc(tt.tag)}</span>`:''}<span class="d">${d.slice(0,4)}.${d.slice(4,6)}.${d.slice(6,8)}</span></span><button class="ndr-x" type="button" data-x="1" aria-label="닫기">×</button></header>
-  <div class="ndr-b">
-    ${n.img?`<div class="ndr-img">${nImg(n)}</div>`:''}
+  NDR_CUR=n;
+  const tt=nTitle(n),p=NDR.querySelector('.ndr-panel'),d=String(n.d),src=NSRC[n.s][0];
+  const day=`${d.slice(0,4)}.${d.slice(4,6)}.${d.slice(6,8)}`;
+  p.innerHTML=`<header class="ndr-h"><span class="nmeta">${nsBadge(n.s)}${tt.tag?`<span class="ntag">${esc(tt.tag)}</span>`:''}<span class="d">${day}</span></span>
+    <span class="ndr-hr"><a class="ndr-orig" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer" data-raw="1">원문 <span aria-hidden="true">↗</span></a><button class="ndr-x" type="button" data-x="1" aria-label="닫기">×</button></span></header>
+  <article class="ndr-b">
     <h2 id="ndr-t">${esc(tt.t)}</h2>
-    ${n.pub?`<div class="ndr-pub">${esc(n.pub)}</div>`:''}
-    ${n.sm?`<p class="ndr-sm">${esc(n.sm)}</p>`:'<p class="ndr-sm muted">요약이 없는 기사입니다. 원문에서 내용을 확인해 주세요.</p>'}
-    <a class="ndr-go" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer" data-raw="1">원문 기사 보기 <span aria-hidden="true">↗</span></a>
-    ${n.k.length?`<section class="ndr-sec"><h3>기사에 나온 기사(棋士)</h3><div class="ndr-chips">${n.k.slice(0,8).map(k=>`<a class="nchip" href="#/players/${encodeURIComponent(k)}">${flag((PBY[k]||{}).c)} ${esc(nameOf(k))}${WS[k]?` <small>${fmt(WS[k][0])}</small>`:''}</a>`).join('')}</div></section>`:''}
-    ${same.length?`<section class="ndr-sec"><h3>관련 뉴스</h3><ul class="ndr-list">${same.map(m=>`<li><a href="${esc(m.u)}" data-nu="${esc(m.u)}">${esc(nTitle(m).t)}</a><span>${NSRC[m.s][0]} · ${nWhen(m.d)}</span></li>`).join('')}</ul></section>`:''}
-    <p class="ndr-note">${NSRC[n.s][0]}${n.pub?' · '+esc(n.pub):''} 기사입니다. 제목과 요약은 수집 때 받아 온 것이고, 전체 글은 원문 사이트에서 볼 수 있습니다.</p>
-  </div>`;
+    <div class="ndr-by"><span>${esc(n.pub||src)}</span><span class="ndr-w"></span></div>
+    <div class="ndr-art" aria-busy="true">${NART_OK[n.s]
+      ?`${n.img?`<figure class="ndr-fig ndr-lead">${nImg(n)}</figure>`:''}<div class="ndr-load"><i></i><i></i><i></i><span>기사 본문을 불러오는 중…</span></div>`
+      :ndrFallback(n,`${esc(n.pub||'언론사')} 기사는 본문을 이곳에 가져오지 않습니다. 위의 <b>원문</b>이나 아래 버튼으로 기사 전체를 볼 수 있습니다.`)}</div>
+    ${n.k.length?`<section class="ndr-sec"><h3>기사에 나온 기사(棋士)</h3><div class="ndr-chips">${n.k.slice(0,10).map(k=>`<a class="nchip" href="#/players/${encodeURIComponent(k)}">${flag((PBY[k]||{}).c)} ${esc(nameOf(k))}${WS[k]?` <small>${fmt(WS[k][0])}</small>`:''}</a>`).join('')}</div></section>`:''}
+    <div class="ndr-foot"><a class="ndr-go" href="${esc(n.u)}" target="_blank" rel="noopener noreferrer" data-raw="1">${esc(src)}에서 원문 보기 <span aria-hidden="true">↗</span></a>
+    <p class="ndr-note">출처 ${esc(src)}${n.pub&&n.pub!==src?' · '+esc(n.pub):''}. 기사의 저작권은 원 언론사에 있습니다.</p></div>
+  </article>`;
   p.scrollTop=0;
+  if(!NART_OK[n.s])return;
+  ndrArt(n).then(a=>{
+    if(NDR_CUR!==n)return;
+    const box=p.querySelector('.ndr-art');if(!box)return;box.removeAttribute('aria-busy');
+    if(!a){box.innerHTML=ndrFallback(n,`본문을 불러오지 못했습니다. <a href="#" data-retry="1">다시 시도</a> 하거나 원문에서 확인해 주세요.`);return;}
+    if(a.writer)p.querySelector('.ndr-w').textContent=a.writer;
+    box.innerHTML=(a.sub?`<p class="ndr-lede">${esc(a.sub)}</p>`:'')+ndrBlocks(a);
+  });
 }
 // 사이트 어디서든 뉴스 링크를 누르면 드로어로 (Ctrl·⌘·가운데 클릭은 원래대로 새 탭)
 document.addEventListener('click',e=>{
