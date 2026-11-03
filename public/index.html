@@ -1172,24 +1172,24 @@ input.q,select.q{border-radius:8px;border-color:var(--rule)}
 /* 뉴스 드로어 */
 .ndr{position:fixed;inset:0;z-index:120}
 .ndr-scrim{position:absolute;inset:0;background:rgba(10,12,14,.38);opacity:0;transition:opacity .28s ease}
-.ndr-panel{position:absolute;top:0;right:0;bottom:0;width:min(660px,94vw);background:var(--card);border-left:1px solid var(--rule);box-shadow:-12px 0 32px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,0,1);overflow-y:auto;overscroll-behavior:contain;outline:0;display:flex;flex-direction:column}
+.ndr-panel{position:absolute;top:0;right:0;bottom:0;width:min(900px,96vw);background:var(--card);border-left:1px solid var(--rule);box-shadow:-12px 0 32px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,0,1);overflow-y:auto;overscroll-behavior:contain;outline:0;display:flex;flex-direction:column}
 .ndr.show .ndr-scrim{opacity:1}.ndr.show .ndr-panel{transform:none}
 html.ndr-on{overflow:hidden}
-.ndr-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px 10px 24px;background:var(--card);border-bottom:1px solid var(--rule)}
+.ndr-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px 12px 48px;background:var(--card);border-bottom:1px solid var(--rule)}
 .ndr-h .nmeta{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);min-width:0}
 .ndr-hr{display:flex;align-items:center;gap:8px;flex:none}
 .ndr-orig{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:16px;border:1px solid var(--rule)}
 .ndr-orig:hover{color:var(--accent);border-color:var(--accent)}
 .ndr-x{width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
 .ndr-x:hover{background:var(--card-2)}
-.ndr-b{padding:22px 28px 36px}
-.ndr-b h2{margin:0 0 8px;font-size:24px;line-height:1.38;font-weight:700;color:var(--ink);letter-spacing:-.015em;word-break:keep-all}
+.ndr-b{padding:30px 48px 44px}
+.ndr-b h2{margin:0 0 10px;font-size:28px;line-height:1.38;font-weight:700;color:var(--ink);letter-spacing:-.015em;word-break:keep-all}
 .ndr-by{display:flex;gap:6px;font-size:13px;color:var(--muted);padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--rule-2)}
 .ndr-by .ndr-w:not(:empty)::before{content:"·";margin-right:6px}
-.ndr-art{font-size:16.5px;line-height:1.85;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
+.ndr-art{font-size:17.5px;line-height:1.9;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
 .ndr-art p{margin:0 0 1.05em}
-.ndr-art .ndr-lede{font-size:17px;font-weight:600;color:var(--ink-soft);margin-bottom:1.2em}
-.ndr-art .ndr-hd{font-weight:700;white-space:pre-line;color:var(--ink);font-size:16.5px;line-height:1.6;padding-left:12px;border-left:3px solid var(--accent)}
+.ndr-art .ndr-lede{font-size:18.5px;font-weight:600;color:var(--ink-soft);margin-bottom:1.2em}
+.ndr-art .ndr-hd{font-weight:700;white-space:pre-line;color:var(--ink);font-size:17.5px;line-height:1.6;padding-left:12px;border-left:3px solid var(--accent)}
 .ndr-art .ndr-cap{font-size:13.5px;line-height:1.6;color:var(--muted)}
 .ndr-fig{margin:6px 0 20px}
 .ndr-fig img{display:block;width:100%;height:auto;border-radius:8px;background:var(--card-2)}
@@ -1210,7 +1210,8 @@ html.ndr-on{overflow:hidden}
 .ndr-go{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:20px;background:var(--accent);color:#fff!important;font-weight:700;font-size:14px;text-decoration:none}
 .ndr-go:hover{filter:brightness(1.08)}
 .ndr-note{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6}
-@media (max-width:560px){.ndr-panel{width:100vw;border-left:0}.ndr-b{padding:18px 18px 32px}.ndr-b h2{font-size:21px}.ndr-art{font-size:16px}}
+@media (max-width:900px){.ndr-b{padding:24px 28px 36px}.ndr-h{padding-left:28px}}
+@media (max-width:560px){.ndr-panel{width:100vw;border-left:0}.ndr-h{padding-left:18px}.ndr-b{padding:18px 18px 32px}.ndr-b h2{font-size:21px}.ndr-art{font-size:16px}}
 @media (prefers-reduced-motion:reduce){.ndr-panel,.ndr-scrim{transition:none}.ndr-load i{animation:none}}
 </style>
 </head>
