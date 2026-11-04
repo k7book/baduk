@@ -1213,6 +1213,32 @@ html.ndr-on{overflow:hidden}
 @media (max-width:900px){.ndr-b{padding:24px 28px 36px}.ndr-h{padding-left:28px}}
 @media (max-width:560px){.ndr-panel{width:100vw;border-left:0}.ndr-h{padding-left:18px}.ndr-b{padding:18px 18px 32px}.ndr-b h2{font-size:21px}.ndr-art{font-size:16px}}
 @media (prefers-reduced-motion:reduce){.ndr-panel,.ndr-scrim{transition:none}.ndr-load i{animation:none}}
+
+/* ---------- 대국 › 최근 대국(일지) ---------- */
+.diary{margin-top:14px}
+.dday{margin:0 0 26px}
+.dday-h{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding:0 0 8px;border-bottom:2px solid var(--ink);font-size:19px;font-weight:700;color:var(--ink)}
+.dday-h .dw{font-size:14px;font-weight:500;color:var(--muted)}
+.dday-h .dn{font-size:13px;font-weight:600;color:var(--accent);font-family:var(--font-num)}
+.dday-h .dcal{margin-left:auto;font-size:12.5px;font-weight:500;color:var(--muted);text-decoration:none}
+.dday-h .dcal:hover{color:var(--accent)}
+.dgrp{background:var(--card);border:1px solid var(--rule);border-radius:10px;margin:0 0 10px;overflow:hidden}
+.dgrp-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:var(--card-2);border-bottom:1px solid var(--rule-2);font-size:14px}
+.dgrp-h a{font-weight:700;color:var(--ink);text-decoration:none}.dgrp-h a:hover{text-decoration:underline}
+.dgrp-h .muted{margin-left:auto}
+.dgl{list-style:none;margin:0;padding:0}
+.dgl li{display:grid;grid-template-columns:minmax(80px,1.1fr) minmax(0,1.2fr) minmax(0,1.2fr) minmax(110px,.9fr) 64px;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--rule-2);font-size:14px}
+.dgl li:last-child{border-bottom:0}
+.dgl.nost li{grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr) minmax(110px,.9fr) 64px}.dgl.nost .ds{display:none}
+.dgl .ds{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dgl .dw{display:flex;align-items:center;gap:6px;min-width:0;font-weight:600}
+.dgl .dw em{font-style:normal;font-size:11px;font-weight:700;color:var(--accent);border:1px solid currentColor;border-radius:4px;padding:0 4px;line-height:16px}
+.dgl .dl{min-width:0;color:var(--ink-soft)}
+.dgl .dr{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;font-family:var(--font-num)}
+.dgl .dh{font-size:12px;color:var(--muted);text-decoration:none;text-align:right}.dgl .dh:hover{color:var(--accent)}
+.dmore{text-align:center;margin:8px 0 24px}
+.calh{display:flex;gap:14px;align-items:center;font-size:22px;margin:14px 0 4px}
+@media (max-width:720px){.dgl li,.dgl.nost li{grid-template-columns:minmax(0,1fr) minmax(0,1fr);row-gap:2px}.dgl .ds{grid-column:1/-1}.dgl .dh{display:none}.dgl .dr{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -1222,15 +1248,15 @@ html.ndr-on{overflow:hidden}
     <nav id="nav" aria-label="주 메뉴">
       <a href="#/" data-r="home">홈</a>
       <a href="#/players" data-r="players">기사</a>
+      <a href="#/games" data-r="games">대국</a>
       <a href="#/rankings" data-r="rankings">랭킹</a>
+      <a href="#/records" data-r="records">기록</a>
       <a href="#/tournaments" data-r="tournaments">대회</a>
       <a href="#/seasons" data-r="seasons">시즌</a>
       <a href="#/players/compare" data-r="compare">상대전적</a>
-      <a href="#/records" data-r="records">기록실</a>
       <a href="#/news" data-r="news">뉴스</a>
-      <a href="#/search" data-r="search">검색</a>
       <div class="more"><button type="button" aria-haspopup="true">기타 ▾</button><div class="dd">
-        <a href="#/schedule" data-r="schedule">대국일정</a><a href="#/federations" data-r="federations">소속·국가</a><a href="#/data" data-r="data">오픈데이터</a><a href="#/about" data-r="about">자료에 대하여</a><a href="#/brand" data-r="brand">로고타입</a>
+        <a href="#/federations" data-r="federations">소속·국가</a><a href="#/data" data-r="data">오픈데이터</a><a href="#/about" data-r="about">자료에 대하여</a><a href="#/brand" data-r="brand">로고타입</a>
       </div></div>
     </nav>
     <div class="gtools">
@@ -1417,7 +1443,7 @@ function renderBoard(){
   const last=GAMES.slice(-18).reverse();const d0=last.length?last[0].d:LASTD;
   const cells=last.map((g,i)=>{const nd=i&&g.d!==last[i-1].d?`<div class="lbl sm"><b>${dstr(g.d).slice(5).replace('-','.')}</b></div>`:'';
     return nd+`<a class="sb" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="${esc(T[g.ti])}"><div class="t">${esc(T[g.ti])}</div><div class="r w"><span>${esc(nameOf(g.wk))}</span><small>${g.j?'무':'승'}</small></div><div class="r l"><span>${esc(nameOf(g.lk))}</span><small>${g.j?'':resText(g).replace(/^\d+수 /,'')}</small></div></a>`;}).join('');
-  el.innerHTML=`<div class="in"><div class="lbl"><b>최근 결과</b>${dstr(d0).replace(/-/g,'.')}<a href="#/records">전체 보기 ›</a></div>${cells}</div>`;
+  el.innerHTML=`<div class="in"><div class="lbl"><b>최근 결과</b>${dstr(d0).replace(/-/g,'.')}<a href="#/games">전체 보기 ›</a></div>${cells}</div>`;
 }
 /* movement: rank now vs rank N months before */
 let RANKCACHE={};
@@ -1486,7 +1512,7 @@ function pHome(){
   const card=(title,href,body,more)=>`<section class="ec"><header><h2>${title}</h2>${href?`<a href="${href}">${more||'전체 보기'}</a>`:''}</header>${body}</section>`;
   const rk=(rows,val,mv)=>`<ol class="erk">${rows.map((r,i)=>`<li><span class="i">${i+1}</span><span class="f">${flag((PBY[r[0]]||{}).c)||'<i></i>'}</span><span class="nm">${plink(r[0])}</span>${mv?mv(r,i):''}<span class="v">${val(r)}</span></li>`).join('')}</ol>`;
   const mv=(r,i)=>{const m=rPrev[r[0]];return `<span class="m">${m==null?'<span class="mv new">NEW</span>':m>i+1?`<span class="mv up">▲${m-i-1}</span>`:m<i+1?`<span class="mv dn">▼${i+1-m}</span>`:'<span class="mv">–</span>'}</span>`;};
-  const links=[['#/players','기사 목록','👤'],['#/rankings','랭킹','🏅'],['#/players/compare','상대전적','⚔'],['#/records','기록실','📋'],['#/tournaments','대회','🏆'],['#/tournaments/intl','국제기전','🌏'],['#/tournaments/open','국내 종합기전','🗂'],['#/tournaments/women','여자기전','♛'],['#/tournaments/limited','제한기전','🎫'],['#/seasons/'+yr,yr+' 시즌','📅'],['#/schedule','일정','🗓'],['#/search','조건 검색','🔎'],['#/news','뉴스','📰']];
+  const links=[['#/players','기사 목록','👤'],['#/rankings','랭킹','🏅'],['#/players/compare','상대전적','⚔'],['#/games','최근 대국','🗒'],['#/records','기록','📋'],['#/tournaments','대회','🏆'],['#/tournaments/intl','국제기전','🌏'],['#/tournaments/open','국내 종합기전','🗂'],['#/tournaments/women','여자기전','♛'],['#/tournaments/limited','제한기전','🎫'],['#/seasons/'+yr,yr+' 시즌','📅'],['#/games/calendar','대국 달력','🗓'],['#/games/search','조건 검색','🔎'],['#/news','뉴스','📰']];
   app.innerHTML=`<h1 class="sr">바둑DB 홈</h1>
   <div class="e3">
     <aside class="e3-l">
@@ -1502,13 +1528,13 @@ function pHome(){
       ${homeHolders(card)}
       ${card(`${yr} 우승`,'#/tournaments','<div class="ech">'+(yChamps.length?yChamps.map(c=>`<a class="echc" href="#/tournaments/${c.g}"><span class="t">${esc(G[c.g])}</span><span class="ed">${esc(c.ed)} · ${dstr(c.d).slice(5).replace('-','.')}</span><span class="w">${flag((PBY[c.ck]||{}).c)} ${esc(nameOf(c.ck))}</span></a>`).join(''):'<div class="empty">올해 판정된 우승이 아직 없습니다</div>')+'</div>','대회 전체')}
       ${card(`${yr} 시즌 다승`,'#/seasons/'+yr,`<div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div><p class="efoot">${yr}년 10국 이상 · 무승부·무효 제외</p>`,'시즌 전체')}
-      ${card('최근 대국','#/records','<ul class="egm efill">'+recentG.map((g,i)=>`<li${xf(i,6)}><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="t" title="${esc(T[g.ti])}">${esc(T[g.ti])}</span><span class="p">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><em>승</em><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="r">${resText(g).replace(/^\d+수 /,"")}</span></li>`).join('')+'</ul>','대국 목록')}
+      ${card('최근 대국','#/games','<ul class="egm efill">'+recentG.map((g,i)=>`<li${xf(i,6)}><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="t" title="${esc(T[g.ti])}">${esc(T[g.ti])}</span><span class="p">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><em>승</em><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="r">${resText(g).replace(/^\d+수 /,"")}</span></li>`).join('')+'</ul>','대국 목록')}
     </div>
     <aside class="e3-r">
       ${heads.length?card('헤드라인','#/news','<ul class="ehl ehn efill">'+heads.map((n,i)=>`<li${xf(i,8)}>${nlink(n,esc(nTitle(n).t))}</li>`).join('')+'</ul>','뉴스 전체'):''}
       ${card(`${yr} 다승`,'#/seasons/'+yr,rk(wins,r=>r[1]+'승'))}
       ${typeof IX!=='undefined'&&IX?card('메이저 국제기전 우승','#/tournaments/intl/players',rk(Object.entries(ixAgg()).filter(([,o])=>o.major).map(([k,o])=>[k,o.major,(ixMru(k)||[0])[0]]).sort((a,b)=>b[1]-a[1]||b[2]-a[2]).slice(0,8),r=>r[1]+'회')):''}
-      ${card('통산 우승','#/rankings/overall?by=titles',rk(champTop.slice(0,8),r=>r[1]+'회'))}
+      ${card('통산 우승','#/records?by=titles',rk(champTop.slice(0,8),r=>r[1]+'회'))}
       ${card('최근 갱신','#/about/changelog','<ul class="ehl">'+META.changelog.slice(0,3).map(c=>`<li><span class="small">${esc(c[1])}</span><span class="s">${esc(c[0])}</span></li>`).join('')+'</ul>','갱신 이력')}
     </aside>
   </div>`;
@@ -1827,7 +1853,9 @@ function extLinks(k,p){
 
 /* =============== RANKINGS =============== */
 /* 모든 탭이 같은 틀: 탭 → 설명 한 줄 → 필터 막대(한 줄, 칸 고정) → 상위 3명 카드(높이 고정) → 표(열 너비 고정) → 계산 기준 */
-const RSUB=[['','한국기원 랭킹'],['china','중국 랭킹'],['all','실력 점수'],['goratings','고레이팅'],['overall','통산 기록'],['intl','국제 우승'],['legacy','역대 1위'],['goat','GOAT']];
+const RSUB=[['','한국기원 랭킹'],['china','중국 랭킹'],['goratings','고레이팅'],['all','실력 점수']];
+// 통산 기록·국제 우승·역대 1위·GOAT 는 '기록' 메뉴로 옮김 (예전 주소는 그쪽으로 넘김)
+const RMOVED={overall:'',intl:'intl',legacy:'legacy',goat:'goat'};
 const RALIAS={kr:['all',{c:'한국'}],cn:['all',{c:'중국'}],jp:['all',{c:'일본'}],women:['all',{g:'w'}]};
 const RDESC={'':'한국기원이 매달 발표하는 공식 랭킹입니다. \'실시간 환산\'은 같은 방식으로 최근 대국까지 반영해 본 계산값입니다.',
   china:'중국바둑협회가 매달 발표하는 공식 랭킹입니다(전체 상위 30명, 여자 상위 10명).',
@@ -1864,8 +1892,9 @@ const mvTxt=(now,prev)=>prev==null?'새로 진입':now<prev?'▲'+(prev-now):now
 function rerank(map,keep){const m={};Object.keys(map).filter(keep).sort((a,b)=>map[a]-map[b]).forEach((k,i)=>m[k]=i+1);return m;}
 function pRankings(sub,q){
   sub=sub||'';q=q||{};
+  if(RMOVED.hasOwnProperty(sub)){location.replace('#/records'+(RMOVED[sub]?'/'+RMOVED[sub]:'')+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
   if(RALIAS[sub]){q={...RALIAS[sub][1],...q};sub=RALIAS[sub][0];}
-  if(!RDESC.hasOwnProperty(sub))sub='';
+  if(!RSUB.some(t=>t[0]===sub))sub='';
   app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1><nav class="tabs">${RSUB.map(([s,l])=>`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav><p class="lede rdesc">${RDESC[sub]}</p><div id="rk"></div>`;
   ({'':rkKba,china:rkCnr,all:rkSkill,goratings:rkGoratings,overall:rkOverall,intl:rkIntl,legacy:rkLegacy,goat:rkGoat})[sub](document.getElementById('rk'),q);
 }
@@ -1991,7 +2020,7 @@ function rkGoat(el,q){
     podium(rows.slice(0,3).map(x=>({k:x.k,v:x.sc.toFixed(1),u:'점',t:full(x),s:`메이저 우승 ${x.w}회 · 국내 우승 ${x.dm}회<br>연말 1위 ${x.no1n}회 · 통산 ${fmt(x.wins)}승`})));
     rkTable(document.getElementById('rtab'),rows,[['순위','rk'],['기사','pl'],['GOAT 점수','num'],['메이저 우승','num'],['국내 우승','num'],['최고 실력 점수','num'],['연말 1위','num'],['정상급 맞대결','num'],['통산 승','num']],x=>x.map(r=>{const i=rows.indexOf(r)+1;return `<tr>${rkTd(i)}<td class="pc">${pf(r.k)}</td><td class="n r"><b>${r.sc.toFixed(1)}</b></td><td class="n r">${r.w||dash}</td><td class="n r">${r.dm||dash}</td><td class="n r">${r.peak?fmt(r.peak):dash}</td><td class="n r">${r.no1n||dash}</td><td class="n r">${r.hn?r.hw+'-'+(r.hn-r.hw):dash}</td><td class="n r">${fmt(r.wins)}</td></tr>`;}).join(''));
     document.getElementById('rnote').innerHTML=`GOAT 점수 ${calc('각 항목을 최고 기록 대비 0~1로 바꾼 뒤 가중치를 곱해 더한 값(100점 만점)')} = ${Object.entries(W8).map(([f,v])=>GOATL[f]+' '+v+'%').join(' + ')}.<br>
-    <b>시대 보정</b> — 그해 연말 실력 점수 상위 10명의 평균으로 경쟁 수준을 재서, 국내 기전 우승과 연말 순위에 0.5~1.0배를 곱합니다(1960~80년대 약 0.6, 지금 1.0). 메이저 국제기전 우승은 보정 없이 그대로 셉니다(국제기전 우승 정리표 기준 — 한국기원 기록에 없는 후지쯔배 등도 포함, <a href="#/rankings/intl">국제 우승 순위</a>).<br>
+    <b>시대 보정</b> — 그해 연말 실력 점수 상위 10명의 평균으로 경쟁 수준을 재서, 국내 기전 우승과 연말 순위에 0.5~1.0배를 곱합니다(1960~80년대 약 0.6, 지금 1.0). 메이저 국제기전 우승은 보정 없이 그대로 셉니다(국제기전 우승 정리표 기준 — 한국기원 기록에 없는 후지쯔배 등도 포함, <a href="#/records/intl">국제 우승 순위</a>).<br>
     <b>정상급 맞대결</b> — 우승·최고 점수 기준 상위 25명끼리 둔 대국의 승률입니다.<br>
     우승은 결승 대국으로 판정한 계산값이고, 실력 점수·연말 순위는 WHR 계산값입니다. <b>중국·일본 기사의 자국 국내 기전 우승은 아직 넣지 않았습니다</b> — 국내 기전·연말 순위·통산 승수는 한국기원 기록에 실린 대국만 반영해 중국·일본 기사가 실제보다 낮게 나옵니다. 통산 300국 이상이거나 우승이 있는 기사만 넣었습니다.`;
   }
@@ -2049,7 +2078,7 @@ function buildRecords(){
 const RECTABS=[['','대국 목록'],['history','역대 기록']];
 const recTabs=sub=>`<nav class="tabs">${RECTABS.map(([t,l])=>`<a href="#/records${t?'/'+t:''}" class="${sub===t?'on':''}">${l}</a>`).join('')}</nav>`;
 function pRecords(q){
-  app.innerHTML=crumb([['홈','#/'],['기록실','#/records'],['역대 기록']])+`<h1 class="pt">기록실</h1>${recTabs('history')}<p class="lede">대국 기록을 날짜순으로 훑어 계산한 역대 기록입니다. ${calc('무승부·무효는 연속 기록에서 건너뜀')}</p>
+  app.innerHTML=recHead('streaks')+`<p class="lede">대국 기록을 날짜순으로 훑어 계산한 연속·최다 기록입니다. ${calc('무승부·무효는 연속 기록에서 건너뜀')}</p>
   <div class="fbar"><div class="fg"><span class="fl">시대</span><select class="q" id="xe" style="min-width:110px">${ERAS.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div><div class="fg"><span class="fl">국가</span><select class="q" id="xc" style="min-width:90px"><option value="all">전체</option>${['한국','중국','일본','대만'].map(c=>`<option>${c}</option>`).join('')}</select></div></div><div id="xr"><div class="skel" style="margin-top:16px"></div></div>`;
   const $=id=>document.getElementById(id);
   setTimeout(()=>{buildRecords();draw();},20);
@@ -2238,7 +2267,7 @@ function pTournament(gid){
 const gst={y:'all',c:'all',t:'',p:''};
 function pGames(q){
   if(Object.keys(q).length){gst.y=q.y||'all';gst.c=q.c||'all';gst.t=q.t||'';gst.p=q.p||'';}
-  app.innerHTML=crumb([['홈','#/'],['기록실']])+`<h1 class="pt">기록실</h1>${recTabs('')}<p class="lede">한국기원 기록실의 대국을 연도·분류·기사·대회로 골라 봅니다.</p>
+  app.innerHTML=gHead('list')+`<p class="lede">한국기원 기록실의 대국 전체를 연도·분류·기사·대회로 골라 봅니다. 여러 조건을 섞어 찾고 내려받으려면 <a class="pl" href="#/games/search">조건 검색</a>을 쓰세요.</p>
   <div class="fbar"><div class="fg"><span class="fl">연도</span><select class="q" id="gy" style="min-width:90px"><option value="all">전체</option>${YEARS.slice().reverse().map(y=>`<option ${String(y)===String(gst.y)?'selected':''}>${y}</option>`).join('')}</select></div>
   <div class="fg"><span class="fl">분류</span><select class="q" id="gc" style="min-width:100px"><option value="all">전체</option>${CATS.map(c=>`<option value="${c}" ${gst.c===c?'selected':''}>${CLABEL[c]}</option>`).join('')}</select></div>
   <div class="fg w"><input class="q" id="gp" type="search" placeholder="기사 이름" value="${esc(gst.p)}"></div><div class="fg w"><input class="q" id="gt" type="search" placeholder="대회명" value="${esc(gst.t)}"></div></div>
@@ -2255,7 +2284,7 @@ function pGames(q){
 const SFIELDS=['p','o','oc','t','c','s','y0','y1','j','res','col','mv0','mv1'];
 function pSearch(q){
   const v=k=>q[k]||'';
-  app.innerHTML=crumb([['홈','#/'],['검색']])+`<h1 class="pt">자유 검색·추출</h1><p class="lede">조건을 조합해 대국을 찾고 집계·내려받습니다. 같은 칸에 쉼표로 여러 값을 넣으면 '또는'(OR), 서로 다른 칸은 '그리고'(AND)로 묶습니다. 검색 주소를 그대로 공유할 수 있습니다.</p>
+  app.innerHTML=gHead('search')+`<p class="lede">조건을 조합해 대국을 찾고 집계·내려받습니다. 같은 칸에 쉼표로 여러 값을 넣으면 '또는'(OR), 서로 다른 칸은 '그리고'(AND)로 묶습니다. 검색 주소를 그대로 공유할 수 있습니다.</p>
   <form id="sf" class="cond" autocomplete="off">
     <fieldset><legend>기사</legend><label for="s_p">기사 (승·패 어느 쪽이든)</label><input class="q" id="s_p" value="${esc(v('p'))}" placeholder="예: 이창호, 조훈현"><label for="s_o">상대</label><input class="q" id="s_o" value="${esc(v('o'))}"><label for="s_oc">상대 국가</label><select class="q" id="s_oc"><option value="">전체</option>${['한국','중국','일본','대만'].map(c=>`<option ${v('oc')===c?'selected':''}>${c}</option>`).join('')}</select></fieldset>
     <fieldset><legend>대회</legend><label for="s_t">대회명 (원본·정리명)</label><input class="q" id="s_t" value="${esc(v('t'))}" placeholder="예: 국수전, 응씨배"><label for="s_c">분류</label><select class="q" id="s_c"><option value="">전체</option>${CATS.map(c=>`<option value="${c}" ${v('c')===c?'selected':''}>${CLABEL[c]}</option>`).join('')}</select><label for="s_s">단계 <span class="cov">채움 ${100-META.stage_unknown_pct}%</span></label><select class="q" id="s_s"><option value="">전체</option>${STAGE.map((s,i)=>`<option value="${i}" ${v('s')===String(i)?'selected':''}>${s}</option>`).join('')}</select></fieldset>
@@ -2265,9 +2294,9 @@ function pSearch(q){
   <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"><button class="btn pri" id="sgo">검색</button><button class="btn" id="sclr">조건 초기화</button></div>
   <div id="sres"></div>`;
   const $=id=>document.getElementById(id);
-  $('sgo').onclick=e=>{e.preventDefault();const qs=new URLSearchParams();SFIELDS.forEach(f=>{const x=$('s_'+f).value.trim();if(x)qs.set(f,x);});location.hash='#/search?'+qs.toString();};
+  $('sgo').onclick=e=>{e.preventDefault();const qs=new URLSearchParams();SFIELDS.forEach(f=>{const x=$('s_'+f).value.trim();if(x)qs.set(f,x);});location.hash='#/games/search?'+qs.toString();};
   $('sf').onsubmit=e=>{e.preventDefault();$('sgo').click();};
-  $('sclr').onclick=()=>location.hash='#/search';
+  $('sclr').onclick=()=>location.hash='#/games/search';
   const has=SFIELDS.some(f=>q[f]);
   if(!has){$('sres').innerHTML='<div class="empty">조건을 하나 이상 넣고 검색하세요.</div>';return;}
   const list=s=>s?s.split(',').map(x=>x.trim()).filter(Boolean):[];
@@ -2291,7 +2320,7 @@ function pSearch(q){
   <div class="kpis" style="margin-top:12px"><div class="kpi"><div class="num">${fmt(F.length)}</div><div class="lbl">대국</div></div><div class="kpi"><div class="num">${F.length?(F[F.length-1].y+'–'+F[0].y):'–'}</div><div class="lbl">기간</div></div><div class="kpi"><div class="num">${fmt(ps.size)}</div><div class="lbl">관련 기사</div></div><div class="kpi"><div class="num">${fmt(new Set(F.map(g=>g.g)).size)}</div><div class="lbl">관련 대회</div></div><div class="kpi"><div class="num"><button class="btn" id="scsv">CSV 내려받기</button></div><div class="lbl">조건 기록 포함</div></div></div>
   ${!F.length&&lowcov.length?`<div class="empty">조건에 맞는 대국이 없습니다. ${lowcov.map(([f,p,l])=>`'${l}' 정보는 전체 대국 중 약 ${100-p}%에만 기록되어 있어 나머지는 제외됐습니다. <button class="linkbtn" data-f="${f}">이 조건만 빼기</button>`).join(' ')}</div>`:''}
   <nav class="tabs" id="sv"><a href="javascript:void 0" data-v="list" class="on">목록</a><a href="javascript:void 0" data-v="player">기사별</a><a href="javascript:void 0" data-v="tour">대회별</a><a href="javascript:void 0" data-v="year">연도별</a><a href="javascript:void 0" data-v="stage">단계별</a></nav><div id="sl" style="margin-top:8px"></div>`;
-  $('sres').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const qs=new URLSearchParams();SFIELDS.forEach(f=>{if(q[f]&&f!==b.dataset.f)qs.set(f,q[f]);});location.hash='#/search?'+qs;});
+  $('sres').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const qs=new URLSearchParams();SFIELDS.forEach(f=>{if(q[f]&&f!==b.dataset.f)qs.set(f,q[f]);});location.hash='#/games/search?'+qs;});
   const show=vw=>{$('sv').querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.v===vw));const el=$('sl');
     if(vw==='list')return pagedTable(el,F,GAME_HEAD,x=>gameRows(x),50);
     const agg={};const add=(k,w)=>{const o=agg[k]=agg[k]||[0,0,0];o[0]++;if(w===1)o[1]++;else if(w===0)o[2]++;};
@@ -3117,6 +3146,57 @@ function dxPlayers(el,sec){
   <p class="note">같은 횟수면 같은 순위입니다. 기사 이름을 누르면 우승 목록이 있는 기사 페이지로 갑니다.</p>`;
 }
 
+/* =============== 대국 — 최근 대국(일지) · 달력 · 대국 목록 · 조건 검색 =============== */
+// 메뉴 정리: '대국'은 어떤 대국이 있었는지(날짜·대회·기사로 찾기), '랭킹'은 지금 순위, '기록'은 역대·통산 기록.
+const GTABS=[['','최근 대국'],['calendar','달력'],['list','대국 목록'],['search','조건 검색']];
+const gHead=sub=>crumb([['홈','#/'],['대국','#/games']].concat(sub?[[(GTABS.find(t=>t[0]===sub)||['',''])[1]]]:[]))+`<h1 class="pt">대국</h1><nav class="tabs">${GTABS.map(([t,l])=>`<a href="#/games${t?'/'+t:''}" class="${sub===t?'on':''}">${l}</a>`).join('')}</nav>`;
+const WDAY=['일','월','화','수','목','금','토'];
+function dayLabel(d){const y=(d/10000)|0,m=((d/100)|0)%100,dd=d%100;const w=new Date(Date.UTC(y,m-1,dd)).getUTCDay();return {y,m,dd,w:WDAY[w]};}
+// 같은 대회 묶음 안에서 대회명의 공통 앞부분을 제목으로, 나머지를 단계로
+function splitTitles(names){
+  const u=[...new Set(names)];if(u.length===1)return {head:u[0],rest:n=>''};
+  let p=u[0];for(const s of u)while(p&&!s.startsWith(p))p=p.slice(0,-1);
+  const cut=p.lastIndexOf(' ');const head=(cut>0?p.slice(0,cut):'').trim();
+  return head.length>=4?{head,rest:n=>n.slice(head.length).trim()}:{head:'',rest:n=>n};
+}
+function pDiary(q){
+  const st={c:CATS.includes(q.c)?q.c:'all',n:10};
+  app.innerHTML=gHead('')+`<p class="lede">한국기원 기록실에 올라온 대국을 날짜별·대회별로 모은 대국 일지입니다. 가장 최근 대국은 <b>${dstr(LASTD).replace(/-/g,'.')}</b>입니다.</p>
+  <div class="fbar">${pillGroup('dc','분류',[['all','전체']].concat(CATS.map(c=>[c,CLABEL[c]])),st.c)}</div>
+  <div id="dy" class="diary"></div><div class="dmore"><button type="button" class="pill" id="dmore">이전 날짜 더 보기</button></div>`;
+  bindPills('dc',v=>{st.c=v;st.n=10;draw();});
+  document.getElementById('dmore').onclick=()=>{st.n+=10;draw(true);};
+  draw();
+  function draw(keep){
+    const days=[];let cur=null,more=false;
+    for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(st.c!=='all'&&g.c!==st.c)continue;
+      if(!cur||cur.d!==g.d){if(days.length>=st.n){more=true;break;}cur={d:g.d,gs:[]};days.push(cur);}cur.gs.push(g);}
+    const y0=window.scrollY;
+    document.getElementById('dy').innerHTML=days.length?days.map(day=>{
+      const L=dayLabel(day.d);const gs=day.gs.slice().reverse();
+      const grp=new Map();gs.forEach(g=>{if(!grp.has(g.g))grp.set(g.g,[]);grp.get(g.g).push(g);});
+      return `<section class="dday"><h2 class="dday-h"><span class="dd">${L.m}월 ${L.dd}일</span><span class="dw">${L.w}요일</span><span class="dn">${gs.length}국</span><a class="dcal" href="#/games/calendar?y=${L.y}&m=${L.m}&d=${L.dd}&keep=1">달력</a></h2>
+      ${[...grp.entries()].map(([gid,a])=>{const sp=splitTitles(a.map(g=>T[g.ti]));const off=a.every(g=>g.of===0);
+        return `<div class="dgrp"><div class="dgrp-h"><a href="#/tournaments/${gid}">${esc(sp.head||G[gid])}</a>${badge(a[0].c)}${off?'<span class="unof">비공식</span>':''}<span class="muted small">${a.length}국</span></div>
+        <ul class="dgl${a.every(g=>!sp.rest(T[g.ti]))?' nost':''}">${a.map(g=>{const s=sp.rest(T[g.ti]);const jt=g.j?(g.j===1?'무승부':g.j===3?'양패':'무효'):'';
+          return `<li><span class="ds" title="${esc(T[g.ti])}">${esc(s)}</span><span class="dw">${plink(g.wk,'w')}<em>${jt||'승'}</em></span><span class="dl">${plink(g.lk)}</span><span class="dr">${stone(g)}${resText(g)}</span><a class="dh" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="두 기사 상대전적">상대전적</a></li>`;}).join('')}</ul></div>`;}).join('')}</section>`;}).join(''):'<div class="empty">조건에 맞는 대국이 없습니다</div>';
+    document.getElementById('dmore').hidden=!more;
+    if(keep)window.scrollTo(0,y0);
+  }
+}
+
+/* =============== 기록 — 역대·통산 기록 (예전 '기록실'의 역대 기록 + 랭킹의 통산·국제 우승·역대 1위·GOAT) =============== */
+const RECSUB=[['','통산 기록'],['intl','국제 우승'],['legacy','역대 1위'],['goat','GOAT'],['streaks','연속·최다 기록']];
+const recHead=sub=>crumb([['홈','#/'],['기록','#/records']].concat(sub?[[(RECSUB.find(t=>t[0]===sub)||['',''])[1]]]:[]))+`<h1 class="pt">기록</h1><nav class="tabs">${RECSUB.map(([t,l])=>`<a href="#/records${t?'/'+t:''}" class="${sub===t?'on':''}">${l}</a>`).join('')}</nav>`;
+function pRecHub(sub,q){
+  sub=sub||'';q=q||{};
+  if(sub==='streaks'){pRecords(q);return;}
+  const F={'':['overall',rkOverall],intl:['intl',rkIntl],legacy:['legacy',rkLegacy],goat:['goat',rkGoat]}[sub]||['overall',rkOverall];
+  if(!({'':1,intl:1,legacy:1,goat:1})[sub])sub='';
+  app.innerHTML=recHead(sub)+`<p class="lede rdesc">${RDESC[F[0]]}</p><div id="rk"></div>`;
+  F[1](document.getElementById('rk'),q);
+}
+
 /* =============== FEDERATIONS =============== */
 function pFederations(){
   const by={};P.forEach(p=>{const o=p.o||'정보 없음';const a=by[o]=by[o]||{o,c:p.c,n:0,act:0,ret:0,f:0,nog:0,keys:[]};a.n++;if((p.st||'').includes('현역'))a.act++;else a.ret++;if(p.g==='여자')a.f++;if(!p.g)a.nog++;a.keys.push(p.k);});
@@ -3138,11 +3218,11 @@ function pSchedule(q){
   const mx=Math.max(1,...Object.values(byD).map(a=>a.length));
   const prev=m===1?[y-1,12]:[y,m-1],next=m===12?[y+1,1]:[y,m+1];
   const sel=+q.d||0;
-  app.innerHTML=crumb([['홈','#/'],['대국일정']])+`<h1 class="pt" style="display:flex;gap:14px;align-items:center"><a class="pl" href="#/schedule?y=${prev[0]}&m=${prev[1]}" aria-label="이전 달">‹</a>${y}년 ${m}월<a class="pl" href="#/schedule?y=${next[0]}&m=${next[1]}" aria-label="다음 달">›</a></h1>
-  <p class="lede">지난 대국 일정입니다. 날짜를 누르면 그날의 대국을 봅니다. 앞으로의 일정은 정보 준비 중입니다.</p>
+  app.innerHTML=gHead('calendar')+`<h2 class="calh"><a class="pl" href="#/games/calendar?y=${prev[0]}&m=${prev[1]}" aria-label="이전 달">‹</a>${y}년 ${m}월<a class="pl" href="#/games/calendar?y=${next[0]}&m=${next[1]}" aria-label="다음 달">›</a></h2>
+  <p class="lede">달마다 대국이 있었던 날을 달력으로 봅니다. 색이 진할수록 대국이 많은 날이고, 날짜를 누르면 그날의 대국이 나옵니다.</p>
   <div class="cal">${['일','월','화','수','목','금','토'].map(x=>`<div class="h">${x}</div>`).join('')}${Array(first).fill('<div class="x"></div>').join('')}${Array.from({length:days},(_,i)=>{const dd=i+1,n=(byD[dd]||[]).length;return `<button class="${n?'':'z'} ${sel===dd?'on':''}" ${n?`data-d="${dd}"`:'disabled'} style="${n?`background:rgba(15,118,110,${.08+.5*n/mx})`:''}" aria-label="${m}월 ${dd}일 ${n}국"><span>${dd}</span><span class="c">${n||''}</span></button>`;}).join('')}</div>
   <div id="cd" style="margin-top:16px"></div>`;
-  app.querySelectorAll('.cal button[data-d]').forEach(b=>b.onclick=()=>{location.hash=`#/schedule?y=${y}&m=${m}&d=${b.dataset.d}&keep=1`;});
+  app.querySelectorAll('.cal button[data-d]').forEach(b=>b.onclick=()=>{location.hash=`#/games/calendar?y=${y}&m=${m}&d=${b.dataset.d}&keep=1`;});
   if(sel&&byD[sel]){const el=document.getElementById('cd');el.innerHTML=`<h2 class="sec"><span>${y}.${m}.${sel} 대국</span><span class="desc">${byD[sel].length}국</span></h2><div id="cdl"></div>`;pagedTable(document.getElementById('cdl'),byD[sel],GAME_HEAD,x=>gameRows(x),100);}
 }
 
@@ -3200,11 +3280,15 @@ function route(){
     else if(r==='goratings'){location.replace('#/rankings/goratings'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
     else if(r==='tournaments'){if(parts[1]==='grades')pGrades();else if(parts[1]==='intl')pIntl(parts[2],q);else if(['open','women','limited'].includes(parts[1]))pDom(parts[1],parts[2],q);else if(parts[1]!=null)pTournament(parts[1]);else pTournaments(q);}
     else if(r==='seasons')pSeason(parts[1]);
-    else if(r==='search')pSearch(q);
-    else if(r==='records'){if(parts[1]==='history')pRecords(q);else if(parts[1]==='games'){location.replace('#/records'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}else pGames(q);}
+    else if(r==='search'){location.replace('#/games/search'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='records'){
+      // 예전 기록실(대국 목록) 주소 → 대국 › 대국 목록, 예전 역대 기록 → 기록 › 연속·최다 기록
+      if(parts[1]==='history'){location.replace('#/records/streaks');return;}
+      if(parts[1]==='games'||(!parts[1]&&['y','c','t','p'].some(k=>q[k]!=null))){location.replace('#/games/list'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+      pRecHub(parts[1],q);}
     else if(r==='federations')pFederations();
-    else if(r==='schedule')pSchedule(q);
-    else if(r==='games'){location.replace('#/records'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='schedule'){location.replace('#/games/calendar'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='games'){if(parts[1]==='calendar')pSchedule(q);else if(parts[1]==='list')pGames(q);else if(parts[1]==='search')pSearch(q);else pDiary(q);}
     else if(r==='news')pNews(q);
     else if(r==='data')pData();
     else if(r==='about')pAbout(parts[1]);
