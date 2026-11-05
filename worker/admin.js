@@ -150,6 +150,9 @@ async function loadStatus(){
     card('최근 대국',si.last_game?ymd(si.last_game):'–',si.games?Number(si.games).toLocaleString()+'국 · 한국기원 수집 '+esc(si.kba_fetched):'status.json 없음 — 다음 배포 후 보입니다',si.last_game?(kD<3?st('ok','최신'):st('warn',kD+'일 전 수집')):'')+
     card('한국기원 랭킹',esc(si.kba_rank||'–'),'매달 초 발표',si.kba_rank?(si.kba_rank>=ym?st('ok','이번 달'):st('warn','지난달')):'')+
     card('중국 랭킹',esc(si.cn_rank||'–'),'표 이미지로 받아 넣음',si.cn_rank?(si.cn_rank>=ym?st('ok','이번 달'):st('warn','지난달')):'')+
+    card('일본 랭킹',esc(si.jp_rank||'–'),'囲碁棋譜.COM 碁力 · 매달',si.jp_rank?(si.jp_rank>=ym?st('ok','이번 달'):st('warn','지난달')):'')+
+    card('대국 일정',esc(si.schedule||'–'),'한국기원 일정 · 일본 대국 '+esc(si.jp_games||'–'),si.schedule?(daysSince(si.schedule)<4?st('ok','최신'):st('warn',daysSince(si.schedule)+'일 전')):'')+
+    card('상금 순위',esc(si.prize||'–'),'표 이미지로 받아 넣음',si.prize?st('ok','입력됨'):'')+
     card('고레이팅',esc(si.goratings||'–'),'goratings.org 순위',si.goratings?(grD<7?st('ok','최신'):st('warn',grD+'일 전')):'')+
     card('실력 점수',esc(si.whr||'–'),'7일마다 PC에서 계산',si.whr?(wD<8?st('ok','최신'):st('warn',wD+'일 전')):'')+
     card('사이트 파일',esc(si.built||'–'),si.players?Number(si.players).toLocaleString()+'명 기사 정보':'');
