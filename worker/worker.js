@@ -113,17 +113,38 @@ export function parseBing(xml) {
   }
   return out;
 }
+// Daum 뉴스 검색(최신순) — 언론사 기사를 가장 빨리 반영. 링크(v.daum.net/v/YYYYMMDD...)에 날짜가 들어 있음
+export function parseDaum(html, now = Date.now()) {
+  const out = [];
+  for (const li of html.split('<li data-docid=').slice(1)) {
+    const m = li.match(/<div class="item-title">[\s\S]*?<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/); if (!m) continue;
+    const link = ent(m[1]).replace(/^http:/, 'https:'), t = strip(m[2].replace(/<\/?b>/gi, ''));
+    const src = strip((li.match(/class="tit_item"[^>]*title="([^"]*)"/) || [])[1] || '');
+    let d = (link.match(/\/v\/(20\d{6})/) || [])[1];
+    if (!d) {
+      const w = strip((li.match(/class="gem-subinfo">([\s\S]*?)<\/span>\s*<\/span>/) || [])[1] || '');
+      const a = w.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/), r = w.match(/(\d+)\s*(분|시간|일)\s*전/);
+      if (a) d = ymd(a[1], a[2], a[3]);
+      else if (r) { const k = new Date(now - (+r[1]) * ({ '분': 6e4, '시간': 36e5, '일': 864e5 })[r[2]] + 9 * 36e5); d = ymd(k.getUTCFullYear(), k.getUTCMonth() + 1, k.getUTCDate()); }
+    }
+    if (!d || !t) continue;
+    out.push(['ggl', d, t, src, link, '', null, '']);
+  }
+  return out;
+}
+
 async function webNews(res) {
-  // 1) 구글 뉴스(최근 7일) → 2) 막히면 Bing 뉴스(최신순)
-  try {
-    const v = parseGoogle(await get('https://news.google.com/rss/search?q=%EB%B0%94%EB%91%91+when:7d&hl=ko&gl=KR&ceid=KR:ko'));
-    if (v.length) return v;
-    res.fail.push('ggl:google 0건');
-  } catch (e) { res.fail.push('ggl:' + String(e.message || e).slice(0, 60)); }
-  const xml = await get('https://www.bing.com/news/search?q=%EB%B0%94%EB%91%91&format=rss&setlang=ko-KR&cc=KR&qft=sortbydate%3d%221%22');
-  const v = parseBing(xml);
-  res.ok.push('bing:' + v.length);
-  return v;
+  // 언론 뉴스: Daum(최신순 2쪽) · 구글 뉴스(최근 7일) · Bing 뉴스를 모두 받아 합침 (같은 기사는 merge 에서 걸러짐)
+  const src = [
+    ['daum', async () => { const q = 'https://search.daum.net/search?w=news&q=%EB%B0%94%EB%91%91&sort=recency';
+      const [a, b] = await Promise.all([get(q), get(q + '&p=2').catch(() => '')]); return parseDaum(a).concat(b ? parseDaum(b) : []); }],
+    ['google', async () => parseGoogle(await get('https://news.google.com/rss/search?q=%EB%B0%94%EB%91%91+when:7d&hl=ko&gl=KR&ceid=KR:ko'))],
+    ['bing', async () => parseBing(await get('https://www.bing.com/news/search?q=%EB%B0%94%EB%91%91&format=rss&setlang=ko-KR&cc=KR&qft=sortbydate%3d%221%22'))],
+  ];
+  const got = await Promise.all(src.map(([k, f]) => f().then(v => { res.ok.push(k + ':' + v.length); return v; }, e => { res.fail.push(k + ':' + String(e.message || e).slice(0, 60)); return []; })));
+  const all = got.flat();
+  if (!all.length) throw new Error('언론 뉴스 0건');
+  return all;
 }
 
 /* ---------- 기사 이름 연결 ---------- */
