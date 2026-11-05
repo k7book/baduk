@@ -1351,6 +1351,11 @@ input.q:focus,select.q:focus{border-color:var(--accent-fill);outline:0;box-shado
 .jpprof{margin:4px 16px 10px;font-size:13.5px;line-height:1.7;color:var(--ink-soft)}.jpp .note{margin:0 16px 14px}
 .dgl.jpg li{grid-template-columns:minmax(120px,1.4fr) minmax(0,1.1fr) minmax(0,1.1fr) minmax(110px,1fr) 56px}
 @media (max-width:720px){.speek{grid-template-columns:1fr}.dgl.jpg li{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+
+/* ---------- 뉴스 사진 트리밍: 인물 얼굴이 잘리지 않게 위쪽 기준 ---------- */
+.etop .img{aspect-ratio:3/2}
+.etop .img img,.esub .img img,.ndr-lead img,.nimg img,.nthumb img{object-position:50% 28%}
+@media (max-width:860px){.etop .img{aspect-ratio:16/10}}
 </style>
 </head>
 <body>
@@ -3432,6 +3437,8 @@ function pJpGames(q){
         return `<li><span class="ds" title="${esc(r[2])}" lang="ja">${esc(r[2])}</span><span class="${bw?'dw':'dl'}"><span class="stone b" aria-label="흑"></span>${nm(r[3],r[4])}${bw?'<em>승</em>':''}</span><span class="${ww?'dw':'dl'}"><span class="stone w" aria-label="백"></span>${nm(r[6],r[7])}${ww?'<em>승</em>':''}</span><span class="dr" lang="ja">${esc(r[10]||'')}</span><a class="dh" href="https://igo-kifu.com/kifu/${r[0]}" target="_blank" rel="noopener">기보 ↗</a></li>`;}).join('')}</ul></div></section>`;}).join(''):`<div class="empty">${JPG?'해당하는 대국이 없습니다':'일본 대국 자료가 아직 없습니다'}</div>`;};
   let tm;document.getElementById('jq').oninput=()=>{clearTimeout(tm);tm=setTimeout(draw,250);};draw();
 }
+// 뉴스 사진 트리밍 보정: 세로 사진은 더 위쪽, 아주 납작한 사진은 가운데 기준
+document.addEventListener('load',e=>{const im=e.target;if(!im||im.tagName!=='IMG'||!im.closest('.etop .img,.esub .img,.nth,.ndr-lead'))return;const r=im.naturalHeight/(im.naturalWidth||1);if(r>1.05)im.style.objectPosition='50% 12%';else if(r<0.5)im.style.objectPosition='50% 50%';},true);
 
 /* =============== FEDERATIONS =============== */
 function pFederations(){
