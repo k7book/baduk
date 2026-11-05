@@ -1,5 +1,5 @@
 // 바둑DB — 정적 사이트 + 뉴스 수집 워커
-// 매일 09:00·18:00(KST) cron으로 사이버오로·타이젬·한게임바둑·구글 뉴스를 모아 KV에 저장하고 /api/news 로 제공합니다.
+// 하루 10번(한국시간 07~01시, 2시간 간격) cron으로 사이버오로·타이젬·한게임바둑·구글 뉴스를 모아 KV에 저장하고 /api/news 로 제공합니다.
 import { CP949 } from './cp949.js';
 import { NAMES } from './names.js';
 import SEED from './news_seed.json';
@@ -175,6 +175,7 @@ export function merge(old, fresh, today) {
 async function refresh(env) {
   const t0 = Date.now();
   const cur = (await env.NEWS_KV.get('news', 'json')) || SEED;
+  const curStr = JSON.stringify(cur);
   const res = { ok: [], fail: [] };
   const jobs = [
     ['oro', () => get('https://www.cyberoro.com/news/?cmt_n=0&div_no=A1&pageNo=1&blockNo=1', true).then(parseOro)],
@@ -193,7 +194,9 @@ async function refresh(env) {
   const prev = JSON.parse((await env.NEWS_KV.get('meta')) || 'null');
   const now = new Date().toISOString();
   const meta = { updated: res.ok.length ? now : (prev && prev.updated) || null, tried: now, added: added.length, total: list.length, ...res, ms: Date.now() - t0 };
-  if (res.ok.length) await env.NEWS_KV.put('news', JSON.stringify(list));
+  // 바뀐 것이 있을 때만 저장 (KV 쓰기 횟수 절약)
+  const next = JSON.stringify(list);
+  if (res.ok.length && next !== curStr) await env.NEWS_KV.put('news', next);
   await env.NEWS_KV.put('meta', JSON.stringify(meta));
   return meta;
 }
@@ -234,7 +237,7 @@ export default {
     if (u.pathname === '/api/news/refresh') {
       // 수동 갱신(첫 배포 확인용). 너무 잦은 호출은 막습니다.
       const meta = JSON.parse((await env.NEWS_KV.get('meta')) || 'null');
-      if (meta && Date.now() - Date.parse(meta.tried || meta.updated) < 20 * 60e3) return J({ skipped: '최근 20분 안에 갱신 시도함', meta });
+      if (meta && Date.now() - Date.parse(meta.tried || meta.updated) < 5 * 60e3) return J({ skipped: '최근 5분 안에 갱신 시도함', meta });
       return J(await refresh(env));
     }
     return env.ASSETS.fetch(req);
