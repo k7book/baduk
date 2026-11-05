@@ -4,6 +4,7 @@ import { CP949 } from './cp949.js';
 import { NAMES } from './names.js';
 import SEED from './news_seed.json';
 import { ART_HOSTS, extractArticle } from './article.js';
+import { handleAdmin, applyOvr, getOvr } from './admin.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 const KEEP_DAYS = 120, KEEP_MAX = 900, HAN_VIEW_MAX = 12;
@@ -259,10 +260,12 @@ export default {
   async fetch(req, env, ctx) {
     const u = new URL(req.url);
     if (u.pathname === '/api/news') {
-      const [list, meta] = await Promise.all([env.NEWS_KV.get('news'), env.NEWS_KV.get('meta')]);
-      const body = '{"meta":' + (meta || 'null') + ',"items":' + (list || JSON.stringify(SEED)) + '}';
+      const [list, meta, ovr] = await Promise.all([env.NEWS_KV.get('news', 'json'), env.NEWS_KV.get('meta'), getOvr(env)]);
+      // 관리자에서 숨김·고정·기사 이름을 고친 내용을 적용
+      const body = '{"meta":' + (meta || 'null') + ',"items":' + JSON.stringify(applyOvr(list || SEED, ovr)) + '}';
       return new Response(body, { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=300' } });
     }
+    if (u.pathname === '/admin' || u.pathname.startsWith('/admin/') || u.pathname.startsWith('/api/admin/')) return handleAdmin(req, env, ctx, u, refresh);
     if (u.pathname === '/api/news/article') return article(u, ctx);
     if (u.pathname === '/api/news/status') return J(JSON.parse((await env.NEWS_KV.get('meta')) || 'null'));
     if (u.pathname === '/api/news/refresh') {
