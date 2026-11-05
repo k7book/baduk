@@ -1332,92 +1332,6 @@ input.q:focus,select.q:focus{border-color:var(--accent-fill);outline:0;box-shado
 .dday-h .dn{color:var(--accent)}
 .dgrp-h{background:var(--card-2)}
 .dgl .dw em{color:var(--accent)}
-
-/* ===== shadcn/ui 스타일: 기사 목록 (2026-11) ===== */
-.sc-players{--sc-r:8px;--sc-h:36px}
-.sc-players .ctabs{display:inline-flex;flex-wrap:wrap;gap:2px;padding:4px;margin:6px 0 14px;background:var(--card-3);border-radius:calc(var(--sc-r) + 2px)}
-.sc-players .ctabs button{border:0;background:transparent;border-radius:var(--sc-r);padding:6px 12px;height:32px;font-size:13px;font-weight:500;color:var(--muted-2);gap:7px}
-.sc-players .ctabs button:hover{color:var(--ink);border:0}
-.sc-players .ctabs button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.12)}
-.sc-players .ctabs button em,.sc-players .ctabs button[aria-pressed="true"] em{background:transparent;color:var(--muted);padding:0;font-size:12px;font-weight:500}
-.sc-players .fbar{position:static;border:0;background:transparent;padding:0;border-radius:0;display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(0,1fr));gap:10px;margin-bottom:12px;align-items:end}
-.sc-players .fbar .fg{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0}
-.sc-players .fbar .fg.w{flex:none;justify-content:flex-end}
-.sc-players .fbar .fl{text-align:left;font-size:12px;font-weight:500;color:var(--muted-2)}
-.sc-players input.q,.sc-players select.q{width:100%;min-width:0!important;height:var(--sc-h);padding:0 12px;border:1px solid var(--rule);border-radius:var(--sc-r);background-color:var(--card);font-size:13.5px;color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.04)}
-.sc-players select.q{appearance:none;-webkit-appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23818DA2' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-.sc-players input.q::placeholder{color:var(--muted)}
-.sc-players input.q:focus,.sc-players select.q:focus{border-color:var(--accent-fill);outline:0;box-shadow:0 0 0 3px var(--accent-tint)}
-.sc-players #pcount{margin:0 0 10px!important;padding:0;border:0;background:transparent;font-size:12.5px;color:var(--muted)}
-.sc-tbl{background:var(--card);border:1px solid var(--rule);border-radius:calc(var(--sc-r) + 2px);overflow-x:auto}
-.sc-tbl table{width:100%;border-collapse:collapse;font-size:13.5px;margin:0}
-.sc-tbl thead th{position:static;height:40px;padding:0 12px;background:transparent;border-bottom:1px solid var(--rule);color:var(--muted);font-size:12.5px;font-weight:500;text-align:left;white-space:nowrap}
-.sc-tbl thead th.r,.sc-tbl td.r{text-align:right}
-.sc-tbl tbody tr{--rowbg:transparent;position:relative;border-bottom:1px solid var(--rule)}
-.sc-tbl tbody tr:nth-child(even){--rowbg:transparent}
-.sc-tbl tbody tr:last-child{border-bottom:0}
-.sc-tbl tbody tr:hover{--rowbg:var(--card-2)}
-.sc-tbl td{height:48px;padding:6px 12px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
-.sc-link{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-weight:600;text-decoration:none}
-.sc-link::after{content:"";position:absolute;inset:0}
-.sc-link:hover{color:var(--ink);text-decoration:none}
-.sc-link:focus-visible{outline:0}.sc-link:focus-visible::after{outline:2px solid var(--accent-fill);outline-offset:-2px;border-radius:4px}
-.sc-av{flex:none;width:32px;height:32px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--card-3);color:var(--muted-2);font-size:12.5px;font-weight:600}
-.sc-av img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.sc-cty .flag{margin-right:6px;vertical-align:-2px}
-.sc-mut{color:var(--muted)}
-.sc-sc{font-weight:600;color:var(--ink)}
-.sc-bdg{display:inline-flex;align-items:center;height:22px;padding:0 8px;border:1px solid var(--rule);border-radius:999px;font-size:12px;font-weight:500;color:var(--muted-2)}
-.sc-bdg.on{border-color:transparent;background:var(--accent-tint);color:var(--accent-ink)}
-.sc-players .pager{margin-top:12px}
-.sc-players .pager button{height:32px;padding:0 12px;border:1px solid var(--rule);border-radius:var(--sc-r);background:var(--card);color:var(--ink);font-size:13px;font-weight:500;box-shadow:0 1px 2px rgba(16,24,40,.04)}
-.sc-players .pager button:hover:not(:disabled){background:var(--card-2)}
-@media (max-width:900px){.sc-players .fbar{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-players .fbar .fg.w{grid-column:1/-1}}
-@media (max-width:767px){.sc-players .ctabs{display:flex}.sc-tbl .sc-h,.sc-tbl .sc-h2,.sc-ctyn{display:none}.sc-cty .sc-mut{white-space:normal;font-size:12px}.sc-tbl td{white-space:normal}.sc-tbl td.r,.sc-link{white-space:nowrap}.sc-tbl td,.sc-tbl thead th{padding-left:10px;padding-right:10px}}
-
-/* ===== shadcn/ui 스타일: 전체 (2026-11) ===== */
-:root{--radius:10px;--sc-r:8px;--sc-h:36px;--sc-shadow:0 1px 2px rgba(16,24,40,.05)}
-/* 입력 */
-input.q,select.q{height:var(--sc-h);padding:0 12px;border:1px solid var(--rule);border-radius:var(--sc-r);background-color:var(--card);color:var(--ink);font-size:13.5px;box-shadow:var(--sc-shadow)}
-select.q{appearance:none;-webkit-appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23818DA2' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-input.q::placeholder{color:var(--muted)}
-input.q:focus,select.q:focus{border-color:var(--accent-fill);outline:0;box-shadow:0 0 0 3px var(--accent-tint)}
-.qs input{height:34px;border-radius:var(--sc-r)}
-.iconbtn{min-height:34px;border-radius:var(--sc-r);box-shadow:var(--sc-shadow)}
-/* 버튼 */
-.btn,.pager button,.linkbtn{border-radius:var(--sc-r)}
-.btn{min-height:var(--sc-h);padding:0 14px;font-weight:500;border-color:var(--rule);background:var(--card);box-shadow:var(--sc-shadow)}
-.btn:hover{border-color:var(--rule);background:var(--card-2)}
-.btn.pri{background:var(--accent-fill);border-color:var(--accent-fill);color:#fff}
-.btn.pri:hover{background:var(--accent-fill);filter:brightness(.92)}
-.pager button{height:32px;padding:0 12px;font-weight:500;color:var(--ink);box-shadow:var(--sc-shadow)}
-.pager button:hover:not(:disabled){background:var(--card-2)}
-/* 탭: 묶음 버튼 */
-.ctabs{display:inline-flex;flex-wrap:wrap;gap:2px;padding:4px;background:var(--card-3);border-radius:calc(var(--sc-r) + 2px)}
-.ctabs button{height:32px;border:0;background:transparent;border-radius:var(--sc-r);padding:0 12px;font-size:13px;font-weight:500;color:var(--muted-2)}
-.ctabs button:hover{border:0;color:var(--ink)}
-.ctabs button[aria-pressed="true"]{background:var(--card);border:0;color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.12)}
-.ctabs button em,.ctabs button[aria-pressed="true"] em{background:transparent;color:var(--muted);padding:0;font-size:12px;font-weight:500}
-.pills{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border:0;border-radius:calc(var(--sc-r) + 2px);background:var(--card-3);overflow:visible}
-.pill,.pill:last-child{min-height:28px;border:0;border-radius:6px;padding:0 10px;background:transparent;font-size:13px;font-weight:500;color:var(--muted-2)}
-.pill:hover{color:var(--ink)}
-.pill[aria-pressed="true"],:root[data-theme="dark"] .pill[aria-pressed="true"],:root[data-theme="light"] .pill[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(16,24,40,.12)}
-/* 카드 */
-.mod,.panel,.ec,.ixgw,.kpis,.etop,.esub,.ehi,.ixnotes,.thub a,.dgrp{border-radius:var(--radius);box-shadow:none}
-.mod>.hd{font-weight:600}
-/* 필터 묶음 */
-.fbar{border:0;background:transparent;padding:0;border-radius:0}
-.fl{font-size:12px;font-weight:500;color:var(--muted-2)}
-/* 표 */
-thead th{background:var(--card);color:var(--muted);font-weight:500;font-size:12.5px;letter-spacing:0;text-transform:none;border-bottom:1px solid var(--rule)}
-tbody tr{--rowbg:transparent;border-bottom:1px solid var(--rule)}
-tbody tr:nth-child(even){--rowbg:transparent}
-tbody tr:hover{--rowbg:var(--card-2)}
-tbody tr:last-child{border-bottom:0}
-/* 페이지 제목 */
-.pt{font-weight:700;letter-spacing:-.02em}
-.lede{color:var(--muted-2)}
-.sc-players .pills,.sc-players .ctabs{margin:6px 0 14px}
 </style>
 </head>
 <body>
@@ -1761,7 +1675,7 @@ const eraOf=k=>{const r=rec(k);if(!r.g)return null;return r;};
 function pPlayers(q){
   if(q.org)pst.org=q.org;if(q.c)pst.c=q.c;
   const orgs=[...new Set(P.map(p=>p.o).filter(Boolean))].sort();
-  app.innerHTML=`<div class="sc-players">`+crumb([['홈','#/'],['기사']])+`<h1 class="pt">기사</h1><p class="lede">기사 정보 ${fmt(P.length)}명과 기사 정보에 연결되지 않은 대국 표기를 함께 찾습니다.</p>
+  app.innerHTML=crumb([['홈','#/'],['기사']])+`<h1 class="pt">기사</h1><p class="lede">기사 정보 ${fmt(P.length)}명과 기사 정보에 연결되지 않은 대국 표기를 함께 찾습니다.</p>
   <div class="ctabs" id="pc" role="group" aria-label="국가">${[['all','전체'],['한국','한국'],['중국','중국'],['일본','일본'],['대만','대만'],['기타','기타']].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${pst.c===v}">${flag(v)}<span>${l}</span><em></em></button>`).join('')}</div>
   <div class="fbar">
     <div class="fg w"><label class="sr" for="pq">이름 검색</label><input class="q" id="pq" type="search" placeholder="이름·한자·영문" value="${esc(pst.q)}"></div>
@@ -1773,7 +1687,7 @@ function pPlayers(q){
     <div class="fg"><span class="fl">정렬</span><select class="q" id="pso" style="min-width:110px"><option value="whr">실력 점수</option><option value="games">통산 대국</option><option value="wins">통산 승</option><option value="titles">우승</option><option value="recent">최근 활동</option><option value="name">이름</option></select></div>
   </div>
   <div class="note" id="pcount" style="margin-top:12px"></div>
-  <div id="plist"></div><div id="ppager"></div></div>`;
+  <div id="plist"></div><div id="ppager"></div>`;
   const bind=(id,key,ev='change')=>{const el=document.getElementById(id);el.addEventListener(ev,()=>{pst[key]=el.value.trim?el.value.trim():el.value;pst.page=0;draw();});};
   ['po:org','ps:st','pg:g','pe:era','pso:sort'].forEach(s=>{const [i,k]=s.split(':');bind(i,k);});
   document.getElementById('pso').value=pst.sort;
@@ -1802,8 +1716,8 @@ function pPlayers(q){
     {const am=list.filter(k=>isNK(k)&&k.includes('(아마')).length,tm=list.filter(k=>isNK(k)&&k.includes('(챌린지)')).length,ex=nk-am-tm;document.getElementById('pcount').innerHTML=`총 ${fmt(list.length)}명${nk?` · 기사 정보 없는 이름 ${fmt(nk)}개 포함 (아마추어 ${fmt(am)} · 한국기원 명단 외 기사 ${fmt(ex)}${tm?' · 팀 '+fmt(tm):''})`:''}`;}
     const el=document.getElementById('plist');
     if(!list.length){el.innerHTML='<div class="empty" style="margin-top:14px">조건에 맞는 기사가 없습니다. <button class="linkbtn" id="preset">필터 초기화</button></div>';document.getElementById('preset').onclick=()=>{Object.assign(pst,{q:'',c:'all',org:'all',st:'all',g:'all',era:'all',page:0});pPlayers({});};document.getElementById('ppager').innerHTML='';return;}
-    el.innerHTML=`<div class="sc-tbl"><table><thead><tr><th>기사</th><th class="sc-h2">국가</th><th class="sc-h">소속</th><th class="r sc-h">단</th><th class="sc-h2">상태</th><th class="r sc-h">대국</th><th class="r">전적</th><th class="r">실력 점수</th></tr></thead><tbody>${list.slice(pst.page*per,(pst.page+1)*per).map(k=>{const p=PBY[k],r=rec(k),s=ws(k),st=p&&p.st?(p.st.includes('현역')?'현역':p.st.includes('은퇴')?'은퇴':p.st):'';
-      return `<tr><td><a class="sc-link" href="#/players/${encodeURIComponent(k)}"><span class="sc-av">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</span><span class="sc-nm">${esc(nameOf(k))}</span></a></td><td class="sc-cty sc-h2">${p?flag(p.c)+`<span class="sc-ctyn">${esc(p.c||'')}</span>`:`<span class="sc-mut">${esc(nkLabel(k))}</span>`}</td><td class="sc-h sc-mut">${esc(p&&p.o!==p.c?p.o||'':'')}</td><td class="r sc-h">${p&&p.dan?p.dan:''}</td><td class="sc-h2">${st?`<span class="sc-bdg${st==='현역'?' on':''}">${esc(st)}</span>`:''}</td><td class="r sc-h">${r.g?fmt(r.g):''}</td><td class="r">${r.g?`${fmt(r.w)}승 ${fmt(r.l)}패`:'<span class="sc-mut">기록 없음</span>'}</td><td class="r sc-sc">${s&&s[7]>=RANK_MIN?fmt(s[0]):''}</td></tr>`;}).join('')}</tbody></table></div>`;
+    el.innerHTML=`<div class="cards">${list.slice(pst.page*per,(pst.page+1)*per).map(k=>{const p=PBY[k],r=rec(k),s=ws(k);
+      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+' ':''}${esc(p?[p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):nkLabel(k))}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
     const pg=document.getElementById('ppager');
     pg.innerHTML=pages>1?`<div class="pager"><span>${pst.page+1} / ${pages} 페이지</span><span><button data-p="-1" ${pst.page===0?'disabled':''}>이전</button> <button data-p="1" ${pst.page>=pages-1?'disabled':''}>다음</button></span></div>`:'';
     pg.querySelectorAll('button').forEach(b=>b.onclick=()=>{pst.page+=+b.dataset.p;draw();window.scrollTo(0,0);});
@@ -2525,7 +2439,7 @@ const NEWSL=(typeof NEWS!=='undefined'?NEWS:[]).map(nMap);
 const NEWS_BY={};let NEWS_DATE=0,NEWS_UPD='';
 function newsIndex(){for(const k in NEWS_BY)delete NEWS_BY[k];NEWSL.forEach(n=>n.k.forEach(k=>(NEWS_BY[k]=NEWS_BY[k]||[]).push(n)));NEWS_DATE=NEWSL.length?NEWSL[0].d:0;}
 newsIndex();
-// 배포된 사이트에서는 Cloudflare가 매일 09:00·18:00에 모은 최신 뉴스를 불러옵니다(실패하면 내장 목록 사용).
+// 배포된 사이트에서는 Cloudflare가 하루 10번 모은 최신 뉴스를 불러옵니다(실패하면 내장 목록 사용).
 function loadLiveNews(){
   if(location.protocol==='file:')return;
   fetch('/api/news').then(r=>r.ok?r.json():null).then(j=>{
@@ -2536,7 +2450,7 @@ function loadLiveNews(){
     if(r==='home'||r==='news'||r==='players'){const y=window.scrollY;route();window.scrollTo(0,y);}
   }).catch(()=>{});
 }
-const nUpd=()=>{if(!NEWS_UPD)return '수집일 '+dstr(NEWS_DATE);const d=new Date(new Date(NEWS_UPD).getTime()+9*3600e3);return `마지막 갱신 ${d.getUTCMonth()+1}.${d.getUTCDate()} ${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} · 매일 09:00·18:00 자동 갱신`;};
+const nUpd=()=>{if(!NEWS_UPD)return '수집일 '+dstr(NEWS_DATE);const d=new Date(new Date(NEWS_UPD).getTime()+9*3600e3);return `마지막 갱신 ${d.getUTCMonth()+1}.${d.getUTCDate()} ${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} · 하루 10번 자동 갱신`;};
 const nsBadge=s=>`<span class="nsb ns-${s}">${NSRC[s][0]}</span>`;
 const nImg=n=>n.img?`<img src="${esc(n.img)}"${n.fb?` data-fb="${esc(n.fb)}"`:''} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}else this.remove()">`:'';
 const nTitle=n=>{const m=n.t.match(/^\[([^\]]{1,20})\]\s*(.*)$/);return m?{tag:m[1],t:m[2]}:{tag:'',t:n.t};};

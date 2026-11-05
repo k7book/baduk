@@ -169,7 +169,14 @@ const bigrams = t => { const x = t.replace(/[^가-힣A-Za-z0-9]/g, ''); const s 
 const jac = (a, b) => { let n = 0; for (const x of a) if (b.has(x)) n++; return n / Math.max(1, a.size + b.size - n); };
 
 /* ---------- merge ---------- */
-export function merge(old, fresh, today) {
+const SRC_ORD = { tyg: 0, oro: 1, han: 2, ggl: 3 };
+// 기사 주소의 글 번호: 타이젬 seq, 사이버오로 num, 한게임 gseq, 다음 v/YYYYMMDDHHMM…
+export function artNo(x) {
+  const u = x[4] || '';
+  const m = u.match(/[?&](?:seq|num|gseq)=(\d+)/) || u.match(/v\.daum\.net\/v\/(\d{12})/);
+  return m ? +m[1] : 0;
+}
+export function merge(old, fresh, today, seen = '') {
   const byU = new Map(old.map(x => [x[4], x]));
   const added = [];
   const gB = old.filter(x => x[0] === 'ggl' && +x[1] >= +today - 7).map(x => [+x[1], bigrams(x[2])]);
@@ -184,11 +191,13 @@ export function merge(old, fresh, today) {
       gB.push([+x[1], b]);
     }
     x[6] = tagNames(x[2] + ' ' + (x[0] === 'ggl' ? '' : x[3]));
+    x[8] = seen;   // 처음 모은 시각(한국시간 YYYYMMDDHHMM) — 같은 날 기사 순서용
     byU.set(x[4], x); added.push(x);
   }
   const cut = Number(new Date(Date.parse(today.slice(0, 4) + '-' + today.slice(4, 6) + '-' + today.slice(6)) - KEEP_DAYS * 864e5).toISOString().slice(0, 10).replace(/-/g, ''));
-  const all = [...byU.values()].filter(x => +x[1] >= cut).map(x => x.slice(0, 8));
-  all.sort((a, b) => (b[1] + b[0]).localeCompare(a[1] + a[0]));
+  const all = [...byU.values()].filter(x => +x[1] >= cut).map(x => x.slice(0, 9));
+  // 최신순: 날짜 → 처음 모은 시각 → 사이트 → 각 사이트의 글 번호(클수록 최신)
+  all.sort((a, b) => (+b[1] - +a[1]) || ((+b[8] || 0) - (+a[8] || 0)) || ((SRC_ORD[a[0]] ?? 9) - (SRC_ORD[b[0]] ?? 9)) || (artNo(b) - artNo(a)));
   return { list: all.slice(0, KEEP_MAX), added };
 }
 
@@ -211,7 +220,8 @@ async function refresh(env) {
   const newHan = fresh.filter(x => x[0] === 'han' && !known.has(x[4])).slice(0, HAN_VIEW_MAX);
   await Promise.all(newHan.map(x => get(`https://baduk.hangame.com/news.nhn?gseq=${x[8]}&m=view`).then(h => { const b = hanBigImage(h); if (b) { x[7] = x[5]; x[5] = b; } }, () => {})));
   const today = ymd(...(d => [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()])(new Date(Date.now() + 9 * 3600e3)));
-  const { list, added } = merge(cur, fresh, today);
+  const k9 = new Date(Date.now() + 9 * 3600e3), seen = k9.toISOString().slice(0, 16).replace(/[-T:]/g, '');
+  const { list, added } = merge(cur, fresh, today, seen);
   const prev = JSON.parse((await env.NEWS_KV.get('meta')) || 'null');
   const now = new Date().toISOString();
   const meta = { updated: res.ok.length ? now : (prev && prev.updated) || null, tried: now, added: added.length, total: list.length, ...res, ms: Date.now() - t0 };
