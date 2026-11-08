@@ -1564,6 +1564,15 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 #app>.crumb{display:none}
 .page{padding-top:28px}
 @media (max-width:860px){.gnav .mdate{display:block;grid-area:crumb}.gnav .in{grid-template-areas:"logo tools" "nav nav" "crumb crumb"}.gnav .mdate:not(:has(.mcrumb)){display:none}.mcrumb{padding:8px 0 0}}
+/* 홈: 메뉴 선과 세 단 사이 빈 공간 없애기 — 각 단 첫 구획의 윗선도 메뉴 선과 겹치지 않게 뺌 */
+#app:has(>.e3){padding-top:0}
+.e3>*>:first-child{border-top:0}
+.e3 .etop{padding-top:16px}
+/* 기사 상세: 이름 크기 줄이기 */
+.phead h1{font-size:clamp(34px,3.4vw,46px);letter-spacing:-.02em;gap:14px;margin-bottom:8px}
+.phead .alt{font-size:16px}
+.phead .ph{width:112px;height:140px}
+@media (max-width:860px){.phead h1{font-size:32px}.phead .ph{width:84px;height:106px}}
 </style>
 </head>
 <body>
