@@ -9,11 +9,11 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5">
 <link rel="manifest" href="site.webmanifest?v=5">
-<meta name="theme-color" content="#0C111D">
-<script>try{var t=localStorage.getItem("bdb-theme2");document.documentElement.dataset.theme=t?JSON.parse(t):"dark";}catch(e){document.documentElement.dataset.theme="dark";}</script>
+<meta name="theme-color" content="#FFFFFF">
+<script>try{var t=localStorage.getItem("bdb-theme-b");document.documentElement.dataset.theme=t?JSON.parse(t):"light";}catch(e){document.documentElement.dataset.theme="light";}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Roboto:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Roboto:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Serif+KR:wght@500;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
@@ -1365,11 +1365,209 @@ input.q:focus,select.q:focus{border-color:var(--accent-fill);outline:0;box-shado
 .spk circle{fill:var(--muted)}
 .spk.up polyline{stroke:var(--up)}.spk.up circle{fill:var(--up)}
 .spk.dn polyline{stroke:var(--dn)}.spk.dn circle{fill:var(--dn)}
+
+/* =====================================================================
+   2026-11 전면 개편 — 시안 B '연감' (흰 종이 · 명조 제목 · 큰 숫자 · 선으로 나눈 구획)
+   기본 밝게, ◐로 어둡게. 색은 신한카드 파랑 팔레트 유지.
+   ===================================================================== */
+:root:not([data-theme="dark"]){
+  --navy:#FFFFFF;--navy-2:#F8F9FC;--navy-3:#F0F4FA;
+  --bg:#FFFFFF;--card:#FFFFFF;--card-2:#F8F9FC;--card-3:#F0F4FA;
+  --ink:#101828;--ink-soft:#344054;--muted:#667085;--muted-2:#475467;
+  --rule:#E4E7EC;--rule-2:#F0F4FA;--rule-dot:#D0D5DD;
+  --accent:#005DF9;--accent-fill:#005DF9;--accent-ink:#0040E8;--accent-tint:#EBF0FF;
+  --link:#0046FF;--link-tint:#EBF0FF;
+  --up:#E53838;--up-tint:#FFF6F5;--dn:#005DF9;--dn-tint:#EBF0FF;
+  --win:#15803D;--loss:#E57708;--draw:#CC6D0D;--none:#F0F4FA;--sky-2:#EBF0FF;--beige:#FFE7CE;--gold:#F6C12C;
+  --th-bg:transparent;--th-rule:#101828;--row-alt:transparent;--row-hover:#F5F8FF;
+  --foot-bg:transparent;--foot-ink:#344054;--foot-muted:#667085;
+  --cat1:#005DF9;--cat2:#F6810C;--cat3:#12A37A;--cat4:#E5A800;--cat5:#E35D93;--cat6:#15803D;--cat7:#6250D6;--cat8:#E53838;
+  --new:#E53838;--new-tint:#FFF6F5;--glass:#FFFFFF;--scrim:rgba(12,17,29,.45)}
+:root[data-theme="dark"]{--th-bg:transparent;--th-rule:#D0D5DD;--row-alt:transparent;--foot-bg:transparent;--foot-ink:#D0D5DD;--foot-muted:#818DA2;--glass:#0C111D}
+:root{--serif:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo","Batang","AppleMyungjo",serif;--radius:0px;--wrap:1240px}
+body{background:var(--bg);font-size:14.5px}
+::selection{background:var(--accent-tint)}
+
+/* ---------- 제호(머리글) ---------- */
+.gnav{position:relative;top:auto;background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;box-shadow:none;color:var(--ink)}
+.gnav .in{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date logo tools" "nav nav nav";align-items:center;column-gap:20px;height:auto;padding-top:22px;padding-bottom:0}
+.gnav .mdate{grid-area:date;font-size:13px;color:var(--muted);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gnav .logo{grid-area:logo;padding:0;justify-self:center}
+.gnav .logo svg{height:34px}
+.gnav .gtools{grid-area:tools;justify-self:end;display:flex;align-items:center;gap:6px}
+.gnav nav{grid-area:nav;justify-content:center;height:auto;margin-top:18px;border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);overflow:visible}
+.gnav nav a,.gnav .more>button{color:var(--ink-soft);font-size:15px;font-weight:500;letter-spacing:0;padding:11px 15px;border:0;height:auto;background:transparent}
+.gnav nav a:hover,.gnav .more>button:hover{background:transparent;color:var(--ink);text-decoration:underline;text-underline-offset:6px}
+.gnav nav a.on{color:var(--accent-fill);font-weight:700;border:0}
+.gnav .more{position:relative}
+.gnav .more.on>button{color:var(--accent-fill);font-weight:700;box-shadow:none}
+.gnav .more .dd{position:absolute;top:100%;left:auto;right:0;border:1px solid var(--ink);border-radius:0;background:var(--bg);box-shadow:0 12px 28px rgba(16,24,40,.12);padding:4px 0}
+.gnav .more .dd a{color:var(--ink-soft);font-size:14px;padding:9px 16px}
+.gnav .more .dd a:hover{text-decoration:none;background:var(--card-2);color:var(--ink)}
+.qs{width:190px}
+.qs input{border:0;border-bottom:1px solid var(--rule-dot);border-radius:0;background:transparent;color:var(--ink);padding:7px 4px 7px 24px;font-size:14px}
+.qs input:focus{background:transparent;color:var(--ink);border-bottom-color:var(--ink);box-shadow:none}
+.qs::before{left:4px;border-color:var(--muted)}.qs::after{left:14px;background:var(--muted)}
+.iconbtn{background:transparent;border:0;border-radius:0;color:var(--ink-soft);width:34px;height:34px;padding:0;display:inline-grid;place-items:center;font-size:15px}
+.iconbtn:hover{background:var(--card-2);color:var(--ink)}
+#favpop{background:var(--bg)}
+
+/* ---------- 바닥글 ---------- */
+.foot{margin-top:64px;padding:22px var(--gutter) 40px;background:transparent;box-shadow:none;clip-path:none;border-top:2px solid var(--ink);color:var(--muted);font-size:12.5px}
+.foot a{color:var(--ink-soft)}.foot #dl{color:var(--ink)}
+.foot .calc{border-color:var(--rule-dot);color:var(--muted)}
+.totop{border-radius:0;border:1px solid var(--ink);background:var(--bg);color:var(--ink)}
+
+/* ---------- 쪽 제목 ---------- */
+.page{padding-top:36px}
+.crumb{font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--accent-fill);margin-bottom:6px}
+.crumb a{color:var(--accent-fill);text-decoration:none}.crumb a:hover{text-decoration:underline}
+h1.pt,.pt{font-family:var(--serif);font-weight:700;font-size:clamp(34px,3.6vw,52px);line-height:1.12;letter-spacing:-.025em;margin:4px 0 12px;word-break:keep-all}
+.lede{font-size:16.5px;line-height:1.7;color:var(--ink-soft);max-width:44em;word-break:keep-all}
+.kicker{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--accent-fill)}
+
+/* ---------- 탭 · 골라 보기: 글자 링크 ---------- */
+.tabs{border-bottom:1px solid var(--ink);gap:6px}
+.tabs a,.tabs span{font-size:15px;color:var(--muted);border-bottom:3px solid transparent;padding-left:4px;padding-right:4px;margin-right:14px}
+.tabs a:hover{color:var(--ink)}
+.tabs a.on{color:var(--ink);font-weight:700;border-bottom-color:var(--accent-fill)}
+.pills{border:0;background:transparent;border-radius:0;gap:2px;box-shadow:none}
+.pill{border:0;border-right:0;background:transparent;color:var(--ink-soft);border-radius:0;padding:5px 6px;margin-right:6px;font-size:14px}
+.pill:hover{color:var(--ink);background:transparent}
+:root[data-theme] .pill[aria-pressed="true"],.pill[aria-pressed="true"]{background:transparent;color:var(--ink);font-weight:700;box-shadow:inset 0 -2px 0 var(--accent-fill)}
+.ctabs{gap:4px 22px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+.ctabs button{border:0;background:transparent;border-radius:0;padding:6px 2px;font-size:15px;color:var(--ink-soft)}
+.ctabs button em{background:transparent;color:var(--muted);font-weight:400;padding:0 0 0 2px}
+.ctabs button[aria-pressed="true"]{background:transparent;border:0;color:var(--ink);font-weight:700;box-shadow:inset 0 -2px 0 var(--accent-fill)}
+.ctabs button[aria-pressed="true"] em{background:transparent;color:var(--muted)}
+.btn{border-radius:0}
+.btn.pri,.ixsub a.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+input.q,select.q{border-radius:0;border:0;border-bottom:1px solid var(--rule-dot);background:transparent;padding-left:2px}
+input.q:focus,select.q:focus{box-shadow:none;border-bottom-color:var(--ink)}
+.fbar{background:transparent;border:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);border-radius:0;padding:12px 0;box-shadow:none}
+.fl{font-weight:500;color:var(--muted)}
+
+/* ---------- 구획: 상자 대신 선 ---------- */
+.mod,.panel,.ec,.ixgw,.kpis,.dgrp,.speek,.sgl,.fedc,.ixnotes,.thub a,.esub,.etop,.ehi,.gcard,.board{background:transparent;border:0;border-top:2px solid var(--ink);border-radius:0;box-shadow:none}
+.thub a:hover,.ec:hover,.gcard:hover{border-color:var(--ink);background:transparent}
+.mod>.hd,.ec>header,.panel>.sec,.panel>h2{background:transparent;border-bottom:1px solid var(--rule);padding:12px 0 10px}
+.mod>.hd,.mod>.hd>span:first-child{font-family:var(--serif);font-size:21px;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
+.mod>.hd .desc,.mod>.hd .calc{font-family:var(--font-sans)}
+.mod>.hd .desc{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+.mod>.bd{padding-left:0;padding-right:0}
+.ec>header h2,.panel h2,.szsec h2,.prose h2,.fedc h3,.dday-h{font-family:var(--serif);font-weight:700;letter-spacing:-.015em}
+.ec>header h2{font-size:20px}
+.ec>header a,.mod>.hd a{font-size:13px;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule-dot)}
+.prose h2{font-size:24px;margin-top:36px}
+.calc{border-radius:0}
+.badge,.award,.chip,.mv,.slive,.nsb{border-radius:2px}
+.empty{border-radius:0;background:transparent;border:1px dashed var(--rule-dot)}
+
+/* 표 */
+table{border-collapse:collapse}
+thead th{background:transparent;color:var(--muted);font-weight:600;font-size:12.5px;border-bottom:1px solid var(--ink);letter-spacing:.01em}
+tbody tr{border-bottom:1px solid var(--rule)}
+tbody tr:nth-child(even){background:transparent}
+tbody tr:hover{background:var(--row-hover)}
+td.n,td.r,.n{font-variant-numeric:tabular-nums}
+
+/* 큰 숫자 */
+.stats .v,.kpis .v,.kpi .num,.szh .v,.kts .v,.feds .v,.ov-kpis .v{font-family:var(--serif);font-weight:600;letter-spacing:-.02em}
+
+/* ---------- 홈 ---------- */
+.blead{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;padding:8px 0 40px;margin-bottom:36px;border-bottom:1px solid var(--rule)}
+.bl-t .kicker{margin-bottom:12px}
+.bl-h{font-family:var(--serif);font-size:clamp(32px,3.4vw,46px);line-height:1.22;letter-spacing:-.025em;font-weight:700;margin:0 0 18px;word-break:keep-all;color:var(--ink)}
+.bl-h a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent-fill);text-decoration-thickness:3px;text-underline-offset:8px}
+.bl-d{font-size:18px;line-height:1.75;color:var(--ink-soft);margin:0;word-break:keep-all;max-width:36em}
+.bl-by{font-size:13px;color:var(--muted);margin-top:18px}.bl-by a{color:var(--ink-soft)}
+.bl-n{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--ink);align-self:start}
+.bl-n div{padding:18px 0;border-bottom:1px solid var(--rule)}
+.bl-n div:nth-child(odd){padding-right:24px;border-right:1px solid var(--rule)}.bl-n div:nth-child(even){padding-left:24px}
+.bl-n strong{display:block;font-family:var(--serif);font-size:46px;line-height:1;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.bl-n span{display:block;font-size:13.5px;color:var(--muted);margin-top:8px}
+.e3{gap:40px;grid-template-columns:236px minmax(0,1fr) 300px}
+.e3>*{gap:36px}
+.e3{counter-reset:bsec}
+.ec>header h2::before{counter-increment:bsec;content:counter(bsec,decimal-leading-zero);font-family:var(--font-logo);font-size:14px;font-weight:700;color:var(--accent-fill);letter-spacing:.06em;margin-right:10px;vertical-align:2px}
+.ec>header{padding:12px 0 10px}
+.eql a{padding-left:0;padding-right:0;border-radius:0;font-size:15px}
+.eql a:hover{background:transparent;text-decoration:underline}
+.eql .ic{display:none}
+.erk li{padding-left:0;padding-right:0}
+.erk .i{font-family:var(--serif);font-weight:700;color:var(--muted)}.erk li:first-child .i{color:var(--accent-fill)}
+.erk .v{font-weight:600}
+.etop .img{border-radius:0}
+.etop .tx{padding-left:0;padding-right:0}
+.etop h2{font-family:var(--serif);font-size:30px;line-height:1.3;letter-spacing:-.02em}
+.esub{border-top-width:1px}.esub .img{border-radius:0}
+.esub .t,.esub h3{font-family:var(--serif)}
+.ehl li,.ehd li{padding-left:0;padding-right:0}
+
+/* ---------- 기사 목록: 명부 ---------- */
+.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:0 44px;border-top:1px solid var(--ink);margin-top:6px}
+.card{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:auto auto auto;column-gap:16px;align-items:center;background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;padding:14px 0;box-shadow:none}
+.card:hover{border-color:var(--rule);box-shadow:none}
+.card:hover .nm{text-decoration:underline;text-decoration-color:var(--accent-fill);text-decoration-thickness:2px;text-underline-offset:5px}
+.card .ph{grid-row:1/4;width:56px;height:56px;aspect-ratio:1/1;border-radius:50%;overflow:hidden;background:var(--card-3)}
+.card .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.card .ph .ini{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--muted)}
+.card .nm{font-family:var(--serif);font-size:20px;font-weight:600;letter-spacing:-.01em;padding:0;color:var(--ink);line-height:1.3}
+.card .nm span{font-family:var(--font-sans);font-size:12.5px;font-weight:400;color:var(--muted);margin-left:6px}
+.card .meta,.card .rec{padding:0;font-size:13px;color:var(--muted);line-height:1.5}
+.card .rec{color:var(--ink-soft)}
+.pager{border-top:1px solid var(--ink);padding-top:12px}
+.pager button{border-radius:0}
+
+/* ---------- 기사 상세: 잡지 프로필 ---------- */
+.phead{background:transparent;border:0;border-radius:0;box-shadow:none;padding:6px 0 32px;gap:36px;border-bottom:1px solid var(--ink)}
+.phead .ph{width:132px;height:164px;border-radius:0;aspect-ratio:auto;background:var(--card-3)}
+.phead .ph img{object-fit:cover;object-position:50% 20%;width:100%;height:100%}
+.phead .ph .ini{font-family:var(--serif);font-size:64px;font-weight:700;color:var(--muted)}
+.phead h1{font-family:var(--serif);font-size:clamp(56px,6vw,84px);line-height:1;letter-spacing:-.035em;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.phead h1 .fav{font-family:var(--font-sans);font-size:13px;letter-spacing:0;border-radius:0}
+.phead .alt{font-family:var(--serif);font-size:20px;color:var(--muted)}
+.phead .bio{margin-top:16px;font-size:14px}
+.phead .bio b{font-weight:600}
+.phead .award{background:transparent;border:1px solid var(--rule-dot);color:var(--ink-soft);border-radius:0}
+.phead .award.ixaw{background:var(--ink)!important;border-color:var(--ink);color:var(--bg)}
+.phead .award.ixaw b{color:inherit}
+.phead .rating{border-left:1px solid var(--rule);padding-left:28px}
+.phead .rating .v{font-family:var(--serif);font-size:58px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.stats{background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;margin-top:0}
+.stats>div{border-color:var(--rule);padding-top:22px;padding-bottom:22px;text-align:left;padding-left:20px}
+.stats>div:first-child{padding-left:0}
+.stats .v{font-size:40px;line-height:1.05}
+.stats .k{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* ---------- 국기 ---------- */
+.flag{display:inline-flex;vertical-align:-2px;line-height:0}
+.flag svg{width:20px;height:13.5px;box-shadow:0 0 0 1px rgba(16,24,40,.14);border-radius:1px}
+.cty{display:inline-flex;align-items:center;gap:5px}
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width:1100px){.blead{grid-template-columns:1fr;gap:28px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.e3{grid-template-columns:minmax(0,1fr) 280px}}
+@media (max-width:860px){
+  .gnav .in{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"logo tools" "nav nav";padding-top:12px}
+  .gnav .mdate{display:none}.gnav .logo{justify-self:start}.gnav .logo svg{height:26px}
+  .gnav nav{justify-content:flex-start;overflow-x:auto;margin-top:10px}
+  .gnav nav a,.gnav .more>button{font-size:14px;padding:9px 10px}
+  .qs{width:140px}
+  .cards{grid-template-columns:1fr}
+  .e3{grid-template-columns:1fr}
+  .bl-n strong{font-size:34px}
+  .phead .ph{width:92px;height:116px}
+}
+.foot{border-top:0;background:linear-gradient(var(--ink),var(--ink)) var(--gutter) 0/calc(100% - 2*var(--gutter)) 2px no-repeat}
+.dgrp-h{background:transparent;border-bottom:1px solid var(--rule)}
+.feds>div,.speek-d{background:transparent}
+.bl-h a,.phead h1 a{font:inherit;color:inherit}
 </style>
 </head>
 <body>
 <header class="gnav">
   <div class="wrap in">
+    <div class="mdate" id="mdate"></div>
     <a class="logo" href="#/" aria-label="바둑DB 홈"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 451.2 103.3" aria-hidden="true"><circle cx="24.30" cy="24.30" r="24.30" fill="#FFFFFF"/><circle cx="78.99" cy="24.30" r="21.87" fill="#0B1A33" stroke="#FFFFFF" stroke-width="4.86"/><circle cx="24.30" cy="78.99" r="21.87" fill="#0B1A33" stroke="#FFFFFF" stroke-width="4.86"/><circle cx="78.99" cy="78.99" r="24.30" fill="#005DF9"/><g transform="translate(125.56 89.00) scale(1.0000)"><path fill="#FFFFFF" d="M5.9 -77.30000000000001V-11.8H52.5V-77.30000000000001H36.5V-55.5H21.900000000000002V-77.30000000000001ZM21.900000000000002 -43.1H36.5V-24.6H21.900000000000002ZM61.6 -84.30000000000001V9.5H77.80000000000001V-37.300000000000004H90.4V-50.5H77.80000000000001V-84.30000000000001ZM102.9 -21.700000000000003V-9.1H152.6V9.600000000000001H168.7V-21.700000000000003H144.0V-28.8H178.60000000000002V-41.5H93.7V-28.8H127.9V-21.700000000000003ZM103.7 -80.7V-47.2H169.5V-59.800000000000004H119.7V-68.10000000000001H168.7V-80.7Z"/><path fill="#005DF9" d="M222.421875 0.0C244.541015625 0.0 258.212890625 -13.671875 258.212890625 -36.376953125C258.212890625 -59.08203125 244.541015625 -72.75390625 222.421875 -72.75390625H195.6640625V0.0ZM212.900390625 -14.74609375V-58.0078125H221.4453125C234.189453125 -58.0078125 240.9765625 -52.1484375 240.9765625 -36.376953125C240.9765625 -20.60546875 234.189453125 -14.74609375 221.689453125 -14.74609375ZM265.9296875 0.0H298.3515625C314.46484375 0.0 323.595703125 -8.59375 323.595703125 -20.3125C323.595703125 -30.859375 315.978515625 -37.451171875 307.23828125 -37.79296875V-38.57421875C315.1484375 -40.185546875 320.763671875 -45.947265625 320.763671875 -54.296875C320.763671875 -65.283203125 312.365234375 -72.75390625 296.10546875 -72.75390625H265.9296875ZM283.166015625 -13.916015625V-31.591796875H294.640625C301.427734375 -31.591796875 305.626953125 -27.9296875 305.626953125 -22.265625C305.626953125 -17.08984375 302.013671875 -13.916015625 294.298828125 -13.916015625ZM283.166015625 -42.7734375V-58.984375H293.46875C299.42578125 -58.984375 303.185546875 -55.908203125 303.185546875 -51.025390625C303.185546875 -45.80078125 298.986328125 -42.7734375 293.17578125 -42.7734375Z"/></g></svg></a>
     <nav id="nav" aria-label="주 메뉴">
       <a href="#/" data-r="home">홈</a>
@@ -1388,7 +1586,7 @@ input.q:focus,select.q:focus{border-color:var(--accent-fill);outline:0;box-shado
     <div class="gtools">
       <div class="qs"><label class="sr" for="qsi">기사·대회 이름으로 바로 이동</label><input id="qsi" type="search" placeholder="기사·대회 검색" autocomplete="off"><div class="qsl" id="qsl" hidden></div></div>
       <button class="iconbtn" id="favbtn" aria-haspopup="true" aria-label="즐겨찾기 목록">★</button>
-      <button class="iconbtn" id="themebtn" aria-label="밝게/어둡게 전환">◐</button>
+      <button class="iconbtn" id="themebtn" aria-label="밝게/어둡게 전환"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
     </div>
   </div>
   <div class="wrap" id="favpop" hidden></div>
@@ -1514,9 +1712,10 @@ document.getElementById('favbtn').onclick=e=>{
 };
 document.addEventListener('click',e=>{const pop=document.getElementById('favpop');if(!pop.hidden&&!e.target.closest('#favpop')&&e.target.id!=='favbtn')pop.hidden=true;});
 /* ---------- theme ---------- */
-(function(){const t=store.get('bdb-theme2','dark');document.documentElement.dataset.theme=t;
-  document.getElementById('themebtn').onclick=()=>{const cur=document.documentElement.dataset.theme||'dark';const nx=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=nx;store.set('bdb-theme2',nx);route();};})();
+(function(){const t=store.get('bdb-theme-b','light');document.documentElement.dataset.theme=t;
+  document.getElementById('themebtn').onclick=()=>{const cur=document.documentElement.dataset.theme||'light';const nx=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=nx;store.set('bdb-theme-b',nx);route();};})();
 
+(function(){const el=document.getElementById('mdate');if(!el)return;const k=kst(),wd=['일','월','화','수','목','금','토'][new Date(Date.UTC(k.y,k.m-1,k.d)).getUTCDay()];const d=String(LASTD);el.textContent=`${k.y}년 ${k.m}월 ${k.d}일 ${wd}요일 · ${+d.slice(4,6)}월 ${+d.slice(6)}일 대국까지`;})();
 /* ---------- quick search ---------- */
 const QS=[];
 P.forEach(p=>QS.push({k:p.k,label:p.n,sub:[p.hn,p.en,p.c].filter(Boolean).join(' · '),hay:(p.n+' '+(p.hn||'')+' '+(p.en||'')+' '+[...(KALL[p.k]||[])].join(' ')).toLowerCase(),href:'#/players/'+encodeURIComponent(p.k)}));
@@ -1602,8 +1801,34 @@ const FLAG=(()=>{
   return {'한국':kr,'중국':cn,'일본':jp,'대만':tw};
 })();
 const flag=c=>FLAG[c]?`<span class="flag" title="${c}">${FLAG[c]}</span>`:'';
-const cflag=c=>c?`<span class="cty">${flag(c)}${esc(c)}</span>`:'';
+const cflag=c=>c?(FLAG[c]?`<span class="cty">${flag(c)}<span class="sr">${esc(c)}</span></span>`:`<span class="cty">${esc(c)}</span>`):'';
 
+
+/* ---------- 연감 머리기사(홈) ---------- */
+function josa(w,a,b){const c=(w||'').replace(/\([^)]*\)$/,'').slice(-1).charCodeAt(0);if(c<0xAC00||c>0xD7A3)return w+a;return w+((c-0xAC00)%28?a:b);}
+function homeLead(){
+  const months=Object.keys(KO).sort();const m=months[months.length-1];if(!m||!KO[m].length)return '';
+  const r=KO[m],a=r[0],b=r[1];const pm=months[months.length-2];const prev={};(KO[pm]||[]).forEach(x=>prev[x[1]]=x[0]);
+  const nm=k=>nameOf(k),mo=+m.slice(5);
+  const held=prev[a[1]]===1;
+  const top10=r.slice(0,10);
+  const up=top10.filter(x=>x[3]>0).sort((p,q)=>q[3]-p[3])[0];
+  const yr=YEARS[YEARS.length-1];
+  const yC=CHAMP.filter(c=>c.st===0&&((c.d/10000)|0)===yr);
+  const aT=(CHB[a[1]]||[]).length,aY=yC.filter(c=>c.ck===a[1]).length;
+  const w1=currentTop(null,2);
+  const s=[];
+  if(up)s.push(`${josa(nm(up[1]),'이','가')} ${up[3]}계단 올라 ${up[0]}위(${fmt(up[2])}점)가 됐다.`);
+  if(b)s.push(`2위는 ${nm(b[1])}(${fmt(b[2])}점).`);
+  if(aT)s.push(`${josa(nm(a[1]),'은','는')} ${aY?`올해 ${aY}개 대회를 포함해 `:''}통산 ${aT}번 우승했다.`);
+  if(w1.length>1&&w1[0][0]===a[1])s.push(`이 사이트의 실력 점수에서도 ${fmt(w1[0][1])}점으로 2위 ${nm(w1[1][0])}(${fmt(w1[1][1])}점)를 앞선다.`);
+  const tg=GAMES.filter(g=>g.y===yr).length;
+  const d=String(LASTD);
+  return `<section class="blead"><div class="bl-t"><div class="kicker">${mo}월 한국기원 랭킹</div>
+  <h2 class="bl-h">${plink(a[1])}, ${fmt(a[2])}점으로 1위 ${held?'수성':'올라'}.${b?` 2위와 ${fmt(a[2]-b[2])}점 차`:''}</h2>
+  <p class="bl-d">${s.join(' ')}</p><div class="bl-by">바둑DB 집계 · ${+d.slice(4,6)}월 ${+d.slice(6)}일 대국까지 · <a href="#/rankings">랭킹 전체 보기</a></div></div>
+  <div class="bl-n"><div><strong>${fmt(GAMES.length)}</strong><span>${YEARS[0]}년부터 쌓인 대국</span></div><div><strong>${fmt(P.length)}</strong><span>한·중·일·대만 기사</span></div><div><strong>${fmt(tg)}</strong><span>${yr}년 대국</span></div><div><strong>${fmt(yC.length)}</strong><span>${yr}년 우승이 가려진 대회</span></div></div></section>`;
+}
 /* =============== HOME =============== */
 function heroSearch(){const f=document.getElementById('hqf'),inp=document.getElementById('hqs'),box=document.getElementById('hqsl');if(!f)return;let tmr,items=[],sel=-1;
   const draw=()=>{box.innerHTML=items.map((x,i)=>`<a href="${x.href}" class="${i===sel?'on':''}">${esc(x.label)}<span>${esc(x.sub)}</span></a>`).join('')||'<div style="padding:8px 10px" class="muted small">일치하는 기사·대회가 없습니다</div>';box.hidden=false;};
@@ -1639,7 +1864,7 @@ function pHome(){
   const rk=(rows,val,mv)=>`<ol class="erk">${rows.map((r,i)=>`<li><span class="i">${i+1}</span><span class="f">${flag((PBY[r[0]]||{}).c)||'<i></i>'}</span><span class="nm">${plink(r[0])}</span>${mv?mv(r,i):''}<span class="v">${val(r)}</span></li>`).join('')}</ol>`;
   const mv=(r,i)=>{const m=rPrev[r[0]];return `<span class="m">${m==null?'<span class="mv new">NEW</span>':m>i+1?`<span class="mv up">▲${m-i-1}</span>`:m<i+1?`<span class="mv dn">▼${i+1-m}</span>`:'<span class="mv">–</span>'}</span>`;};
   const links=[['#/players','기사 목록','👤'],['#/rankings','랭킹','🏅'],['#/players/compare','상대전적','⚔'],['#/games','최근 대국','🗒'],['#/records','기록','📋'],['#/tournaments','대회','🏆'],['#/tournaments/intl','국제기전','🌏'],['#/tournaments/open','국내 종합기전','🗂'],['#/tournaments/women','여자기전','♛'],['#/tournaments/limited','제한기전','🎫'],['#/seasons/'+yr,yr+' 시즌','📅'],['#/games/calendar','대국 달력','🗓'],['#/games/search','조건 검색','🔎'],['#/news','뉴스','📰']];
-  app.innerHTML=`<h1 class="sr">바둑DB 홈</h1>
+  app.innerHTML=`<h1 class="sr">바둑DB 홈</h1>${homeLead()}
   <div class="e3">
     <aside class="e3-l">
       ${card('바로 가기','','<nav class="eql">'+links.map(([h,l,ic])=>`<a href="${h}"><span class="ic" aria-hidden="true">${ic}</span>${l}</a>`).join('')+'</nav>')}
@@ -1750,7 +1975,7 @@ function pPlayers(q){
     const el=document.getElementById('plist');
     if(!list.length){el.innerHTML='<div class="empty" style="margin-top:14px">조건에 맞는 기사가 없습니다. <button class="linkbtn" id="preset">필터 초기화</button></div>';document.getElementById('preset').onclick=()=>{Object.assign(pst,{q:'',c:'all',org:'all',st:'all',g:'all',era:'all',page:0});pPlayers({});};document.getElementById('ppager').innerHTML='';return;}
     el.innerHTML=`<div class="cards">${list.slice(pst.page*per,(pst.page+1)*per).map(k=>{const p=PBY[k],r=rec(k),s=ws(k);
-      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+' ':''}${esc(p?[p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):nkLabel(k))}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
+      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+(FLAG[p.c]?'<span class="sr">'+esc(p.c)+'</span> ':' '):''}${esc(p?[FLAG[p.c]?'':p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):nkLabel(k))}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
     const pg=document.getElementById('ppager');
     pg.innerHTML=pages>1?`<div class="pager"><span>${pst.page+1} / ${pages} 페이지</span><span><button data-p="-1" ${pst.page===0?'disabled':''}>이전</button> <button data-p="1" ${pst.page>=pages-1?'disabled':''}>다음</button></span></div>`:'';
     pg.querySelectorAll('button').forEach(b=>b.onclick=()=>{pst.page+=+b.dataset.p;draw();window.scrollTo(0,0);});
@@ -1794,7 +2019,7 @@ function pPlayer(k,tab,q){{const al={};P.forEach(p=>(p.alias||[]).forEach(x=>al[
     <div>
       <h1>${esc(name)} <button class="fav" id="favt" aria-pressed="${fav}" title="이 브라우저에만 저장됩니다">${fav?'★ 즐겨찾기됨':'☆ 즐겨찾기'}</button></h1>
       <div class="alt">${p?esc([p.hn||'',p.en||''].filter(Boolean).join(' · ')):(nkLabel(k)==='아마추어'?'아마추어 — 한국기원 기사 정보가 없어 대국 기록만 표시합니다':nkLabel(k)==='팀(릴레이 대국)'?'팀 이름으로 기록된 릴레이 대국 — 개인 기사가 아닙니다':'한국기원 기사 명단에 없는 기사(관서기원·해외·은퇴 등) — 대국 기록만 표시합니다')}${p&&nameOf(k)!==p.n?` · 기사 정보 표기: ${esc(p.n)}`:''}</div>
-      <div class="bio">${bio.map(([a,b])=>`<span>${a}<b>${a==='국가'&&FLAG[b]?flag(b)+' ':''}${esc(b)}</b></span>`).join('')}</div>
+      <div class="bio">${bio.map(([a,b])=>`<span>${a}<b>${a==='국가'&&FLAG[b]?flag(b)+'<span class="sr">'+esc(b)+'</span>':esc(b)}</b></span>`).join('')}</div>
       ${chips.length?`<div class="awards">${chips.join('')}</div>`:''}
       ${extLinks(k,p)}
     </div>
