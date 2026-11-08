@@ -1593,6 +1593,10 @@ h1.pt,.pt{font-size:clamp(30px,2.8vw,40px)}
 .gcard .gk-s{font-family:var(--font-num);font-size:19px;font-weight:700}
 .gcard .ph .ini{font-size:28px}
 @media (max-width:860px){.gcard .gk-n{font-size:17px}.gcard .gk-s{font-size:15px}}
+/* 고정되는 막대·표머리: 제호가 더는 따라오지 않으므로 맨 위에 붙이고, 아래 내용이 비치지 않게 바탕색을 채움 */
+.fbar{top:0;background:var(--bg);z-index:25}
+.nside{top:16px}
+.scrollbox thead th,.tw.sticky th:first-child,.tw.sticky td:first-child,.ixg tbody th{background:var(--bg)}
 </style>
 </head>
 <body>
