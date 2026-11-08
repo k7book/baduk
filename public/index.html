@@ -1566,6 +1566,10 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 .etop .img{aspect-ratio:16/9}
 .etop .img img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
 @media (max-width:860px){.etop .img{aspect-ratio:16/9}}
+/* 홈 보정: 메인 사진이 위 선을 덮지 않게, 세 단 번호는 빼기 */
+.etop{padding-top:16px;position:relative}
+.etop .eimg{display:block}
+.ec>header h2::before{content:none}
 </style>
 </head>
 <body>
