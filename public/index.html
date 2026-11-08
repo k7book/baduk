@@ -1475,17 +1475,6 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 .stats .v,.kpis .v,.kpi .num,.szh .v,.kts .v,.feds .v,.ov-kpis .v{font-family:var(--serif);font-weight:600;letter-spacing:-.02em}
 
 /* ---------- 홈 ---------- */
-.blead{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;padding:8px 0 40px;margin-bottom:36px;border-bottom:1px solid var(--rule)}
-.bl-t .kicker{margin-bottom:12px}
-.bl-h{font-family:var(--serif);font-size:clamp(32px,3.4vw,46px);line-height:1.22;letter-spacing:-.025em;font-weight:700;margin:0 0 18px;word-break:keep-all;color:var(--ink)}
-.bl-h a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent-fill);text-decoration-thickness:3px;text-underline-offset:8px}
-.bl-d{font-size:18px;line-height:1.75;color:var(--ink-soft);margin:0;word-break:keep-all;max-width:36em}
-.bl-by{font-size:13px;color:var(--muted);margin-top:18px}.bl-by a{color:var(--ink-soft)}
-.bl-n{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--ink);align-self:start}
-.bl-n div{padding:18px 0;border-bottom:1px solid var(--rule)}
-.bl-n div:nth-child(odd){padding-right:24px;border-right:1px solid var(--rule)}.bl-n div:nth-child(even){padding-left:24px}
-.bl-n strong{display:block;font-family:var(--serif);font-size:46px;line-height:1;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
-.bl-n span{display:block;font-size:13.5px;color:var(--muted);margin-top:8px}
 .e3{gap:40px;grid-template-columns:236px minmax(0,1fr) 300px}
 .e3>*{gap:36px}
 .e3{counter-reset:bsec}
@@ -1546,7 +1535,7 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 .cty{display:inline-flex;align-items:center;gap:5px}
 
 /* ---------- 좁은 화면 ---------- */
-@media (max-width:1100px){.blead{grid-template-columns:1fr;gap:28px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.e3{grid-template-columns:minmax(0,1fr) 280px}}
+@media (max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.e3{grid-template-columns:minmax(0,1fr) 280px}}
 @media (max-width:860px){
   .gnav .in{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"logo tools" "nav nav";padding-top:12px}
   .gnav .mdate{display:none}.gnav .logo{justify-self:start}.gnav .logo svg{height:26px}
@@ -1555,13 +1544,11 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
   .qs{width:140px}
   .cards{grid-template-columns:1fr}
   .e3{grid-template-columns:1fr}
-  .bl-n strong{font-size:34px}
   .phead .ph{width:92px;height:116px}
 }
 .foot{border-top:0;background:linear-gradient(var(--ink),var(--ink)) var(--gutter) 0/calc(100% - 2*var(--gutter)) 2px no-repeat}
 .dgrp-h{background:transparent;border-bottom:1px solid var(--rule)}
 .feds>div,.speek-d{background:transparent}
-.bl-h a,.phead h1 a{font:inherit;color:inherit}
 /* 메인 뉴스 사진: 원본(약 1.7:1)에 가까운 16:9로, 얼굴이 있는 위쪽 기준 */
 .etop .img{aspect-ratio:16/9}
 .etop .img img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
@@ -1570,6 +1557,13 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 .etop{padding-top:16px;position:relative}
 .etop .eimg{display:block}
 .ec>header h2::before{content:none}
+/* 빵부스러기(현재 위치): 본문 위에서 빼서 제호 왼쪽 날짜 자리로 */
+.mcrumb{font-size:13px;color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcrumb a{color:var(--muted);font-weight:400;text-decoration:none}.mcrumb a:hover{color:var(--ink);text-decoration:underline}
+.mcrumb .sep{color:var(--rule-dot);margin:0 4px}
+#app>.crumb{display:none}
+.page{padding-top:28px}
+@media (max-width:860px){.gnav .mdate{display:block;grid-area:crumb}.gnav .in{grid-template-areas:"logo tools" "nav nav" "crumb crumb"}.gnav .mdate:not(:has(.mcrumb)){display:none}.mcrumb{padding:8px 0 0}}
 </style>
 </head>
 <body>
@@ -1723,7 +1717,7 @@ document.addEventListener('click',e=>{const pop=document.getElementById('favpop'
 (function(){const t=store.get('bdb-theme-b','light');document.documentElement.dataset.theme=t;
   document.getElementById('themebtn').onclick=()=>{const cur=document.documentElement.dataset.theme||'light';const nx=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=nx;store.set('bdb-theme-b',nx);route();};})();
 
-(function(){const el=document.getElementById('mdate');if(!el)return;const k=kst(),wd=['일','월','화','수','목','금','토'][new Date(Date.UTC(k.y,k.m-1,k.d)).getUTCDay()];const d=String(LASTD);el.textContent=`${k.y}년 ${k.m}월 ${k.d}일 ${wd}요일 · ${+d.slice(4,6)}월 ${+d.slice(6)}일 대국까지`;})();
+(function(){const el=document.getElementById('mdate');if(!el)return;const k=kst(),wd=['일','월','화','수','목','금','토'][new Date(Date.UTC(k.y,k.m-1,k.d)).getUTCDay()];const d=String(LASTD);const ds=`${k.y}년 ${k.m}월 ${k.d}일 ${wd}요일 · ${+d.slice(4,6)}월 ${+d.slice(6)}일 대국까지`;el.textContent=ds;const ap=document.getElementById('app');const sync=()=>{const c=ap.querySelector('.crumb');if(c){el.innerHTML='<div class="mcrumb" role="navigation" aria-label="현재 위치">'+c.innerHTML+'</div>';c.remove();}else if(!ap.querySelector('.crumb')&&!el.dataset.keep){}};new MutationObserver(()=>{if(ap.querySelector('.crumb'))sync();}).observe(ap,{childList:true,subtree:true});window.addEventListener('hashchange',()=>{el.textContent=ds;setTimeout(()=>{if(ap.querySelector('.crumb'))sync();},0);});sync();})();
 /* ---------- quick search ---------- */
 const QS=[];
 P.forEach(p=>QS.push({k:p.k,label:p.n,sub:[p.hn,p.en,p.c].filter(Boolean).join(' · '),hay:(p.n+' '+(p.hn||'')+' '+(p.en||'')+' '+[...(KALL[p.k]||[])].join(' ')).toLowerCase(),href:'#/players/'+encodeURIComponent(p.k)}));
@@ -1811,32 +1805,6 @@ const FLAG=(()=>{
 const flag=c=>FLAG[c]?`<span class="flag" title="${c}">${FLAG[c]}</span>`:'';
 const cflag=c=>c?(FLAG[c]?`<span class="cty">${flag(c)}<span class="sr">${esc(c)}</span></span>`:`<span class="cty">${esc(c)}</span>`):'';
 
-
-/* ---------- 연감 머리기사(홈) ---------- */
-function josa(w,a,b){const c=(w||'').replace(/\([^)]*\)$/,'').slice(-1).charCodeAt(0);if(c<0xAC00||c>0xD7A3)return w+a;return w+((c-0xAC00)%28?a:b);}
-function homeLead(){
-  const months=Object.keys(KO).sort();const m=months[months.length-1];if(!m||!KO[m].length)return '';
-  const r=KO[m],a=r[0],b=r[1];const pm=months[months.length-2];const prev={};(KO[pm]||[]).forEach(x=>prev[x[1]]=x[0]);
-  const nm=k=>nameOf(k),mo=+m.slice(5);
-  const held=prev[a[1]]===1;
-  const top10=r.slice(0,10);
-  const up=top10.filter(x=>x[3]>0).sort((p,q)=>q[3]-p[3])[0];
-  const yr=YEARS[YEARS.length-1];
-  const yC=CHAMP.filter(c=>c.st===0&&((c.d/10000)|0)===yr);
-  const aT=(CHB[a[1]]||[]).length,aY=yC.filter(c=>c.ck===a[1]).length;
-  const w1=currentTop(null,2);
-  const s=[];
-  if(up)s.push(`${josa(nm(up[1]),'이','가')} ${up[3]}계단 올라 ${up[0]}위(${fmt(up[2])}점)가 됐다.`);
-  if(b)s.push(`2위는 ${nm(b[1])}(${fmt(b[2])}점).`);
-  if(aT)s.push(`${josa(nm(a[1]),'은','는')} ${aY?`올해 ${aY}개 대회를 포함해 `:''}통산 ${aT}번 우승했다.`);
-  if(w1.length>1&&w1[0][0]===a[1])s.push(`이 사이트의 실력 점수에서도 ${fmt(w1[0][1])}점으로 2위 ${nm(w1[1][0])}(${fmt(w1[1][1])}점)를 앞선다.`);
-  const tg=GAMES.filter(g=>g.y===yr).length;
-  const d=String(LASTD);
-  return `<section class="blead"><div class="bl-t"><div class="kicker">${mo}월 한국기원 랭킹</div>
-  <h2 class="bl-h">${plink(a[1])}, ${fmt(a[2])}점으로 1위 ${held?'수성':'올라'}.${b?` 2위와 ${fmt(a[2]-b[2])}점 차`:''}</h2>
-  <p class="bl-d">${s.join(' ')}</p><div class="bl-by">바둑DB 집계 · ${+d.slice(4,6)}월 ${+d.slice(6)}일 대국까지 · <a href="#/rankings">랭킹 전체 보기</a></div></div>
-  <div class="bl-n"><div><strong>${fmt(GAMES.length)}</strong><span>${YEARS[0]}년부터 쌓인 대국</span></div><div><strong>${fmt(P.length)}</strong><span>한·중·일·대만 기사</span></div><div><strong>${fmt(tg)}</strong><span>${yr}년 대국</span></div><div><strong>${fmt(yC.length)}</strong><span>${yr}년 우승이 가려진 대회</span></div></div></section>`;
-}
 /* =============== HOME =============== */
 function heroSearch(){const f=document.getElementById('hqf'),inp=document.getElementById('hqs'),box=document.getElementById('hqsl');if(!f)return;let tmr,items=[],sel=-1;
   const draw=()=>{box.innerHTML=items.map((x,i)=>`<a href="${x.href}" class="${i===sel?'on':''}">${esc(x.label)}<span>${esc(x.sub)}</span></a>`).join('')||'<div style="padding:8px 10px" class="muted small">일치하는 기사·대회가 없습니다</div>';box.hidden=false;};
