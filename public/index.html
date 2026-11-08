@@ -1573,6 +1573,26 @@ td.n,td.r,.n{font-variant-numeric:tabular-nums}
 .phead .alt{font-size:16px}
 .phead .ph{width:112px;height:140px}
 @media (max-width:860px){.phead h1{font-size:32px}.phead .ph{width:84px;height:106px}}
+/* ---------- 글자 크기 단계 정리 (PC 기준) ----------
+   쪽 제목·기사 이름 40~44 > 대표 점수 32 > 통계 숫자 28 > 메인 기사 제목 26 > 구획 제목 19 > 탭 15 > 본문 14.5 > 보조 12.5 */
+h1.pt,.pt{font-size:clamp(30px,2.8vw,40px)}
+.phead h1{font-size:clamp(34px,3.1vw,44px)}
+.phead .rating .v{font-size:32px}
+.phead .ph .ini{font-size:44px}
+.stats .v{font-size:28px}
+.stats>div{padding-top:16px;padding-bottom:16px}
+.etop h2{font-size:26px}
+.mod>.hd,.mod>.hd>span:first-child{font-size:19px}
+.ec>header h2{font-size:19px}
+.prose h2{font-size:21px}
+.kts .v,.szh .v{font-size:26px}
+.kpi .num,.kpis .v{font-size:26px}
+@media (max-width:860px){h1.pt,.pt{font-size:28px}.phead h1{font-size:30px}.phead .rating .v{font-size:26px}.stats .v{font-size:22px}.etop h2{font-size:21px}}
+/* 랭킹·기록 상위 3명 카드: 이름이 점수보다 크게 */
+.gcard .gk-n{font-family:var(--serif);font-size:22px;font-weight:700}
+.gcard .gk-s{font-family:var(--font-num);font-size:19px;font-weight:700}
+.gcard .ph .ini{font-size:28px}
+@media (max-width:860px){.gcard .gk-n{font-size:17px}.gcard .gk-s{font-size:15px}}
 </style>
 </head>
 <body>
