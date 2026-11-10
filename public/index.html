@@ -2741,25 +2741,26 @@ newsIndex();
 //  - 지난번에 받은 최신 뉴스를 브라우저에 저장해 두었다가 바로 보여 주고
 //  - 저장된 것이 없으면(첫 방문) 뉴스 자리를 '불러오는 중'으로 두었다가 최신 뉴스가 오면 그립니다(3초 안에 안 오면 내장 목록).
 const NWZ='bk_news_v1';
-let NEWS_PENDING=false;
+let NEWS_PENDING=false,NEWS_FB=null;
 (function(){
   if(location.protocol==='file:')return;
   let c=null;try{c=JSON.parse(localStorage.getItem(NWZ)||'null');}catch(e){}
   if(c&&Array.isArray(c.items)&&c.items.length){
     const L=c.items.map(nMap);
-    if(!NEWSL.length||L[0].d>=NEWSL[0].d){NEWSL.length=0;L.forEach(x=>NEWSL.push(x));newsIndex();if(c.meta&&c.meta.updated)NEWS_UPD=c.meta.updated;}
-    else NEWS_PENDING=true;   // 저장된 것이 내장 목록보다 오래됐으면 최신 뉴스를 기다림
+    const fresh=c.at&&Date.now()-c.at<2*3600e3;   // 2시간 안에 받아 둔 것만 바로 보여 줌
+    if(fresh&&(!NEWSL.length||L[0].d>=NEWSL[0].d)){NEWSL.length=0;L.forEach(x=>NEWSL.push(x));newsIndex();if(c.meta&&c.meta.updated)NEWS_UPD=c.meta.updated;}
+    else{NEWS_PENDING=true;if(!NEWSL.length||L[0].d>=NEWSL[0].d)NEWS_FB=c;}   // 오래된 저장본은 최신 뉴스를 못 받을 때만 씀
   }else NEWS_PENDING=true;
 })();
 function newsRedraw(){const r=parseHash().parts[0]||'home';if(r==='home'||r==='news'||r==='players'){const y=window.scrollY;route();window.scrollTo(0,y);}}
 function loadLiveNews(){
   if(location.protocol==='file:')return;
   const sig=()=>NEWSL.slice(0,16).map(n=>n.u+n.d).join('|');
-  const done=()=>{if(NEWS_PENDING){NEWS_PENDING=false;newsRedraw();}};
-  setTimeout(done,3000);
+  const done=()=>{if(NEWS_PENDING){NEWS_PENDING=false;if(NEWS_FB){NEWSL.length=0;NEWS_FB.items.forEach(x=>NEWSL.push(nMap(x)));newsIndex();if(NEWS_FB.meta&&NEWS_FB.meta.updated)NEWS_UPD=NEWS_FB.meta.updated;}newsRedraw();}};
+  setTimeout(done,6000);
   fetch('/api/news').then(r=>r.ok?r.json():null).then(j=>{
     if(!j||!Array.isArray(j.items)||!j.items.length){done();return;}
-    try{localStorage.setItem(NWZ,JSON.stringify({items:j.items,meta:j.meta?{updated:j.meta.updated}:{}}));}catch(e){}
+    try{localStorage.setItem(NWZ,JSON.stringify({at:Date.now(),items:j.items,meta:j.meta?{updated:j.meta.updated}:{}}));}catch(e){}
     const was=NEWS_PENDING,before=sig();
     NEWSL.length=0;j.items.forEach(x=>NEWSL.push(nMap(x)));newsIndex();
     if(j.meta&&j.meta.updated)NEWS_UPD=j.meta.updated;
