@@ -1656,6 +1656,35 @@ h1.pt,.pt{font-size:clamp(30px,2.8vw,40px)}
 .krh-t td.on a.pl{font-weight:800;text-decoration:underline}
 .krh-t tr.on td.l a.pl{font-weight:800}
 .krh-sec{margin-top:16px}
+/* 타임라인 탭 */
+.ctl-help{font-size:13px;color:var(--ink-soft);margin:0 0 10px;line-height:1.6}
+.ctl{list-style:none;margin:0;padding:0}
+.ctl>li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;padding:10px 0;border-bottom:1px solid var(--rule-2);position:relative}
+.ctl>li:last-child{border-bottom:0}
+.ctl-y b{display:block;font-family:var(--font-head);font-size:20px;line-height:1.1;font-variant-numeric:tabular-nums}
+.ctl-y span{font-size:12px;color:var(--muted)}
+.ctl-s{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13.5px;font-variant-numeric:tabular-nums}
+.ctl-s b.w{color:var(--win)}.ctl-s b.l{color:var(--loss)}
+.ctl-bar{display:inline-block;width:90px;height:6px;border-radius:3px;background:var(--none);overflow:hidden;vertical-align:middle}
+.ctl-bar i{display:block;height:100%;background:var(--win)}
+.ctl-rk{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-soft)}
+.ctl-rk.top{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--ink)}
+.ctl-e{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.ctl-ev{font-size:12.5px;padding:3px 9px;border-radius:6px;background:var(--none);color:var(--ink)}
+.ctl-ev a{color:inherit;text-decoration:none;font-weight:600}.ctl-ev a:hover{text-decoration:underline}
+.ctl-ev.win{background:color-mix(in srgb,var(--gold) 28%,transparent)}
+.ctl-ev.run{background:color-mix(in srgb,var(--silver) 25%,transparent)}
+.ctl-ev.semi{background:color-mix(in srgb,var(--orange) 14%,transparent)}
+.ctl-ev.pr{background:transparent;border:1px dashed var(--rule)}
+.hm2{width:auto}
+.hm2 th{font-size:11px;min-width:24px;text-align:center}
+.hm2 td{width:24px;min-width:24px;height:22px;text-align:center;font-size:11px;font-weight:700;color:var(--ink);line-height:22px}
+.hm2 td.s5,.hm2 td.s3{color:#222}.hm2 td.s45{color:#fff}.hm2 td.s0{color:var(--muted)}.hm2 td.sx{color:var(--muted)}
+.hm2 td.e{background:transparent}
+.hm2 td.lab,.hm2 th.lab{position:sticky;left:0;z-index:1;background:var(--card);min-width:180px;max-width:240px;text-align:left;font-weight:500;color:inherit}
+.hm2 tr.grp td.lab{font-weight:800}
+.legend i.s5{background:var(--gold)}.legend i.s45{background:var(--silver)}.legend i.s3{background:var(--orange)}.legend i.s2{background:var(--beige)}.legend i.s1{background:var(--sky)}.legend i.s0{background:var(--sky-2)}
+@media (max-width:640px){.ctl>li{grid-template-columns:54px minmax(0,1fr);gap:10px}.ctl-y b{font-size:17px}.hm2 td.lab,.hm2 th.lab{min-width:120px;max-width:140px}}
 </style>
 </head>
 <body>
@@ -2151,23 +2180,66 @@ function tTour(el,k,p,gs){
   el.innerHTML=`<section class="panel"><h2 class="sec"><span>최근 흐름</span><span class="desc">무승부·무효 제외</span></h2><div class="split"><div><div class="k">최근 10국</div><div class="v">${w10}승 ${l10}패</div><div class="s">승률 ${pct(w10,w10+l10)}</div></div><div><div class="k">최근 30국</div><div class="v">${w30}승 ${l30}패</div><div class="s">승률 ${pct(w30,w30+l30)}</div></div><div><div class="k">통산</div><div class="v">${fmt(rec(k).w)}승 ${fmt(rec(k).l)}패</div><div class="s">승률 ${wpct(rec(k))}</div></div><div><div class="k">참가 대회</div><div class="v">${rows.length}</div><div class="s">정리된 대회명 기준</div></div></div></section>
   <section class="panel"><h2 class="sec"><span>대회별 성적</span><span class="desc">우승 많은 순 · 대회를 누르면 대회 페이지</span></h2><div class="tw sticky"><table><thead><tr><th>대회</th><th>분류</th><th class="r">참가 연도</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th class="r">우승 ${calc('결승·도전기 다승자')}</th><th class="r">준우승</th><th>최고 단계</th></tr></thead><tbody>${rows.map(([g,o])=>`<tr><td><a class="pl" href="#/tournaments/${g}">${esc(G[g])}</a></td><td>${badge(o.c)}</td><td class="n r">${o.ys.size}</td><td class="n r">${o.w+o.l+o.d}</td><td class="n r">${o.w}</td><td class="n r">${o.l}</td><td class="n r">${pct(o.w,o.w+o.l)}</td><td class="n r">${tc[g]||''}</td><td class="n r">${ru[g]||''}</td><td class="small">${tc[g]?'우승':o.best>=0?STAGE[o.best]:'<span class="muted">단계 정보 없음</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
 }
-function tTimeline(el,k,p,gs){
+function tTimeline(el,k,p,gs,q){
   if(!gs.length){el.innerHTML='<div class="empty">대국 기록이 없습니다</div>';return;}
+  q=q||{};
   const y0=gs[0].y,y1=gs[gs.length-1].y;const years=[];for(let y=y0;y<=y1;y++)years.push(y);
-  const cell={};const cnt={};gs.forEach(g=>{const key=g.g+'|'+g.y;cnt[key]=(cnt[key]||0)+1;const v=g.s;if(cell[key]==null||v>cell[key])cell[key]=v;});
+  const STL=v=>v==null?'':v>=5?'우승':v>=4.5?'준우승':v>=4?'결승':v>=3?'4강':v>=2?'8강':v>=1?'본선':v>=0?'예선':'단계 정보 없음';
+  const STS=v=>v>=5?'우':v>=4.5?'준':v>=4?'결':v>=3?'4':v>=2?'8':v>=1?'본':v>=0?'예':'?';
+  const cls=v=>v==null?'':v>=5?'s5':v>=4?'s45':v>=3?'s3':v>=2?'s2':v>=1?'s1':v>=0?'s0':'sx';
+  // ---- 연도별 묶음 ----
+  const Y={};years.forEach(y=>Y[y]={g:0,w:0,l:0,win:[],run:[],pr:[],best:{}});
+  gs.forEach(g=>{const a=Y[g.y];a.g++;if(g.j===1||g.j===2){}else if(g.j===3)a.l++;else if(g.wk===k)a.w++;else a.l++;
+    if(g.s!=null&&g.s>=3){const b=a.best[g.g];if(b==null||g.s>b)a.best[g.g]=g.s;}});
+  (CHB[k]||[]).forEach(c=>{const y=(c.d/10000)|0;if(Y[y])Y[y].win.push(c);});
+  (RUB[k]||[]).forEach(c=>{const y=(c.d/10000)|0;if(Y[y])Y[y].run.push(c);});
+  ((p&&p.pr)||[]).forEach(r=>{const y=+String(r[1]).slice(0,4);if(Y[y])Y[y].pr.push(r);});
+  const by=p&&p.b&&/^\d{4}/.test(p.b)?+p.b.slice(0,4):null;
+  const isW=p&&p.g==='여자';
+  const krRank=(y,w)=>{if(typeof KRH==='undefined'||!KRH)return null;const H=w?KRH.w:KRH;if(!H||!H.ye[y])return null;const i=H.ye[y].findIndex(x=>x[0]===k);return i>=0?i+1:null;};
+  const tn=c=>`<a href="#/tournaments/${c.g}">${esc(G[c.g])}</a>${c.ed?` <span class="muted">${esc(c.ed)}</span>`:''}`;
+  const rowY=y=>{const a=Y[y];if(!a.g&&!a.win.length&&!a.pr.length)return '';
+    const dec=a.w+a.l,pc=dec?Math.round(a.w/dec*1000)/10:null;
+    const r1=krRank(String(y),false),rw=isW?krRank(String(y),true):null;
+    const rk=[r1?`<span class="ctl-rk${r1<=3?' top':''}">한국 ${r1}위</span>`:'',rw?`<span class="ctl-rk${rw<=3?' top':''}">여자 ${rw}위</span>`:''].join('');
+    const ev=[];
+    a.win.sort((x,z)=>x.d-z.d).forEach(c=>ev.push(`<span class="ctl-ev win">🏆 ${tn(c)} 우승</span>`));
+    a.run.sort((x,z)=>x.d-z.d).forEach(c=>ev.push(`<span class="ctl-ev run">준우승 · ${tn(c)}</span>`));
+    const won=new Set(a.win.concat(a.run).map(c=>c.g));
+    const semi=Object.entries(a.best).filter(([g,s])=>s>=3&&s<4.5&&!won.has(+g)).map(([g])=>`<a href="#/tournaments/${g}">${esc(G[g])}</a>`);
+    if(semi.length)ev.push(`<span class="ctl-ev semi">4강·결승 진출 · ${semi.join(', ')}</span>`);
+    a.pr.forEach(r=>ev.push(`<span class="ctl-ev pr">${/입단/.test(r[2])?'입단':r[0]+'단 승단'} <span class="muted">${esc(String(r[1]))}</span></span>`));
+    return `<li><div class="ctl-y"><b>${y}</b>${by?`<span>${y-by}세</span>`:''}</div>
+      <div class="ctl-b"><div class="ctl-s">${a.g?`<span>${fmt(a.g)}국</span><span><b class="w">${a.w}승</b> <b class="l">${a.l}패</b></span>${pc!=null?`<span class="ctl-bar" title="승률 ${pc}%"><i style="width:${pc}%"></i></span><span>승률 ${pc}%</span>`:''}`:'<span class="muted">대국 없음</span>'}${rk}</div>
+      ${ev.length?`<div class="ctl-e">${ev.join('')}</div>`:''}</div></li>`;};
+  // ---- 대회별 성적표 ----
+  const cell={},cnt={};gs.forEach(g=>{const key=g.g+'|'+g.y;cnt[key]=(cnt[key]||0)+1;const v=g.s;if(cell[key]==null||v>cell[key])cell[key]=v;});
   (RUB[k]||[]).forEach(c=>{const key=c.g+'|'+((c.d/10000)|0);cell[key]=Math.max(cell[key]??-1,4.5);});
   (CHB[k]||[]).forEach(c=>{const key=c.g+'|'+((c.d/10000)|0);cell[key]=5;});
   const groups={};gs.forEach(g=>{(groups[g.c]=groups[g.c]||{})[g.g]=(groups[g.c][g.g]||0)+1;});
   const order=['세계기전','국내기전','리그','협회리그','해외리그','기타'];
-  const cls=v=>v==null?'':v>=5?'s5':v>=4?'s45':v>=3?'s3':v>=2?'s2':v>=1?'s1':v>=0?'s0':'sx';
-  const lab=v=>v>=5?'우승':v>=4.5?'준우승':v>=4?'결승':v>=3?'4강':v>=2?'8강':v>=1?'본선':v>=0?'예선':'단계 정보 없음';
-  let rows='';
-  order.forEach(c=>{if(!groups[c])return;rows+=`<tr class="grp"><td class="lab">${CLABEL[c]}</td>${years.map(()=>'<td style="background:transparent"></td>').join('')}</tr>`;
-    Object.entries(groups[c]).sort((a,b)=>b[1]-a[1]).forEach(([g])=>{rows+=`<tr><td class="lab" title="${esc(G[g])}"><a class="pl" href="#/tournaments/${g}">${esc(G[g])}</a></td>${years.map(y=>{const v=cell[g+'|'+y];return v==null?'<td></td>':`<td class="${cls(v)}" title="${y} · ${esc(G[g])} · ${lab(v)} (${cnt[g+'|'+y]}국)"></td>`;}).join('')}</tr>`;});});
-  el.innerHTML=`<section class="panel"><h2 class="sec"><span>대회 × 연도 최고 성적 ${calc('대회명의 단계 표기(예선/본선/8강/4강/결승)와 우승 판정으로 계산')}</span><span class="desc">${y0}–${y1}</span></h2>
-  <div class="legend"><span><i style="background:var(--gold)"></i>우승</span><span><i style="background:var(--silver)"></i>준우승·결승</span><span><i style="background:var(--orange)"></i>4강</span><span><i style="background:var(--beige)"></i>8강</span><span><i style="background:var(--sky)"></i>본선</span><span><i style="background:var(--sky-2)"></i>예선</span><span><i class="" style="background:repeating-linear-gradient(45deg,var(--none),var(--none) 3px,var(--rule) 3px,var(--rule) 5px)"></i>단계 정보 없음</span></div>
-  <div class="tw sticky"><table class="hm"><thead><tr><th></th>${years.map(y=>`<th>${y%5===0||y===y0||y===y1?String(y).slice(2):''}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>
-  <div class="note">대회명에 단계 표기가 없는 대국(전체의 약 ${META.stage_unknown_pct}%)은 빗금 칸으로 표시하고 추정하지 않습니다. 공식 기전 목록에 없는 대회는 '기타/미분류' 묶음에 모았습니다.</div></section>`;
+  const st={all:q.all==='1'};
+  el.innerHTML=`<section class="panel"><h2 class="sec"><span>연도별 경력</span><span class="desc">${y0}–${y1} · 최근 해부터</span></h2>
+    <p class="ctl-help">해마다 몇 판을 두어 몇 번 이겼는지, 그해 우승·준우승한 대회, 4강 이상 오른 대회, 승단을 한 줄로 모았습니다. 순위는 그해 말 한국기원 방식 랭킹(계산값, 20위 안일 때만)입니다.</p>
+    <ol class="ctl">${years.slice().reverse().map(rowY).join('')}</ol></section>
+  <section class="panel"><h2 class="sec"><span>대회별 성적표 ${calc('대회명의 단계 표기(예선/본선/8강/4강/결승)와 우승 판정으로 계산')}</span><span class="desc">${y0}–${y1}</span></h2>
+    <p class="ctl-help">줄은 대회, 칸은 연도입니다. 칸 안의 글자는 그해 그 대회에서 올라간 <b>가장 높은 단계</b>입니다 — <b>우</b> 우승 · <b>준</b> 준우승 · <b>결</b> 결승 · <b>4</b> 4강 · <b>8</b> 8강 · <b>본</b> 본선 · <b>예</b> 예선 · <b>?</b> 단계 정보 없음. 빈칸은 그해 그 대회에 나가지 않은 것입니다. 칸에 마우스를 대면 대국 수가 나옵니다.</p>
+    <div class="fbar"><div class="fg"><span class="fl">보기</span><div class="pills" id="tlv"><button class="pill" data-v="0" aria-pressed="${!st.all}">본선 이상 오른 대회만</button><button class="pill" data-v="1" aria-pressed="${st.all}">모든 대회</button></div></div>
+    <div class="legend"><span><i class="s5"></i>우승</span><span><i class="s45"></i>준우승·결승</span><span><i class="s3"></i>4강</span><span><i class="s2"></i>8강</span><span><i class="s1"></i>본선</span><span><i class="s0"></i>예선</span></div></div>
+    <div class="tw sticky"><table class="hm hm2" id="tlt"></table></div>
+    <div class="note">대회명에 단계 표기가 없는 대국(전체의 약 ${META.stage_unknown_pct}%)은 '?'로 표시하고 추정하지 않습니다. 공식 기전 목록에 없는 대회는 '기타/미분류' 묶음에 모았습니다.</div></section>`;
+  const draw=()=>{
+    let rows='';
+    order.forEach(c=>{if(!groups[c])return;
+      const list=Object.entries(groups[c]).map(([g,n])=>{let b=-2;years.forEach(y=>{const v=cell[g+'|'+y];if(v!=null&&v>b)b=v;});return [g,n,b];})
+        .filter(x=>st.all||x[2]>=1).sort((a,b)=>b[2]-a[2]||b[1]-a[1]);
+      if(!list.length)return;
+      rows+=`<tr class="grp"><td class="lab">${CLABEL[c]}</td>${years.map(()=>'<td class="e"></td>').join('')}</tr>`;
+      list.forEach(([g,n,b])=>{rows+=`<tr><td class="lab" title="${esc(G[g])}"><a class="pl" href="#/tournaments/${g}">${esc(G[g])}</a></td>${years.map(y=>{const v=cell[g+'|'+y];return v==null?'<td></td>':`<td class="${cls(v)}" title="${y}년 · ${esc(G[g])} · ${STL(v)} (${cnt[g+'|'+y]||0}국)">${STS(v)}</td>`;}).join('')}</tr>`;});});
+    document.getElementById('tlt').innerHTML=`<thead><tr><th class="lab"></th>${years.map(y=>`<th title="${y}년">${String(y).slice(2)}</th>`).join('')}</tr></thead><tbody>${rows||`<tr><td class="lab muted">본선에 오른 대회가 없습니다</td></tr>`}</tbody>`;
+  };
+  bindPills('tlv',v=>{st.all=v==='1';draw();});
+  draw();
 }
 function tGames(el,k,p,gs,q){
   const myGroups=[...new Set(gs.map(g=>g.g))].sort((a,b)=>G[a].localeCompare(G[b],'ko'));
