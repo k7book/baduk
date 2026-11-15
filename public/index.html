@@ -1728,6 +1728,8 @@ tr.fxg-on td{background:color-mix(in srgb,var(--gold) 18%,transparent)}
 .fxb-p.w{border-left-color:var(--gold);font-weight:700}.fxb-p.w .sc{background:color-mix(in srgb,var(--gold) 30%,transparent);color:var(--ink)}
 .fxb-p.l .nm,.fxb-p.l .nm a{color:var(--muted)}.fxb-p a.sc:hover{text-decoration:underline}.fxb-p .tbd{color:var(--muted);font-weight:400}
 .fxb.hlon .fxb-p{opacity:.45}.fxb.hlon .fxb-p.hl{opacity:1;background:color-mix(in srgb,var(--gold) 16%,transparent)}
+.fxb-sl{position:absolute;display:flex;justify-content:space-between;align-items:baseline;padding:0 4px;font-size:11.5px;color:var(--muted);line-height:16px}.fxb-sl b{font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.02em}.fxb-sl.fin b{font-size:17px}.fxb-sl b i{font-style:normal;font-weight:600;font-size:11.5px;color:var(--muted);margin-right:3px}.fxb-sl.fin b i{font-size:12.5px}.fxb-sl.fin span{font-weight:700}
+.fxb-champ .sc{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin:0 0 2px}.fxb-win{display:flex;align-items:center;gap:6px}.fxb-win>b{font-size:18px;font-variant-numeric:tabular-nums;margin:0 4px}.fxb-win .vs{display:flex;gap:5px;align-items:center;font-weight:600;opacity:.75}
 .fxb-champ{position:absolute;width:180px;box-sizing:border-box;padding:10px 12px;border:2px solid var(--gold);border-radius:10px;background:var(--card)}.fxb-champ .t{font-size:12px;font-weight:800;color:var(--muted)}.fxb-champ .n{font-size:16px;font-weight:800;display:flex;gap:5px;align-items:center;margin:2px 0}.fxb-champ .r{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .fxw-teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.fxw-team{border:1px solid var(--rule);border-radius:var(--radius);background:var(--card);padding:10px 12px}.fxw-th{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;margin:0 0 6px}.fxw-th b{font-size:15px}.fxw-th .muted{width:100%}.fxw-team ul{list-style:none;margin:0;padding:0}.fxw-team li{display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px dashed var(--rule);font-size:13.5px}.fxw-team li .n{margin-left:auto;font-variant-numeric:tabular-nums}.fxw-team li em{font-style:normal;color:var(--muted);font-size:12px}
 .fxw-m{display:grid;grid-template-columns:52px 1fr 56px 1fr;gap:6px;align-items:center;padding:5px 0;border-top:1px solid var(--rule);font-size:13.5px}.fxw-m .d{color:var(--muted);font-size:12px}.fxw-m a{text-decoration:none;color:var(--ink)}.fxw-m a.w{font-weight:800}.fxw-m>b{text-align:center}.fxw-m a:nth-of-type(2){text-align:left}.fxw-m details{grid-column:1/-1;font-size:13px;padding:0 0 0 58px}.fxw-m summary{cursor:pointer;color:var(--muted);font-size:12px}
@@ -4643,7 +4645,7 @@ function pBracket(q){
   // 아직 안 둔 다음 판: 아래 단계 승자로 채움
   const pend=slots.map(()=>[]);
   for(let c=1;c<nC;c++)slots[c].forEach((m,j)=>{if(m)return;const pa=win(slots[c-1][2*j]),pb=win(slots[c-1][2*j+1]);if(pa||pb)pend[c][j]=[pa,pb];});
-  const U=62,CH=52,CW=210,GX=44,TOP=0;const H=slots[0].length*U;
+  const ser0=pool[0].some(m=>m.gs.length>1);const U=ser0?82:62,CH=52,CW=210,GX=44,TOP=0;const H=slots[0].length*U;
   const X=c=>c*(CW+GX),Y=(c,j)=>(j+.5)*Math.pow(2,c)*U;
   const lab=s=>s===2?'결승':s===4?'4강':(sl[s]||s)+'강';
   const md=d=>{const s=String(d);return +s.slice(4,6)+'.'+ +s.slice(6,8);};
@@ -4651,17 +4653,20 @@ function pBracket(q){
   const row=(p,cls,sc,href)=>`<div class="fxb-p ${cls}" ${p?`data-k="${esc(p)}"`:''}><span class="nm">${p?pf(p):'<span class="tbd">미정</span>'}</span>${href?`<a class="sc" href="${href}" title="대국 보기">${sc}</a>`:`<span class="sc">${sc}</span>`}</div>`;
   const card=(c,j)=>{const m=slots[c][j],top=Y(c,j)-CH/2,left=X(c);
     if(m){const w=win(m),ser=m.gs.length>1,last=m.gs[m.gs.length-1];const sc=p=>ser?(p===m.a?m.wa:m.wb):(w===p?'승':w?'패':'–');
-      return `<div class="fxb-m" style="left:${left}px;top:${top}px" title="${esc(dstr(m.gs[0].d))}${ser?' · '+m.gs.length+'번기':''}">${[m.a,m.b].map(p=>row(p,w===p?'w':w?'l':'',sc(p),'#/games/g/'+(ser?m.gs.find(g=>g.wk===p||g.lk===p).i:last.i))).join('')}</div>`;}
+      const hi=Math.max(m.wa,m.wb),lo=Math.min(m.wa,m.wb),bo=hi*2-1;
+      const tip=ser?m.gs.slice().sort((x,y)=>x.d-y.d).map((g,i)=>`제${i+1}국 ${md(g.d)} ${nameOf(g.wk)} 승`).join('\n'):dstr(m.gs[0].d);
+      const sl=ser?`<div class="fxb-sl ${c===nC-1?'fin':''}" style="left:${left}px;top:${top-(c===nC-1?26:19)}px;width:${CW}px"><span>${bo>1?bo+'번기':''}</span><b>${w?`<i>${esc(nameOf(w))}</i> `:''}${hi} : ${lo}</b></div>`:'';
+      return sl+`<div class="fxb-m" style="left:${left}px;top:${top}px" title="${esc(tip)}">${[m.a,m.b].map(p=>row(p,w===p?'w':w?'l':'',sc(p),'#/games/g/'+(ser?m.gs.find(g=>g.wk===p||g.lk===p).i:last.i))).join('')}</div>`;}
     const pd=pend[c][j];if(pd)return `<div class="fxb-m pend" style="left:${left}px;top:${top}px">${row(pd[0],'','')}${row(pd[1],'','')}</div>`;
     return '';};
   const has=(c,j)=>!!(slots[c][j]||pend[c][j]);
   let path='';for(let c=1;c<nC;c++)slots[c].forEach((_,j)=>{if(!has(c,j))return;const py=Y(c,j),px=X(c),mx=px-GX/2;[2*j,2*j+1].forEach(k=>{if(!has(c-1,k))return;const cy=Y(c-1,k),cx=X(c-1)+CW;const on=slots[c-1][k]&&win(slots[c-1][k]);path+=`<path class="${on?'on':''}" d="M${cx} ${cy}H${mx}V${py}H${px}"/>`;});});
   const fm=slots[nC-1][0],ch=E.fin?win(fm):null,ru=ch?(ch===fm.a?fm.b:fm.a):null;
   const W=X(nC)+190;
-  const champ=`<div class="fxb-champ" style="left:${X(nC)}px;top:${Y(nC-1,0)-48}px">${ch?`<div class="t">🏆 우승</div><div class="n">${pf(ch)}</div><div class="r">준우승 ${pf(ru)}${fm.gs.length>1?` · ${Math.max(fm.wa,fm.wb)}:${Math.min(fm.wa,fm.wb)}`:''}</div>`:`<div class="t">우승</div><div class="n muted">결승 전</div><div class="r"><a class="pl" href="#/tournaments/sim">우승 확률 계산기 ›</a></div>`}</div>`;
+  const champ=`<div class="fxb-champ" style="left:${X(nC)}px;top:${Y(nC-1,0)-(fm&&fm.gs.length>1?62:48)}px">${ch?`<div class="t">🏆 우승</div><div class="n">${pf(ch)}</div>${fm.gs.length>1?`<div class="sc">${Math.max(fm.wa,fm.wb)} : ${Math.min(fm.wa,fm.wb)}</div>`:''}<div class="r">준우승 ${pf(ru)}</div>`:`<div class="t">우승</div><div class="n muted">결승 전</div><div class="r"><a class="pl" href="#/tournaments/sim">우승 확률 계산기 ›</a></div>`}</div>`;
   if(ch)path+=`<path class="on" d="M${X(nC-1)+CW} ${Y(nC-1,0)}H${X(nC)}"/>`;
   const n0=pool.reduce((s,p)=>s+p.length,0);
-  document.getElementById('bb').innerHTML=`<div class="fxb-top"><div><div class="fxb-ed">${esc(E.ed)} ${esc(G[E.g])}</div><div class="muted small">${dstr(E.gs.reduce((a,x)=>Math.min(a,x[0].d),1e9)).replace(/-/g,'.')} – ${dstr(E.d1).replace(/-/g,'.')} · 맞대결 ${n0}번 ${E.fin?'':'· <b>진행 중</b>'}</div></div>${ch?`<div class="fxb-win">🏆 ${pf(ch)}</div>`:''}</div>
+  document.getElementById('bb').innerHTML=`<div class="fxb-top"><div><div class="fxb-ed">${esc(E.ed)} ${esc(G[E.g])}</div><div class="muted small">${dstr(E.gs.reduce((a,x)=>Math.min(a,x[0].d),1e9)).replace(/-/g,'.')} – ${dstr(E.d1).replace(/-/g,'.')} · 맞대결 ${n0}번 ${E.fin?'':'· <b>진행 중</b>'}</div></div>${ch?`<div class="fxb-win">🏆 ${pf(ch)}${fm.gs.length>1?`<b>${Math.max(fm.wa,fm.wb)} : ${Math.min(fm.wa,fm.wb)}</b><span class="vs">${pf(ru)}</span>`:''}</div>`:''}</div>
   <div class="fxb-wrap"><div class="fxb-hd" style="width:${W}px">${sizes.map((s,c)=>`<div style="left:${X(c)}px;width:${CW}px"><b>${lab(s)}</b><span>${rng(c)}</span></div>`).join('')}<div style="left:${X(nC)}px;width:180px"><b>우승</b></div></div>
   <div class="fxb" id="fxb" style="width:${W}px;height:${H}px"><svg class="fxb-ln" width="${W}" height="${H}">${path}</svg>${slots.map((col,c)=>col.map((_,j)=>card(c,j)).join('')).join('')}${champ}</div></div>
   <div class="note">대회명의 단계 표기(32강·16강…)로 묶은 대진입니다. 예선·조별리그·패자부활처럼 표기가 다른 대국은 빠지고, 시드로 다음 단계부터 나온 기사는 앞 단계 칸이 비어 보입니다. 번기는 한 칸에 승수로 적었고, 점선 칸은 아직 두지 않은 다음 판입니다.</div>`;
