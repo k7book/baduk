@@ -1716,9 +1716,23 @@ a.glink{color:inherit;text-decoration:none}a.glink:hover{text-decoration:underli
 tr.fxg-on td{background:color-mix(in srgb,var(--gold) 18%,transparent)}
 .fx-rd{border-bottom:1px solid var(--rule-2);padding:8px 0}.fx-rdh{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}.fx-rd ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px 16px}.fx-rd li{font-size:13px;display:flex;gap:6px;align-items:baseline}.fx-rd li em{font-style:normal;color:var(--win);font-size:11.5px}
 .fx-ty{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--none)}.fx-ty.t-입단{background:color-mix(in srgb,var(--cat1) 20%,transparent)}.fx-ty.t-첫우승{background:color-mix(in srgb,var(--gold) 30%,transparent)}.fx-ty.t-첫승{background:color-mix(in srgb,var(--win) 18%,transparent)}
-.fxb{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px}.fxb-c{display:flex;flex-direction:column;justify-content:space-around;gap:8px;min-width:200px}.fxb-h{font-weight:800;font-size:13px;text-align:center}
-.fxb-m{border:1px solid var(--rule);border-radius:8px;background:var(--card);padding:4px 8px;font-size:13px}.fxb-p{display:flex;align-items:center;gap:4px;padding:2px 0}.fxb-p b{margin-left:auto}.fxb-p.l{color:var(--muted)}.fxb-p.l a{color:var(--muted)}.fxb-p.w{font-weight:700}.fxb-g{display:block;text-align:right;font-size:11px;color:var(--muted)}
-.fxb-ch{font-size:16px;font-weight:800;margin:0 0 12px}
+.fxb-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin:6px 0 14px;padding:0 0 12px;border-bottom:1px solid var(--rule)}.fxb-ed{font-size:20px;font-weight:800;letter-spacing:-.01em}.fxb-win{font-size:16px;font-weight:800;padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--gold) 22%,transparent)}
+.fxb-wrap{overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch}
+.fxb-hd{position:relative;height:44px;margin:0 0 8px}.fxb-hd>div{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;padding:5px 0;border-radius:8px;background:var(--none)}.fxb-hd b{font-size:13px}.fxb-hd span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fxb{position:relative}.fxb-ln{position:absolute;left:0;top:0;pointer-events:none}.fxb-ln path{fill:none;stroke:var(--rule);stroke-width:1.5}.fxb-ln path.on{stroke:color-mix(in srgb,var(--ink) 40%,transparent)}
+.fxb-m{position:absolute;width:210px;height:52px;box-sizing:border-box;border:1px solid var(--rule);border-radius:8px;background:var(--card);overflow:hidden;box-shadow:0 1px 2px rgb(0 0 0/.04)}
+.fxb-m.pend{border-style:dashed;background:transparent;box-shadow:none}.fxb-m.pend .sc{background:transparent}
+.fxb-p{display:flex;align-items:center;height:25px;font-size:13px;border-left:3px solid transparent}.fxb-p+.fxb-p{border-top:1px solid var(--rule)}
+.fxb-p .nm{flex:1;min-width:0;display:flex;align-items:center;gap:5px;padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fxb-p .nm a{overflow:hidden;text-overflow:ellipsis}
+.fxb-p .sc{flex:0 0 34px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;text-decoration:none;color:var(--muted);background:var(--none);font-variant-numeric:tabular-nums}
+.fxb-p.w{border-left-color:var(--gold);font-weight:700}.fxb-p.w .sc{background:color-mix(in srgb,var(--gold) 30%,transparent);color:var(--ink)}
+.fxb-p.l .nm,.fxb-p.l .nm a{color:var(--muted)}.fxb-p a.sc:hover{text-decoration:underline}.fxb-p .tbd{color:var(--muted);font-weight:400}
+.fxb.hlon .fxb-p{opacity:.45}.fxb.hlon .fxb-p.hl{opacity:1;background:color-mix(in srgb,var(--gold) 16%,transparent)}
+.fxb-champ{position:absolute;width:180px;box-sizing:border-box;padding:10px 12px;border:2px solid var(--gold);border-radius:10px;background:var(--card)}.fxb-champ .t{font-size:12px;font-weight:800;color:var(--muted)}.fxb-champ .n{font-size:16px;font-weight:800;display:flex;gap:5px;align-items:center;margin:2px 0}.fxb-champ .r{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.fxw-teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.fxw-team{border:1px solid var(--rule);border-radius:var(--radius);background:var(--card);padding:10px 12px}.fxw-th{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;margin:0 0 6px}.fxw-th b{font-size:15px}.fxw-th .muted{width:100%}.fxw-team ul{list-style:none;margin:0;padding:0}.fxw-team li{display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px dashed var(--rule);font-size:13.5px}.fxw-team li .n{margin-left:auto;font-variant-numeric:tabular-nums}.fxw-team li em{font-style:normal;color:var(--muted);font-size:12px}
+.fxw-m{display:grid;grid-template-columns:52px 1fr 56px 1fr;gap:6px;align-items:center;padding:5px 0;border-top:1px solid var(--rule);font-size:13.5px}.fxw-m .d{color:var(--muted);font-size:12px}.fxw-m a{text-decoration:none;color:var(--ink)}.fxw-m a.w{font-weight:800}.fxw-m>b{text-align:center}.fxw-m a:nth-of-type(2){text-align:left}.fxw-m details{grid-column:1/-1;font-size:13px;padding:0 0 0 58px}.fxw-m summary{cursor:pointer;color:var(--muted);font-size:12px}
+.fxw-po{padding:6px 0;border-top:1px solid var(--rule)}.fx-seq{display:inline-flex;gap:2px}.fx-seq i{font-style:normal;font-size:11px;font-weight:700;padding:1px 4px;border-radius:4px;background:var(--none)}.fx-seq i.w{background:color-mix(in srgb,var(--win) 25%,transparent)}
+.fxw-go{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0;padding:12px 14px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--card)}
 @media (max-width:760px){.fxg{grid-template-columns:1fr}}
 @media (max-width:640px){.fx-pod{grid-template-columns:1fr}.fx-form{grid-template-columns:1fr}.fx-pa b,.fx-pb b{font-size:20px}}
 </style>
@@ -2947,7 +2961,7 @@ function pTournaments(q){
   const tot=(typeof IX!=='undefined'&&IX?IX.ev.reduce((a,e)=>a+e[10].length,0):0)+(typeof DX!=='undefined'&&DX?DX.se.reduce((a,s)=>a+s[6].length,0):0);
   app.innerHTML=crumb([['홈','#/'],['대회']])+`<h1 class="pt">대회</h1>
   <p class="lede">세계·한국·일본·중국 기전의 역대 우승 기록 ${fmt(tot)}건과, 대국 기록이 있는 대회 ${fmt(G.length)}개를 모았습니다.</p>
-  <p class="fx-links"><a href="#/tournaments/timeline">📅 시즌 타임라인 — 한 해의 우승을 달력으로</a><a href="#/tournaments/sim">🎯 우승 확률 계산기 — 남은 기사로 우승 확률 계산</a><a href="#/tournaments/bracket">🗂 대진표 — 토너먼트 흐름</a><a href="#/tournaments/league">📊 리그 시즌 기록 — 바둑리그 개인 성적·라운드 결과</a></p>
+  <p class="fx-links"><a href="#/tournaments/timeline">📅 시즌 타임라인 — 한 해의 우승을 달력으로</a><a href="#/tournaments/sim">🎯 우승 확률 계산기 — 남은 기사로 우승 확률 계산</a><a href="#/tournaments/bracket">🗂 대진표 — 토너먼트 흐름</a><a href="#/tournaments/league">📊 리그 시즌 기록 — 바둑리그 개인 성적·라운드 결과</a><a href="#/tournaments/wleague">👥 여자바둑리그 — 팀 순위·팀 명단</a></p>
   ${tMap()}
   <section class="tsec"><header><h2>지금 타이틀을 가진 기사</h2><span class="desc">진행 중인 기전의 가장 최근 우승자 · 오른쪽은 우승한 해</span></header>${tHolders()}</section>
   <div class="t2"><section class="tsec"><header><h2>요즘 열리는 대회</h2><span class="desc">최근 3주 대국 기준 · 가장 최근에 둔 단계</span></header>${tLive()}</section>
@@ -4405,6 +4419,7 @@ function fxSummary(k){
   const rh=fxRankHist(k);
   if(rh&&rh.best){out.push(`<span><em>실력 점수 순위</em> 최고 <b>${rh.best[0]}위</b> <i>${ymstr(rh.best[1])}</i></span>`);if(rh.n1)out.push(`<span><em>실력 점수 1위</em> <b>${rh.n1}개월</b></span>`);if(rh.yeBest)out.push(`<span><em>연말 최고</em> <b>${rh.yeBest[0]}위</b> <i>${rh.yeBest[1]}년</i></span>`);}
   const yr=(LASTD/10000)|0;const ys=(BYK[k]||[]).filter(g=>g.y===yr);if(ys.length){const c=cntRec(ys,k);const t=(CHB[k]||[]).filter(x=>((x.d/10000)|0)===yr).length;out.push(`<span><em>${yr}년</em> <b>${c.w}승 ${c.l}패</b>${t?` · 우승 <b>${t}</b>`:''}</span>`);}
+  {const w=fxWlPlayer(k);if(w)out.push(w);}
   box.innerHTML=out.length?out.join(''):'';box.hidden=!out.length;
 }
 function fxRecentTour(k,gs){
@@ -4568,7 +4583,7 @@ function pLeague(q){
   document.getElementById('lgb').innerHTML=`<div class="fx-tiles"><div class="fx-tile"><div class="k">기간</div><div class="v" style="font-size:18px">${dstr(E.d0).replace(/-/g,'.')} – ${dstr(E.d1).slice(5).replace('-','.')}</div></div><div class="fx-tile"><div class="k">대국</div><div class="v">${fmt(E.n)}</div></div><div class="fx-tile"><div class="k">출전 기사</div><div class="v">${rows.length}</div></div><div class="fx-tile"><div class="k">다승 1위</div><div class="v" style="font-size:18px">${rows[0]?esc(nameOf(rows[0].k))+' '+rows[0].w+'승':'–'}</div></div></div>
   ${fxPanel('개인 성적','다승순 · 무승부·무효 제외','<div id="lgt"></div>')}
   ${fxPanel('라운드별 결과','최신순',R.slice(0,40).map(([key,gs])=>`<div class="fx-rd"><div class="fx-rdh"><b>${esc(key)}</b><span class="muted small">${dstr(gs[0].d)} · ${gs.length}국</span></div><ul>${gs.map(g=>`<li>${plink(g.wk,'w')}<em>승</em>${plink(g.lk)}<a class="glink small" href="#/games/g/${g.i}">${stone(g)}${resText(g)}</a></li>`).join('')}</ul></div>`).join('')+(R.length>40?`<div class="small muted">앞의 ${R.length-40}개 라운드는 생략했습니다</div>`:''))}
-  <div class="note">기록에는 팀 이름이 없어 팀 순위는 아직 만들 수 없습니다. 팀 명단을 따로 모으면 팀 순위표와 팀 페이지를 붙일 수 있습니다.</div>`;
+  ${fxLeagueTeam(G[gid])}`;
   pagedTable(document.getElementById('lgt'),rows,['순위','기사','대국','승','패','승률','흑번 승률','최다 연승','가장 강한 상대에게 거둔 승'],x=>x.map(o=>`<tr><td class="n c">${rows.indexOf(o)+1}</td><td>${pf(o.k)}</td><td class="n r">${o.n}</td><td class="n r"><b>${o.w}</b></td><td class="n r">${o.l}</td><td class="n r">${pct(o.w,o.w+o.l)}</td><td class="n r">${o.bn?pct(o.bw,o.bn):'–'}</td><td class="n r">${o.best||'–'}</td><td>${o.top?`${plink(o.top[0])} <a class="glink small" href="#/games/g/${o.top[2]}">${fmt(o.top[1])}점</a>`:'–'}</td></tr>`).join(''),30,{sticky:true});
 }
 
@@ -4601,27 +4616,111 @@ function fxBrackets(){
   return FX.br=Object.values(m).filter(o=>o.max>=8).sort((a,b)=>b.d1-a.d1);
 }
 function pBracket(q){
-  const B=fxBrackets();const gq=+q.g;const list=gq?B.filter(o=>o.g===gq):B;let E=list.find(o=>o.ed===q.e)||list[0];
-  const recent=B.filter(o=>o.c==='세계기전').slice(0,12);
-  app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['대진표']])+`<h1 class="pt">대진표</h1><p class="lede">대회 기록의 단계(32강·16강·8강·4강·결승)로 그린 토너먼트 대진입니다. 오른쪽으로 갈수록 결승에 가깝습니다.</p>
-  <div class="fbar"><div class="fg"><span class="fl">최근 세계대회</span><select class="q" id="bq" style="min-width:260px">${recent.map(o=>`<option value="${o.g}|${esc(o.ed)}" ${E&&o.g===E.g&&o.ed===E.ed?'selected':''}>${esc(o.ed+' '+G[o.g])}${o.fin?'':' (진행 중)'}</option>`).join('')}</select></div>
-  ${gq?fxSel('be','회차',list.map(o=>[o.ed,o.ed+(o.fin?'':' (진행 중)')]),E?E.ed:''):''}</div><div id="bb"></div>`;
-  document.getElementById('bq').onchange=e=>{const [g,ed]=e.target.value.split('|');location.hash='#/tournaments/bracket?g='+g+'&e='+encodeURIComponent(ed);};
-  const be=document.getElementById('be');if(be)be.onchange=e=>{location.hash='#/tournaments/bracket?g='+gq+'&e='+encodeURIComponent(e.target.value);};
+  const B=fxBrackets();
+  const grp=[...new Map(B.map(o=>[o.g,o])).values()];
+  const world=grp.filter(o=>o.c==='세계기전'),dom=grp.filter(o=>o.c!=='세계기전');
+  let gq=+q.g;if(!grp.some(o=>o.g===gq))gq=(world[0]||grp[0]||{}).g;
+  const list=B.filter(o=>o.g===gq);const E=list.find(o=>o.ed===q.e)||list[0];
+  const og=(lab,a)=>a.length?`<optgroup label="${lab}">${a.map(o=>`<option value="${o.g}" ${o.g===gq?'selected':''}>${esc(G[o.g])}</option>`).join('')}</optgroup>`:'';
+  app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['대진표']])+`<h1 class="pt">대진표</h1><p class="lede">토너먼트 단계(64강·32강·16강·8강·4강·결승)별 맞대결을 한 장의 대진으로 그렸습니다. 기사 이름에 마우스를 올리면 그 기사가 지나온 길이 표시됩니다.</p>
+  <div class="fbar"><div class="fg"><span class="fl">대회</span><select class="q" id="bq" style="min-width:260px">${og('세계대회',world)}${og('국내·기타',dom)}</select></div>
+  <div class="fg"><span class="fl">회차</span><select class="q" id="be">${list.map(o=>`<option value="${esc(o.ed)}" ${E&&o.ed===E.ed?'selected':''}>${esc(o.ed)}${o.fin?'':' (진행 중)'}</option>`).join('')}</select></div></div><div id="bb"></div>`;
+  document.getElementById('bq').onchange=e=>{location.hash='#/tournaments/bracket?g='+e.target.value;};
+  document.getElementById('be').onchange=e=>{location.hash='#/tournaments/bracket?g='+gq+'&e='+encodeURIComponent(e.target.value);};
   if(!E){document.getElementById('bb').innerHTML='<div class="empty">대진 기록이 없습니다</div>';return;}
-  // 단계별 맞대결 묶기 (번기는 한 칸으로)
-  const st={};E.gs.forEach(([g,s])=>{const a=g.wk<g.lk?g.wk:g.lk,b=a===g.wk?g.lk:g.wk;const id=a+'|'+b;const r=st[s]||(st[s]={});const o=r[id]||(r[id]={a,b,wa:0,wb:0,gs:[]});o.gs.push(g);if(!g.j){if(g.wk===a)o.wa++;else o.wb++;}});
-  const sizes=Object.keys(st).map(Number).sort((a,b)=>b-a).filter(s=>s<=64);
-  const win=o=>o.wa>o.wb?o.a:o.wb>o.wa?o.b:null;
-  const cols=sizes.map(s=>Object.values(st[s]));
-  // 결승부터 거꾸로 순서 맞추기
-  for(let c=cols.length-2;c>=0;c--){const up=cols[c+1],cur=cols[c];const ord=[];up.forEach(m=>[m.a,m.b].forEach(k=>{const x=cur.find(z=>win(z)===k&&!ord.includes(z));if(x)ord.push(x);}));cur.forEach(z=>{if(!ord.includes(z))ord.push(z);});cols[c]=ord;}
-  const lab=s=>s===2?'결승':s===4?'4강':s+'강';
-  const cell=m=>{const w=win(m);const one=p=>`<div class="fxb-p ${w===p?'w':w?'l':''}">${pf(p)}<b>${m.gs.length>1?(p===m.a?m.wa:m.wb):(w===p?'승':'')}</b></div>`;return `<div class="fxb-m">${one(m.a)}${one(m.b)}<a class="glink fxb-g" href="#/games/g/${m.gs[m.gs.length-1].i}">${m.gs.length>1?m.gs.length+'국':'대국'} ›</a></div>`;};
-  const ch=E.fin?(()=>{const f=cols[cols.length-1];return f&&f[0]?win(f[0]):null;})():null;
-  document.getElementById('bb').innerHTML=`${ch?`<div class="fxb-ch">🏆 우승 ${pf(ch)}</div>`:'<div class="fxb-ch muted">아직 결승 기록이 없습니다 — <a class="pl" href="#/tournaments/sim">우승 확률 계산기</a></div>'}
-  <div class="fxb">${cols.map((c,i)=>`<div class="fxb-c"><div class="fxb-h">${lab(sizes[i])} <span class="muted small">${c.length}</span></div>${c.map(cell).join('')}</div>`).join('')}</div>
-  <div class="note">대회명의 단계 표기로 묶었기 때문에, 예선·조별리그·패자부활처럼 단계 표기가 다른 대국은 빠질 수 있고 표기가 없는 회차는 그리지 않습니다. 번기는 한 칸에 승수로 적었습니다.</div>`;
+  // 단계별 맞대결 (번기는 한 칸)
+  const st={},sl={};E.gs.forEach(([g,s0])=>{if(s0>64)return;const s=Math.pow(2,Math.ceil(Math.log2(s0)));sl[s]=s0;const a=g.wk<g.lk?g.wk:g.lk,b=a===g.wk?g.lk:g.wk;const r=st[s]||(st[s]={});const o=r[a+'|'+b]||(r[a+'|'+b]={a,b,wa:0,wb:0,gs:[]});o.gs.push(g);if(!g.j){if(g.wk===a)o.wa++;else o.wb++;}});
+  if(!Object.keys(st).length){document.getElementById('bb').innerHTML='<div class="empty">64강 이후 대진 기록이 없습니다</div>';return;}
+  const win=o=>o?(o.wa>o.wb?o.a:o.wb>o.wa?o.b:null):null;
+  const maxS=Math.max(...Object.keys(st).map(Number));const sizes=[];for(let s=maxS;s>=2;s/=2)sizes.push(s);
+  const nC=sizes.length,pool=sizes.map(s=>Object.values(st[s]||{})),slots=sizes.map(s=>Array(Math.max(1,s/2)).fill(null));
+  slots[nC-1][0]=pool[nC-1][0]||null;
+  for(let c=nC-2;c>=0;c--){const used=new Set(),cur=slots[c];
+    slots[c+1].forEach((m,j)=>{if(!m)return;[m.a,m.b].forEach((p,i)=>{const x=pool[c].find(z=>!used.has(z)&&win(z)===p)||pool[c].find(z=>!used.has(z)&&(z.a===p||z.b===p));if(x){cur[2*j+i]=x;used.add(x);}});});
+    const rest=pool[c].filter(z=>!used.has(z)).sort((x,y)=>x.gs[0].d-y.gs[0].d||x.gs[0].i-y.gs[0].i);
+    for(let j=0;j<slots[c+1].length&&rest.length;j++){if(slots[c+1][j])continue;for(const k of [2*j,2*j+1])if(!cur[k]&&rest.length)cur[k]=rest.shift();}
+    for(let k=0;k<cur.length&&rest.length;k++)if(!cur[k])cur[k]=rest.shift();}
+  // 아직 안 둔 다음 판: 아래 단계 승자로 채움
+  const pend=slots.map(()=>[]);
+  for(let c=1;c<nC;c++)slots[c].forEach((m,j)=>{if(m)return;const pa=win(slots[c-1][2*j]),pb=win(slots[c-1][2*j+1]);if(pa||pb)pend[c][j]=[pa,pb];});
+  const U=62,CH=52,CW=210,GX=44,TOP=0;const H=slots[0].length*U;
+  const X=c=>c*(CW+GX),Y=(c,j)=>(j+.5)*Math.pow(2,c)*U;
+  const lab=s=>s===2?'결승':s===4?'4강':(sl[s]||s)+'강';
+  const md=d=>{const s=String(d);return +s.slice(4,6)+'.'+ +s.slice(6,8);};
+  const rng=c=>{const ds=pool[c].flatMap(m=>m.gs.map(g=>g.d));if(!ds.length)return '';const a=Math.min(...ds),b=Math.max(...ds);return a===b?md(a):md(a)+'–'+md(b);};
+  const row=(p,cls,sc,href)=>`<div class="fxb-p ${cls}" ${p?`data-k="${esc(p)}"`:''}><span class="nm">${p?pf(p):'<span class="tbd">미정</span>'}</span>${href?`<a class="sc" href="${href}" title="대국 보기">${sc}</a>`:`<span class="sc">${sc}</span>`}</div>`;
+  const card=(c,j)=>{const m=slots[c][j],top=Y(c,j)-CH/2,left=X(c);
+    if(m){const w=win(m),ser=m.gs.length>1,last=m.gs[m.gs.length-1];const sc=p=>ser?(p===m.a?m.wa:m.wb):(w===p?'승':w?'패':'–');
+      return `<div class="fxb-m" style="left:${left}px;top:${top}px" title="${esc(dstr(m.gs[0].d))}${ser?' · '+m.gs.length+'번기':''}">${[m.a,m.b].map(p=>row(p,w===p?'w':w?'l':'',sc(p),'#/games/g/'+(ser?m.gs.find(g=>g.wk===p||g.lk===p).i:last.i))).join('')}</div>`;}
+    const pd=pend[c][j];if(pd)return `<div class="fxb-m pend" style="left:${left}px;top:${top}px">${row(pd[0],'','')}${row(pd[1],'','')}</div>`;
+    return '';};
+  const has=(c,j)=>!!(slots[c][j]||pend[c][j]);
+  let path='';for(let c=1;c<nC;c++)slots[c].forEach((_,j)=>{if(!has(c,j))return;const py=Y(c,j),px=X(c),mx=px-GX/2;[2*j,2*j+1].forEach(k=>{if(!has(c-1,k))return;const cy=Y(c-1,k),cx=X(c-1)+CW;const on=slots[c-1][k]&&win(slots[c-1][k]);path+=`<path class="${on?'on':''}" d="M${cx} ${cy}H${mx}V${py}H${px}"/>`;});});
+  const fm=slots[nC-1][0],ch=E.fin?win(fm):null,ru=ch?(ch===fm.a?fm.b:fm.a):null;
+  const W=X(nC)+190;
+  const champ=`<div class="fxb-champ" style="left:${X(nC)}px;top:${Y(nC-1,0)-48}px">${ch?`<div class="t">🏆 우승</div><div class="n">${pf(ch)}</div><div class="r">준우승 ${pf(ru)}${fm.gs.length>1?` · ${Math.max(fm.wa,fm.wb)}:${Math.min(fm.wa,fm.wb)}`:''}</div>`:`<div class="t">우승</div><div class="n muted">결승 전</div><div class="r"><a class="pl" href="#/tournaments/sim">우승 확률 계산기 ›</a></div>`}</div>`;
+  if(ch)path+=`<path class="on" d="M${X(nC-1)+CW} ${Y(nC-1,0)}H${X(nC)}"/>`;
+  const n0=pool.reduce((s,p)=>s+p.length,0);
+  document.getElementById('bb').innerHTML=`<div class="fxb-top"><div><div class="fxb-ed">${esc(E.ed)} ${esc(G[E.g])}</div><div class="muted small">${dstr(E.gs.reduce((a,x)=>Math.min(a,x[0].d),1e9)).replace(/-/g,'.')} – ${dstr(E.d1).replace(/-/g,'.')} · 맞대결 ${n0}번 ${E.fin?'':'· <b>진행 중</b>'}</div></div>${ch?`<div class="fxb-win">🏆 ${pf(ch)}</div>`:''}</div>
+  <div class="fxb-wrap"><div class="fxb-hd" style="width:${W}px">${sizes.map((s,c)=>`<div style="left:${X(c)}px;width:${CW}px"><b>${lab(s)}</b><span>${rng(c)}</span></div>`).join('')}<div style="left:${X(nC)}px;width:180px"><b>우승</b></div></div>
+  <div class="fxb" id="fxb" style="width:${W}px;height:${H}px"><svg class="fxb-ln" width="${W}" height="${H}">${path}</svg>${slots.map((col,c)=>col.map((_,j)=>card(c,j)).join('')).join('')}${champ}</div></div>
+  <div class="note">대회명의 단계 표기(32강·16강…)로 묶은 대진입니다. 예선·조별리그·패자부활처럼 표기가 다른 대국은 빠지고, 시드로 다음 단계부터 나온 기사는 앞 단계 칸이 비어 보입니다. 번기는 한 칸에 승수로 적었고, 점선 칸은 아직 두지 않은 다음 판입니다.</div>`;
+  const bx=document.getElementById('fxb');let hk=null;
+  bx.addEventListener('mouseover',e=>{const r=e.target.closest('[data-k]');const k=r?r.dataset.k:null;if(k===hk)return;hk=k;bx.querySelectorAll('.hl').forEach(x=>x.classList.remove('hl'));bx.classList.toggle('hlon',!!k);if(k)bx.querySelectorAll(`[data-k="${CSS.escape(k)}"]`).forEach(x=>x.classList.add('hl'));});
+  bx.addEventListener('mouseleave',()=>{hk=null;bx.classList.remove('hlon');bx.querySelectorAll('.hl').forEach(x=>x.classList.remove('hl'));});
+}
+/* ---------- 여자바둑리그 팀 순위·팀 페이지 · 한국바둑리그 선수 선발 현황 ---------- */
+const WLG=X.WLG||{};
+function fxWlStand(S){
+  const T={};const add=c=>T[c]||(T[c]={c,n:0,w:0,l:0,gw:0,gl:0,last:[]});
+  S.L.forEach(m=>{const a=add(m[2]),b=add(m[3]);if(m[4]+m[5]===0)return;a.n++;b.n++;a.gw+=m[4];a.gl+=m[5];b.gw+=m[5];b.gl+=m[4];if(m[4]>m[5]){a.w++;b.l++;a.last.push('W');b.last.push('L');}else{b.w++;a.l++;a.last.push('L');b.last.push('W');}});
+  return Object.values(T).sort((x,y)=>y.w-x.w||(y.gw-y.gl)-(x.gw-x.gl)||y.gw-x.gw);
+}
+function fxWlPost(S){
+  const R=new Map();S.P.slice().sort((a,b)=>a[1]-b[1]).forEach(m=>{if(m[4]+m[5]===0)return;const id=m[0]+'|'+[m[2],m[3]].sort().join('-');if(!R.has(id))R.set(id,{r:m[0],a:m[2],b:m[3],wa:0,wb:0,ms:[]});const o=R.get(id);const [sa,sb]=o.a===m[2]?[m[4],m[5]]:[m[5],m[4]];o.ms.push([m[1],sa,sb,m]);if(sa>sb)o.wa++;else o.wb++;});
+  const ord=['와일드카드','준플레이오프','플레이오프','챔피언결정전'];return [...R.values()].sort((x,y)=>ord.indexOf(x.r)-ord.indexOf(y.r));
+}
+function fxWlChamp(S){const f=fxWlPost(S).filter(o=>o.r==='챔피언결정전').pop();if(!f||f.wa===f.wb)return null;return f.wa>f.wb?[f.a,f.b]:[f.b,f.a];}
+function pWLeague(q){
+  const W=WLG.w;
+  if(!W||!W.s||!Object.keys(W.s).length){app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['여자바둑리그']])+'<h1 class="pt">여자바둑리그</h1><div class="empty">여자바둑리그 자료가 아직 없습니다. 35_바둑 폴더의 바둑리그_받기.bat 을 실행하세요.</div>';return;}
+  const ys=Object.keys(W.s).sort().reverse();const y=ys.includes(q.y)?q.y:ys[0];const S=W.s[y];const tn=c=>(S.t[c]||['?'])[0];
+  const st=fxWlStand(S),po=fxWlPost(S),ch=fxWlChamp(S);
+  const P={};const addP=(k,c,win,post)=>{const o=P[k]||(P[k]={k,c,w:0,l:0,pw:0,pl:0});if(post){win?o.pw++:o.pl++;}else{win?o.w++:o.l++;}};
+  S.L.forEach(m=>m[6].forEach(g=>{if(!g[2])return;addP(g[0],m[2],g[2]===1,0);addP(g[1],m[3],g[2]===2,0);}));
+  S.P.forEach(m=>m[6].forEach(g=>{if(!g[2])return;addP(g[0],m[2],g[2]===1,1);addP(g[1],m[3],g[2]===2,1);}));
+  const PL=Object.values(P).sort((a,b)=>b.w-a.w||a.l-b.l);
+  const team=c=>{const t=S.t[c]||['?','',[]];const mem=PL.filter(p=>p.c===c);const s=st.find(x=>x.c===c);return `<div class="fxw-team" id="wt-${c}"><div class="fxw-th"><b>${esc(t[0])}</b>${ch&&ch[0]===c?' <span class="fx-tag">🏆 우승</span>':ch&&ch[1]===c?' <span class="fx-tag">준우승</span>':''}<span class="muted small">${s?`정규 ${st.indexOf(s)+1}위 · ${s.w}승 ${s.l}패`:''}${t[1]?` · 감독 ${esc(t[1])}`:''}</span></div><ul>${mem.map(p=>`<li>${pf(p.k)}<span class="n">${p.w}승 ${p.l}패${p.pw+p.pl?` <em>PS ${p.pw}-${p.pl}</em>`:''}</span></li>`).join('')}</ul></div>`;};
+  const mrow=m=>`<div class="fxw-m"><span class="d">${dstr(m[1]).slice(5).replace('-','.')}</span><a href="#wt-${m[2]}" class="${m[4]>m[5]?'w':''}">${esc(tn(m[2]))}</a><b>${m[4]} : ${m[5]}</b><a href="#wt-${m[3]}" class="${m[5]>m[4]?'w':''}">${esc(tn(m[3]))}</a><details><summary>대국</summary>${m[6].map(g=>`<div>${g[2]===1?'<b>':''}${plink(g[0])}${g[2]===1?'</b>':''} <span class="muted">vs</span> ${g[2]===2?'<b>':''}${plink(g[1])}${g[2]===2?'</b>':''}</div>`).join('')}</details></div>`;
+  const rounds=new Map();S.L.forEach(m=>{if(!rounds.has(m[0]))rounds.set(m[0],[]);rounds.get(m[0]).push(m);});
+  // 역대 우승
+  const hist=ys.map(yy=>{const s=W.s[yy];const a=fxWlStand(s)[0],c=fxWlChamp(s);const pl={};s.L.forEach(m=>m[6].forEach(g=>{if(g[2]){const k=g[2]===1?g[0]:g[1];pl[k]=(pl[k]||0)+1;}}));const top=Object.entries(pl).sort((x,z)=>z[1]-x[1])[0];return [yy,a?s.t[a.c][0]:'',c?s.t[c[0]][0]:'',c?s.t[c[1]][0]:'',top];});
+  app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['여자바둑리그']])+`<h1 class="pt">${y} 여자바둑리그</h1>
+  <p class="lede">한국여자바둑리그 공식 사이트(w.baduk.or.kr)의 경기 결과·팀 명단으로 만든 팀 순위와 팀별 성적입니다.${ch?` 이 시즌 우승은 <b>${esc(tn(ch[0]))}</b>입니다.`:''}</p>
+  <div class="fbar">${fxSel('wy','시즌',ys.map(v=>[v,v+'시즌']),y)}</div>
+  ${fxPanel('정규리그 팀 순위','팀 승수 → 개인 승수 득실 순',`<div class="tw"><table><thead><tr><th class="c">순위</th><th>팀</th><th class="r">경기</th><th class="r">승</th><th class="r">패</th><th class="r">개인 승</th><th class="r">개인 패</th><th class="r">득실</th><th>최근 5경기</th></tr></thead><tbody>${st.map((s,i)=>`<tr><td class="n c">${i+1}</td><td><a class="pl" href="#wt-${s.c}">${esc(tn(s.c))}</a>${ch&&ch[0]===s.c?' 🏆':''}</td><td class="n r">${s.n}</td><td class="n r"><b>${s.w}</b></td><td class="n r">${s.l}</td><td class="n r">${s.gw}</td><td class="n r">${s.gl}</td><td class="n r">${s.gw-s.gl>0?'+':''}${s.gw-s.gl}</td><td><span class="fx-seq">${s.last.slice(-5).map(x=>`<i class="${x==='W'?'w':'l'}">${x==='W'?'승':'패'}</i>`).join('')}</span></td></tr>`).join('')}</tbody></table></div>`)}
+  ${po.length?fxPanel('포스트시즌','',po.map(o=>`<div class="fxw-po"><b>${esc(o.r)}</b> ${esc(tn(o.a))} <b>${o.wa} : ${o.wb}</b> ${esc(tn(o.b))} <span class="muted small">${o.ms.map(x=>x[1]+':'+x[2]).join(', ')}</span></div>`).join('')):''}
+  ${fxPanel('팀별 선수 성적','PS = 포스트시즌',`<div class="fxw-teams">${st.map(s=>team(s.c)).join('')}</div>`)}
+  <div class="g2">${fxPanel('개인 다승','정규리그',`<div class="tw"><table><thead><tr><th class="c">순위</th><th>기사</th><th>팀</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th></tr></thead><tbody>${PL.slice(0,15).map((p,i)=>`<tr><td class="n c">${i+1}</td><td>${pf(p.k)}</td><td class="small">${esc(tn(p.c))}</td><td class="n r"><b>${p.w}</b></td><td class="n r">${p.l}</td><td class="n r">${pct(p.w,p.w+p.l)}</td></tr>`).join('')}</tbody></table></div>`)}
+  ${fxPanel('역대 시즌','',`<div class="tw"><table><thead><tr><th>시즌</th><th>정규 1위</th><th>우승</th><th>준우승</th><th>다승</th></tr></thead><tbody>${hist.map(h=>`<tr><td><a class="pl" href="#/tournaments/wleague?y=${h[0]}">${h[0]}</a></td><td class="small">${esc(h[1])}</td><td class="small"><b>${esc(h[2]||'–')}</b></td><td class="small">${esc(h[3]||'–')}</td><td class="small">${h[4]?plink(h[4][0])+' '+h[4][1]+'승':'–'}</td></tr>`).join('')}</tbody></table></div>`)}</div>
+  ${fxPanel('라운드별 결과','최신 라운드부터',[...rounds.entries()].sort((a,b)=>Math.max(...b[1].map(m=>m[1]))-Math.max(...a[1].map(m=>m[1]))).map(([r,ms])=>`<div class="fx-rd"><div class="fx-rdh"><b>${esc(r)}</b></div>${ms.map(mrow).join('')}</div>`).join(''))}
+  <div class="note">순위는 팀 승수, 같으면 개인 승수 득실로 매긴 계산값이라 공식 순위(동률 처리 규정)와 다를 수 있습니다. 출처: 한국여자바둑리그 공식 사이트 · ${esc((W.fetched||'').slice(0,10))} 수집</div>`;
+  document.getElementById('wy').onchange=e=>{location.hash='#/tournaments/wleague?y='+e.target.value;};
+}
+function fxKSelection(){
+  const K=WLG.k;if(!K||!K.teams||!K.teams.length)return '';
+  return fxPanel('다음 시즌 선수 선발 현황 · 한국바둑리그','공식 사이트 '+esc(K.updated||'')+' 기준',`<div class="fxw-teams">${K.teams.map(t=>`<div class="fxw-team"><div class="fxw-th"><b>${esc(t[0])}</b><span class="muted small">감독 ${esc(t[1])}</span></div><ul>${t[2].map((k,i)=>`<li><span class="muted small">${i+1}지명</span> ${k.startsWith('n:')?esc(t[4][i]):pf(k)}</li>`).join('')}${t[3]?`<li><span class="muted small">외국인</span> ${t[3].startsWith('n:')?esc(t[4][t[4].length-1]):pf(t[3])}</li>`:''}</ul></div>`).join('')}</div>`);
+}
+function fxWlPlayer(k){
+  const W=WLG.w;if(!W||!W.s)return '';const out=[];
+  Object.keys(W.s).sort().reverse().forEach(y=>{const S=W.s[y];let c=null,w=0,l=0;S.L.concat(S.P).forEach(m=>m[6].forEach(g=>{if(g[0]===k){c=m[2];g[2]===1?w++:g[2]===2&&l++;}else if(g[1]===k){c=m[3];g[2]===2?w++:g[2]===1&&l++;}}));if(c)out.push(`<a href="#/tournaments/wleague?y=${y}#wt-${c}">${y} ${esc(S.t[c][0])} <b>${w}-${l}</b></a>`);});
+  return out.length?`<span><em>여자바둑리그</em> ${out.slice(0,3).join(' · ')}${out.length>3?` 외 ${out.length-3}시즌`:''}</span>`:'';
+}
+function fxLeagueTeam(name){
+  name=name||'';
+  if(/여자/.test(name)&&WLG.w)return `<div class="fxw-go"><b>팀 순위·팀 명단</b><span class="muted small">여자바둑리그 공식 사이트 자료로 팀 순위표와 팀별 선수 성적을 따로 봅니다.</span><a class="btn" href="#/tournaments/wleague">여자바둑리그 팀 순위 보기 →</a></div>`;
+  if(/바둑리그/.test(name)&&!/여자/.test(name)&&WLG.k)return fxKSelection()+'<div class="note">한국바둑리그 공식 사이트는 지금 선수 선발 화면만 열려 있어 지난 시즌 팀 순위는 아직 넣지 못했습니다. 사이트가 다시 열리면 같은 방식으로 붙일 수 있습니다.</div>';
+  return '<div class="note">기록에는 팀 이름이 없어 이 리그의 팀 순위는 만들 수 없습니다.</div>';
 }
 /* =============== fx 끝 =============== */
 function parseHash(){const h=location.hash.replace(/^#\/?/,'');const i=h.indexOf('?');const path=i<0?h:h.slice(0,i),qs=i<0?'':h.slice(i+1);return {parts:path.split('/').filter(Boolean).map(decodeURIComponent),q:Object.fromEntries(new URLSearchParams(qs))};}
@@ -4636,7 +4735,7 @@ function route(){
     else if(r==='players'){if(parts[1]==='feed')pFeed(q);else if(parts[1]==='compare')pCompare(q);else if(parts[1])pPlayer(parts[1],parts[2]||'',q);else pPlayers(q);}
     else if(r==='rankings')pRankings(parts[1],q);
     else if(r==='goratings'){location.replace('#/rankings/goratings'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
-    else if(r==='tournaments'){if(parts[1]==='league')pLeague(q);else if(parts[1]==='bracket')pBracket(q);else if(parts[1]==='sim')pSim(q);else if(parts[1]==='timeline')pSeasonTL(q);else if(parts[1]==='grades')pGrades();else if(parts[1]==='intl')pIntl(parts[2],q);else if(['open','women','limited','world','team','jp','cn'].includes(parts[1]))pDom(parts[1],parts[2],q);else if(parts[1]!=null)pTournament(parts[1]);else pTournaments(q);}
+    else if(r==='tournaments'){if(parts[1]==='wleague')pWLeague(q);else if(parts[1]==='league')pLeague(q);else if(parts[1]==='bracket')pBracket(q);else if(parts[1]==='sim')pSim(q);else if(parts[1]==='timeline')pSeasonTL(q);else if(parts[1]==='grades')pGrades();else if(parts[1]==='intl')pIntl(parts[2],q);else if(['open','women','limited','world','team','jp','cn'].includes(parts[1]))pDom(parts[1],parts[2],q);else if(parts[1]!=null)pTournament(parts[1]);else pTournaments(q);}
     else if(r==='seasons')pSeason(parts[1]);
     else if(r==='search'){location.replace('#/games/search'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
     else if(r==='records'){
