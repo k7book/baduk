@@ -8,12 +8,16 @@
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/admin", "/admin/*"]
+    "run_worker_first": ["/api/*", "/admin", "/admin/*", "/d/*", "/k/*", "/gr/*"]
   },
   // 뉴스 갱신: 하루 10번 (한국시간 07·09·11·13·15·17·19·21·23·01시) = UTC 22,0,2,4,6,8,10,12,14,16시
   "triggers": { "crons": ["0 0,2,4,6,8,10,12,14,16,22 * * *"] },
   "kv_namespaces": [
     { "binding": "NEWS_KV", "id": "e4cbe9fb37344d729371da6bc56f4e14" }
+  ],
+  // 원장 DB (Cloudflare D1) — pipeline\d1_sync.py 가 채움
+  "d1_databases": [
+    { "binding": "DB", "database_name": "baduk-db", "database_id": "ad2cb695-97f3-4f88-b469-df7edfd30cee" }
   ],
   "routes": [
     { "pattern": "baduk.rajin.live", "custom_domain": true }

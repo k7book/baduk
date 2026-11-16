@@ -1,0 +1,44 @@
+# 바둑DB (baduk.rajin.live)
+# 이 사이트의 기록 정리·기사 연결·계산값과 화면은 열람과 출처를 밝힌 인용을 위해 공개합니다.
+# 자동 수집 프로그램으로 자료를 대량 수집·복제·재배포하거나 AI 학습에 쓰는 것은 허락하지 않습니다.
+
+# AI 학습·AI 검색 수집기
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
+User-agent: FacebookBot
+User-agent: Amazonbot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: Diffbot
+User-agent: ImagesiftBot
+User-agent: Omgilibot
+User-agent: Omgili
+User-agent: YouBot
+User-agent: Timpibot
+User-agent: AI2Bot
+User-agent: Ai2Bot-Dolma
+User-agent: PetalBot
+User-agent: Scrapy
+Disallow: /
+
+# 검색엔진 등 그 밖의 수집기: 첫 화면은 허용, 기록 자료 파일과 관리 화면은 금지
+User-agent: *
+Disallow: /d/
+Disallow: /k/
+Disallow: /gr/
+Disallow: /api/
+Disallow: /admin
+Allow: /

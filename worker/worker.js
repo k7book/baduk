@@ -256,9 +256,25 @@ async function article(u, ctx) {
 
 const J = (o, s = 200, extra = {}) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json; charset=utf-8', ...extra } });
 
+// 데이터 파일 문지기 — 기록 자료(/d 데이터 · /k 기보 묶음 · /gr 고레이팅)는 이 사이트 화면이 부를 때만 내줍니다.
+// 주소를 직접 찍어 통째로 받아 가는 자동 수집을 막는 용도이며, 화면에서 보는 데는 영향이 없습니다.
+const DATA_PATH = /^\/(d|k|gr)\//;
+const OUR_HOSTS = new Set(['baduk.rajin.live', 'baduk.k7book.workers.dev', 'localhost', '127.0.0.1']);
+function fromOurPage(req, u) {
+  const sfs = req.headers.get('sec-fetch-site');
+  if (sfs === 'same-origin') return true;
+  if (sfs && sfs !== 'same-site') return false;            // cross-site · none(주소 직접 입력) 은 거절
+  const ref = req.headers.get('referer');
+  if (!ref) return false;
+  try { const h = new URL(ref).hostname; return h === u.hostname || OUR_HOSTS.has(h); } catch { return false; }
+}
+const DENY = () => new Response('이 자료는 바둑DB 화면에서만 볼 수 있습니다. 자동 수집·대량 복제는 허락하지 않습니다 (https://baduk.rajin.live/robots.txt).\n',
+  { status: 403, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+
 export default {
   async fetch(req, env, ctx) {
     const u = new URL(req.url);
+    if (DATA_PATH.test(u.pathname) && !fromOurPage(req, u)) return DENY();
     if (u.pathname === '/api/news') {
       const [list, meta, ovr] = await Promise.all([env.NEWS_KV.get('news', 'json'), env.NEWS_KV.get('meta'), getOvr(env)]);
       // 관리자에서 숨김·고정·기사 이름을 고친 내용을 적용

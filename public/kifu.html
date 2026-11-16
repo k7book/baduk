@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기보 뷰어 · 바둑DB</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* 13장 필드 아카이브 토큰 — 라이트 기본 → 시스템 다크 → 수동 토글 순서로 덮어씀(13.4절) */
+  :root{
+    --bg:#FFFFFF; --surface:#F7F7F5; --surface-2:#ECECE9; --surface-3:#E2E1DC;
+    --ink:#111111; --ink-muted:#55564F; --ink-faint:#8B8A82;
+    --rule:#111111; --rule-soft:#D8D7D1;
+    --accent:#FFC72C; --accent-ink:#111111;
+    --good:#2E7D32; --loss:#1565C0; --draw:#B8860B;
+    /* 바둑판은 "인쇄된 기보 도면"이라 테마와 무관하게 밝은 종이색 유지 */
+    --board:#EFE9DA; --board-line:#2A2823; --board-label:#55564F;
+    --stone-b:#111111; --stone-w:#FBFBF8; --stone-w-edge:#111111;
+    --font-sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0D0D0D; --surface:#161616; --surface-2:#201F1D; --surface-3:#2A2926;
+      --ink:#F5F5F0; --ink-muted:#A8A79F; --ink-faint:#6E6C64;
+      --rule:#F5F5F0; --rule-soft:#3A3935;
+      --good:#4C9F55; --loss:#3E8FD9; --draw:#B0821F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D0D0D; --surface:#161616; --surface-2:#201F1D; --surface-3:#2A2926;
+    --ink:#F5F5F0; --ink-muted:#A8A79F; --ink-faint:#6E6C64;
+    --rule:#F5F5F0; --rule-soft:#3A3935;
+    --good:#4C9F55; --loss:#3E8FD9; --draw:#B0821F;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; padding-inline:20px; }
+  button,input,textarea{ font-family:inherit; }
+  :focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+  .num{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding-block:22px 56px; }
+  .topbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--rule); font-size:12px; letter-spacing:.08em; color:var(--ink-muted); }
+  .brand{ font-weight:800; color:var(--ink); letter-spacing:.02em; font-size:13px; }
+  .theme-btn{ background:none; border:1px solid var(--rule-soft); color:var(--ink-muted); padding:4px 10px; font-size:12px; cursor:pointer; }
+  .theme-btn:hover{ color:var(--ink); border-color:var(--ink); }
+
+  header.game{ padding:22px 0 18px; border-bottom:1px solid var(--rule-soft); }
+  .eyebrow{ font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--ink-muted); text-transform:uppercase; }
+  h1{ font-weight:900; font-size:clamp(26px,3.6vw,38px); letter-spacing:-.02em; line-height:1.15; margin:6px 0 8px; text-wrap:balance; }
+  .meta{ display:flex; flex-wrap:wrap; gap:6px 18px; color:var(--ink-muted); font-size:13.5px; }
+  .meta b{ color:var(--ink); font-weight:600; }
+
+  .layout{ display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:28px; margin-top:22px; align-items:start; }
+  @media (max-width:920px){ .layout{ grid-template-columns:1fr; } }
+
+  /* 노란 프레임 = "실제로 기록된 대국"(13.1절) */
+  .board-box{ width:100%; max-width:max(320px, calc(100vh - 150px)); }
+  .record-frame{ border:6px solid var(--accent); background:var(--board); }
+  .record-tag{ display:inline-block; background:var(--accent); color:var(--accent-ink); font-size:11px; font-weight:800; letter-spacing:.1em; padding:4px 10px 3px; }
+  #board{ display:block; width:100%; height:auto; touch-action:manipulation; user-select:none; }
+  .board-caption{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:12.5px; color:var(--ink-muted); }
+
+  .side{ display:flex; flex-direction:column; gap:18px; }
+  .players{ border-top:3px solid var(--rule); }
+  .pl{ display:grid; grid-template-columns:22px 1fr auto; gap:10px; align-items:center; padding:12px 2px; border-bottom:1px solid var(--rule-soft); }
+  .pl .st{ width:18px; height:18px; border-radius:50%; }
+  .pl .st.b{ background:var(--stone-b); box-shadow:0 0 0 1.5px var(--ink-faint); }
+  .pl .st.w{ background:var(--stone-w); box-shadow:inset 0 0 0 1.5px var(--stone-w-edge); }
+  .pl .nm{ font-weight:800; font-size:15px; line-height:1.25; }
+  .pl .sub{ font-size:12px; color:var(--ink-muted); font-weight:400; }
+  .pl .cap{ text-align:right; font-size:11.5px; color:var(--ink-muted); }
+  .pl .cap .num{ display:block; font-size:18px; color:var(--ink); font-weight:600; }
+  .pl.turn .nm::after{ content:"차례"; font-size:10.5px; font-weight:800; letter-spacing:.06em; margin-left:8px; padding:1px 6px; background:var(--accent); color:var(--accent-ink); vertical-align:2px; }
+  .result-row{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 2px; font-size:13px; color:var(--ink-muted); }
+  .result-row b{ color:var(--ink); font-size:14px; }
+  .result-row .win{ color:var(--good); font-weight:800; }
+
+  .now{ background:var(--surface); padding:14px 16px; }
+  .now .row{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .now .count{ font-size:28px; font-weight:600; letter-spacing:-.02em; }
+  .now .count small{ font-size:14px; color:var(--ink-faint); font-weight:400; }
+  .now .mv{ font-size:14px; color:var(--ink-muted); }
+  .now .mv b{ color:var(--ink); font-weight:600; }
+  input[type=range]{ width:100%; margin:12px 0 4px; accent-color:var(--ink); }
+
+  .controls{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
+  .controls button{ border:1px solid var(--rule); background:var(--bg); color:var(--ink); padding:9px 0; font-size:14px; cursor:pointer; font-family:var(--font-mono); }
+  .controls button:hover:not(:disabled){ background:var(--ink); color:var(--bg); }
+  .controls button:disabled{ opacity:.35; cursor:not-allowed; }
+  .controls button.on{ background:var(--ink); color:var(--bg); }
+  .toggles{ display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; color:var(--ink-muted); }
+  .toggles label{ display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+  .toggles input{ accent-color:var(--ink); }
+  .keys{ font-size:11.5px; color:var(--ink-faint); }
+  kbd{ font-family:var(--font-mono); font-size:11px; border:1px solid var(--rule-soft); padding:0 4px; color:var(--ink-muted); }
+
+  .comment{ border-left:3px solid var(--rule); padding:2px 0 2px 12px; font-size:13.5px; color:var(--ink); white-space:pre-wrap; min-height:22px; }
+  .comment.empty{ color:var(--ink-faint); }
+
+  .section-h{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; font-weight:800; padding-bottom:6px; border-bottom:1px solid var(--rule); margin-bottom:8px; }
+  .section-h span{ font-weight:400; color:var(--ink-faint); font-size:12px; }
+  .movelist{ position:relative; max-height:236px; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(74px,1fr)); gap:2px; padding-right:2px; }
+  .mvb{ all:unset; cursor:pointer; display:flex; align-items:center; gap:5px; padding:3px 5px; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums; }
+  .mvb:hover{ background:var(--surface-2); color:var(--ink); }
+  .mvb:focus-visible{ outline:2px solid var(--accent); }
+  .mvb .d{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .mvb .d.b{ background:var(--stone-b); box-shadow:0 0 0 1px var(--ink-faint); }
+  .mvb .d.w{ background:var(--stone-w); box-shadow:inset 0 0 0 1px var(--stone-w-edge); }
+  .mvb.cur{ background:var(--ink); color:var(--bg); }
+
+  .loader{ margin-top:36px; border-top:3px solid var(--rule); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:760px){ .loader{ grid-template-columns:1fr; } }
+  .loader h2{ font-size:16px; font-weight:800; margin:0 0 6px; }
+  .loader p{ margin:0 0 10px; color:var(--ink-muted); font-size:13px; }
+  .drop{ border:1.5px dashed var(--ink-faint); padding:18px; text-align:center; font-size:13px; color:var(--ink-muted); cursor:pointer; background:var(--surface); }
+  .drop.over{ border-color:var(--ink); color:var(--ink); background:var(--surface-2); }
+  textarea{ width:100%; min-height:96px; resize:vertical; border:1px solid var(--rule-soft); background:var(--surface); color:var(--ink); padding:10px; font-family:var(--font-mono); font-size:12px; }
+  textarea:focus{ border-color:var(--ink); outline:none; }
+  .btn{ border:1px solid var(--rule); background:var(--ink); color:var(--bg); padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; margin-top:8px; }
+  .btn.ghost{ background:var(--bg); color:var(--ink); }
+  .msg{ font-size:12.5px; margin-top:8px; min-height:18px; }
+  .msg.err{ color:var(--loss); } .msg.ok{ color:var(--good); }
+
+  .source{ margin-top:28px; padding-top:12px; border-top:1px solid var(--rule-soft); font-size:12px; color:var(--ink-muted); line-height:1.7; }
+  .source b{ color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span><a class="brand" href="/" style="color:inherit;text-decoration:none">바둑DB</a> · 기보 뷰어</span>
+    <button class="theme-btn" id="themeBtn" type="button">다크 모드</button>
+  </div>
+
+  <header class="game">
+    <div class="eyebrow" id="eyebrow">고전 명국 · 견본 기보</div>
+    <h1 id="title">—</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="layout">
+    <section aria-label="바둑판">
+      <div class="board-box">
+      <span class="record-tag">원본 기보</span>
+      <div class="record-frame">
+        <svg id="board" role="img" aria-label="바둑판"></svg>
+      </div>
+      <div class="board-caption">
+        <span id="boardStatus" aria-live="polite"></span>
+        <span>판을 눌러도 한 수 앞으로 갑니다</span>
+      </div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div>
+        <div class="players">
+          <div class="pl" id="plB"><span class="st b"></span><div><div class="nm" id="nameB">—</div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
+          <div class="pl" id="plW"><span class="st w"></span><div><div class="nm" id="nameW">—</div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
+        </div>
+        <div class="result-row"><span>결과</span><b id="result">—</b></div>
+      </div>
+
+      <div class="now">
+        <div class="row">
+          <div class="count num" id="count">0 <small>/ 0</small></div>
+          <div class="mv" id="mvLabel">대국 시작 전</div>
+        </div>
+        <input type="range" id="slider" min="0" max="0" value="0" aria-label="수 이동">
+        <div class="controls">
+          <button type="button" id="bFirst" title="처음 (Home)">|◀</button>
+          <button type="button" id="bBack10" title="10수 뒤로 (Shift+←)">◀◀</button>
+          <button type="button" id="bPrev" title="한 수 뒤로 (←)">◀</button>
+          <button type="button" id="bNext" title="한 수 앞으로 (→)">▶</button>
+          <button type="button" id="bFwd10" title="10수 앞으로 (Shift+→)">▶▶</button>
+          <button type="button" id="bLast" title="마지막 (End)">▶|</button>
+        </div>
+      </div>
+
+      <div class="toggles">
+        <label><input type="checkbox" id="tNums"> 수 번호</label>
+        <label><input type="checkbox" id="tCoords" checked> 좌표</label>
+        <label><input type="checkbox" id="tPlay"> 자동 재생</label>
+      </div>
+      <div class="keys"><kbd>←</kbd> <kbd>→</kbd> 한 수 · <kbd>Shift</kbd>+화살표 10수 · <kbd>Home</kbd> <kbd>End</kbd> 처음·끝</div>
+
+      <div>
+        <div class="section-h">해설 <span>SGF의 C 속성</span></div>
+        <div class="comment empty" id="comment">이 수에 붙은 해설이 없습니다.</div>
+      </div>
+
+      <div>
+        <div class="section-h">수순표 <span id="mlCount"></span></div>
+        <div class="movelist" id="movelist" role="list"></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="loader" id="loaderSec" aria-label="SGF 불러오기">
+    <div>
+      <h2>SGF 파일 열기</h2>
+      <p>내 컴퓨터의 .sgf 파일을 끌어다 놓거나 눌러서 고르세요. 파일은 이 화면 안에서만 읽고 어디에도 보내지 않습니다.</p>
+      <label class="drop" id="drop"><input type="file" id="file" accept=".sgf,text/plain" hidden>여기로 끌어다 놓거나 눌러서 파일 선택</label>
+    </div>
+    <div>
+      <h2>SGF 텍스트 붙여넣기</h2>
+      <p>예: <span class="num">(;GM[1]SZ[19];B[pd];W[dp]...)</span></p>
+      <textarea id="paste" spellcheck="false" aria-label="SGF 텍스트"></textarea>
+      <div><button class="btn" id="loadPaste" type="button">이 기보 보기</button> <button class="btn ghost" id="loadSample" type="button">견본 기보로 돌아가기</button></div>
+      <div class="msg" id="msg" role="status"></div>
+    </div>
+  </section>
+
+  <div class="source" id="source"></div>
+</div>
+
+<script>
+/* ---------- SGF 파서: 전체 트리를 읽고 본선(첫 번째 분기)만 따라감 ---------- */
+function parseSGF(text){
+  let i = 0;
+  const n = text.length;
+  const ws = () => { while (i < n && /\s/.test(text[i])) i++; };
+  function parseTree(){
+    ws(); if (text[i] !== '(') throw new Error('SGF 형식 오류: "(" 가 필요합니다 (위치 ' + i + ')');
+    i++; const nodes = []; const children = [];
+    ws();
+    while (i < n && text[i] === ';') { i++; nodes.push(parseNode()); ws(); }
+    while (i < n && text[i] === '(') { children.push(parseTree()); ws(); }
+    if (text[i] !== ')') throw new Error('SGF 형식 오류: ")" 가 필요합니다 (위치 ' + i + ')');
+    i++;
+    return { nodes, children };
+  }
+  function parseNode(){
+    const props = {};
+    ws();
+    while (i < n && /[A-Za-z]/.test(text[i])) {
+      let id = '';
+      while (i < n && /[A-Za-z]/.test(text[i])) { if (/[A-Z]/.test(text[i])) id += text[i]; i++; }
+      ws();
+      const vals = [];
+      while (i < n && text[i] === '[') {
+        i++; let v = '';
+        while (i < n && text[i] !== ']') {
+          if (text[i] === '\\') { i++; if (text[i] === '\n') { i++; continue; } if (text[i] === '\r') { i++; if (text[i] === '\n') i++; continue; } }
+          v += text[i]; i++;
+        }
+        i++; vals.push(v); ws();
+      }
+      if (id) props[id] = (props[id] || []).concat(vals);
+      ws();
+    }
+    return props;
+  }
+  ws();
+  const start = text.indexOf('(');
+  if (start < 0) throw new Error('SGF 내용을 찾지 못했습니다');
+  i = start;
+  const tree = parseTree();
+  const line = [];
+  let t = tree;
+  while (t) { line.push(...t.nodes); t = t.children[0]; }
+  return line;
+}
+
+/* ---------- 좌표 변환 ---------- */
+const COLS = 'ABCDEFGHJKLMNOPQRST'; // I 제외 (바둑 표기 관례)
+function sgfToXY(s){ if (!s || s.length < 2) return null; const x = s.charCodeAt(0) - 97, y = s.charCodeAt(1) - 97; return [x, y]; }
+function xyToLabel(x, y, size){ return COLS[x] + (size - y); }
+
+/* ---------- 규칙 엔진: 착수 → 따내기 ---------- */
+function buildPositions(nodes){
+  const root = nodes[0] || {};
+  const size = parseInt((root.SZ || ['19'])[0], 10) || 19;
+  let board = Array.from({ length: size }, () => Array(size).fill(0)); // 0 빈점, 1 흑, 2 백
+  const nums = Array.from({ length: size }, () => Array(size).fill(0)); // 그 자리 돌을 놓은 수 번호
+  const caps = { 1: 0, 2: 0 };
+  const states = [];
+  const inb = (x, y) => x >= 0 && y >= 0 && x < size && y < size;
+  const nbrs = (x, y) => [[x+1,y],[x-1,y],[x,y+1],[x,y-1]].filter(([a,b]) => inb(a,b));
+  function group(b, x, y){
+    const c = b[y][x], seen = new Set([x+','+y]), stack = [[x,y]], stones = []; let libs = 0; const libSeen = new Set();
+    while (stack.length) {
+      const [a, d] = stack.pop(); stones.push([a, d]);
+      for (const [p, q] of nbrs(a, d)) {
+        const k = p + ',' + q;
+        if (b[q][p] === 0) { if (!libSeen.has(k)) { libSeen.add(k); libs++; } }
+        else if (b[q][p] === c && !seen.has(k)) { seen.add(k); stack.push([p, q]); }
+      }
+    }
+    return { stones, libs };
+  }
+  const snapshot = (extra) => ({ board: board.map(r => r.slice()), nums: nums.map(r => r.slice()), caps: { ...caps }, ...extra });
+  const applySetup = (node) => {
+    for (const [key, col] of [['AB',1],['AW',2],['AE',0]]) for (const v of node[key] || []) {
+      // 압축 표기 aa:cc 지원
+      const [p, q] = v.split(':'); const a = sgfToXY(p), b = q ? sgfToXY(q) : a;
+      if (!a) continue;
+      for (let y = Math.min(a[1],b[1]); y <= Math.max(a[1],b[1]); y++) for (let x = Math.min(a[0],b[0]); x <= Math.max(a[0],b[0]); x++) if (inb(x,y)) { board[y][x] = col; nums[y][x] = 0; }
+    }
+  };
+  applySetup(root);
+  states.push(snapshot({ move: null, moveNo: 0, comment: (root.C || [''])[0], captured: [] }));
+  let moveNo = 0;
+  const warnings = [];
+  for (let k = 1; k < nodes.length; k++) {
+    const node = nodes[k];
+    applySetup(node);
+    const colKey = node.B ? 'B' : node.W ? 'W' : null;
+    if (!colKey) { states.push(snapshot({ move: null, moveNo, comment: (node.C || [''])[0], captured: [] })); continue; }
+    moveNo++;
+    const col = colKey === 'B' ? 1 : 2, opp = 3 - col;
+    const xy = sgfToXY(node[colKey][0]);
+    const isPass = !xy || xy[0] >= size || xy[1] >= size; // "" 또는 "tt" 는 착수 포기
+    const captured = [];
+    if (!isPass) {
+      const [x, y] = xy;
+      if (board[y][x] !== 0) warnings.push(moveNo + '수: 이미 돌이 있는 자리(' + xyToLabel(x, y, size) + ')');
+      board[y][x] = col; nums[y][x] = moveNo;
+      for (const [p, q] of nbrs(x, y)) if (board[q][p] === opp) {
+        const g = group(board, p, q);
+        if (g.libs === 0) for (const [a, d] of g.stones) { board[d][a] = 0; nums[d][a] = 0; captured.push([a, d]); caps[col]++; }
+      }
+      const self = group(board, x, y);
+      if (self.libs === 0) { warnings.push(moveNo + '수: 자충(자살수)'); for (const [a, d] of self.stones) { board[d][a] = 0; nums[d][a] = 0; caps[opp]++; } }
+    }
+    states.push(snapshot({ move: { col, x: isPass ? null : xy[0], y: isPass ? null : xy[1], pass: isPass }, moveNo, comment: (node.C || [''])[0], captured }));
+  }
+  return { size, states, warnings, info: root };
+}
+
+
+/* ---------- 견본: 1846년 슈사쿠–겐난 "귀가 붉어진 대국" ---------- */
+const SAMPLE_SGF = `(;GM[1]FF[4]CA[UTF-8]SZ[19]KM[0]GN[Ear-reddening game]DT[1846-09-11]PB[Honinbo Shusaku]BR[4d]PW[Inoue Gennan Inseki]WR[8d]RE[B+2]
+;B[qd];W[dc];B[pq];W[oc];B[cp];W[cf];B[ep];W[qo];B[pe];W[np]
+;B[po];W[pp];B[op];W[qp];B[oq];W[oo];B[pn];W[qq];B[nq];W[on]
+;B[pm];W[om];B[pl];W[mp];B[mq];W[ol];B[pk];W[lq];B[lr];W[kr]
+;B[lp];W[kq];B[qr];W[rr];B[rs];W[mr];B[nr];W[pr];B[ps];W[qs]
+;B[no];W[mo];B[qr];W[rm];B[rl];W[qs];B[lo];W[mn];B[qr];W[qm]
+;B[or];W[ql];B[qj];W[rj];B[ri];W[rk];B[ln];W[mm];B[qi];W[rq]
+;B[jn];W[ls];B[ns];W[gq];B[go];W[ck];B[kc];W[ic];B[pc];W[nj]
+;B[ke];W[og];B[oh];W[pb];B[qb];W[ng];B[mi];W[mj];B[nd];W[ph]
+;B[qg];W[pg];B[hq];W[hr];B[ir];W[iq];B[hp];W[jr];B[fc];W[lc]
+;B[ld];W[mc];B[lb];W[mb];B[md];W[qf];B[pf];W[qh];B[rg];W[rh]
+;B[sh];W[rf];B[sg];W[pj];B[pi];W[oi];B[oj];W[ni];B[qk];W[ok]
+;B[qe];W[kb];B[jb];W[ka];B[jc];W[ob];B[ja];W[la];B[db];W[cc]
+;B[fe];W[cn];B[gr];W[is];B[fq];W[io];B[ji];W[eb];B[fb];W[eg]
+;B[dj];W[dk];B[ej];W[cj];B[dh];W[ij];B[hm];W[gj];B[eh];W[fl]
+;B[fg];W[er];B[dm];W[fn];B[dn];W[gn];B[jj];W[jk];B[kk];W[ii]
+;B[ik];W[jl];B[kl];W[il];B[jh];W[co];B[do];W[ih];B[hn];W[hl]
+;B[bl];W[dg];B[gh];W[ch];B[ig];W[ec];B[cr];W[fd];B[gd];W[ed]
+;B[gc];W[bk];B[cm];W[gs];B[gp];W[li];B[kg];W[in];B[lj];W[lg]
+;B[gm];W[jf];B[jg];W[im];B[fm];W[kf];B[lf];W[mf];B[le];W[gf]
+;B[hf];W[ff];B[gg];W[lk];B[kj];W[km];B[lm];W[ll];B[jm];W[ge]
+;B[he];W[ef];B[ea];W[cb];B[fr];W[fs];B[dr];W[qa];B[ra];W[pa]
+;B[rb];W[da];B[gi];W[fj];B[fi];W[fa];B[ga];W[gl];B[ek];W[em]
+;B[ho];W[el];B[en];W[jo];B[kn];W[ci];B[lh];W[mh];B[mg];W[di]
+;B[ei];W[lg];B[qn];W[rn];B[re];W[sl];B[mg];W[bm];B[am];W[lg]
+;B[eq];W[es];B[mg];W[ha];B[gb];W[lg];B[ds];W[hs];B[mg];W[sj]
+;B[si];W[lg];B[sr];W[sq];B[mg];W[hd];B[hb];W[lg];B[ro];W[so]
+;B[mg];W[ss];B[qs];W[lg];B[sn];W[rp];B[mg];W[cl];B[bn];W[lg]
+;B[ml];W[mk];B[mg];W[pj];B[sf];W[lg];B[nn];W[nl];B[mg];W[ib]
+;B[ia];W[lg];B[nc];W[nb];B[mg];W[jd];B[kd];W[lg];B[ma];W[na]
+;B[mg];W[qc];B[rc];W[lg];B[js];W[ks];B[mg];W[hc];B[id];W[lg]
+;B[fk];W[hj];B[mg];W[hh];B[hg];W[lg];B[gk];W[hk];B[mg];W[ak]
+;B[lg];W[al];B[bm];W[nf];B[od];W[ki];B[ms];W[kp];B[ip];W[jp]
+;B[lr];W[oj];B[mr];W[ea];B[sr])`;
+const SAMPLE_DISPLAY = {
+  title: '귀가 붉어진 대국 (耳赤の一局)',
+  eyebrow: '고전 명국 · 견본 기보',
+  black: '혼인보 슈사쿠', blackSub: '本因坊秀策 · 4단',
+  white: '이노우에 겐난 인세키', whiteSub: '井上幻庵因碩 · 8단',
+  source: '<b>견본 기보 출처와 검증</b> — 공개 저장소에 올라와 있는 이 대국의 SGF 4개(herzbube/littlego, jokkebk/jgoboard, Slymaster/masame, akitaonrails/frank_go)를 받아 수순을 한 수씩 대조했고, <b>325수 모두 일치</b>했습니다. 결과 "흑 2집승"과 대국일 1846년 9월 11일은 위키백과 "Ear-reddening game" 항목과 일치합니다. 덤 없음(당시 관례, 4개 파일 모두 KM 0 또는 미기재). 규칙 엔진으로 끝까지 재생했을 때 이미 돌이 있는 자리에 둔 수·자충수는 0건이었고, 판 위의 돌과 따낸 돌의 합이 흑 163수·백 162수와 정확히 맞았습니다.'
+};
+
+/* ---------- 상태 ---------- */
+const S = { game: null, idx: 0, showNums: false, showCoords: true, timer: null, display: null };
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+function resultText(re){
+  if (!re) return '기록 없음';
+  const m = /^([BW])\+(.*)$/i.exec(re.trim());
+  if (!m) { if (/^(0|draw|jigo)$/i.test(re.trim())) return '무승부'; if (re.trim() === 'Void') return '무효'; if (re.trim() === '?') return '미상'; return re; }
+  const who = m[1].toUpperCase() === 'B' ? '흑' : '백', r = m[2].trim();
+  if (/^(R|Resign)$/i.test(r)) return who + ' 불계승';
+  if (/^(T|Time)$/i.test(r)) return who + ' 시간승';
+  if (/^(F|Forfeit)$/i.test(r)) return who + ' 반칙승';
+  if (r === '') return who + ' 승';
+  if (!isNaN(parseFloat(r))) return who + ' ' + r + '집승';
+  return who + ' 승 (' + r + ')';
+}
+
+function loadGame(text, display){
+  const nodes = parseSGF(text);
+  const g = buildPositions(nodes);
+  if (g.size < 2 || g.size > 25) throw new Error('지원하지 않는 판 크기입니다 (SZ ' + g.size + ')');
+  S.game = g; S.display = display || null; S.idx = 0;
+  stopPlay();
+  const info = g.info, first = k => (info[k] || [''])[0];
+  const d = display || {};
+  $('title').textContent = d.title || first('GN') || first('EV') || ((first('PB') || '흑') + ' 대 ' + (first('PW') || '백'));
+  $('eyebrow').textContent = d.eyebrow || '불러온 기보';
+  $('nameB').textContent = d.black || first('PB') || '흑';
+  $('nameW').textContent = d.white || first('PW') || '백';
+  $('subB').textContent = d.blackSub || [first('PB') && d.black ? first('PB') : '', first('BR')].filter(Boolean).join(' · ');
+  $('subW').textContent = d.whiteSub || [first('PW') && d.white ? first('PW') : '', first('WR')].filter(Boolean).join(' · ');
+  const res = first('RE');
+  $('result').innerHTML = res ? '<span class="' + (/^[BW]\+/i.test(res) ? 'win' : '') + '">' + esc(resultText(res)) + '</span> <span class="num" style="color:var(--ink-faint);font-weight:400">' + esc(res) + '</span>' : '기록 없음';
+  const total = g.states[g.states.length - 1].moveNo;
+  const meta = [];
+  if (first('DT')) meta.push('대국일 <b class="num">' + esc(first('DT')) + '</b>');
+  if (first('EV') && !d.title) meta.push('대회 <b>' + esc(first('EV')) + '</b>');
+  meta.push('판 <b class="num">' + g.size + '×' + g.size + '</b>');
+  meta.push('덤 <b class="num">' + esc(first('KM') || '기록 없음') + '</b>');
+  if (first('HA') && first('HA') !== '0') meta.push('치석 <b class="num">' + esc(first('HA')) + '</b>');
+  meta.push('총 <b class="num">' + total + '</b>수');
+  if (first('RU')) meta.push('규칙 <b>' + esc(first('RU')) + '</b>');
+  $('meta').innerHTML = meta.map(m => '<span>' + m + '</span>').join('');
+  $('source').innerHTML = d.source || ('불러온 SGF를 이 화면에서 직접 해석했습니다. 원본 파일의 내용을 고치지 않고 그대로 보여주며, 분기가 있으면 첫 번째 분기(본선)만 따라갑니다.' + (g.warnings.length ? ' <b>주의:</b> 규칙상 이상한 수 ' + g.warnings.length + '건 — ' + esc(g.warnings.slice(0, 3).join(', ')) + (g.warnings.length > 3 ? ' 외' : '') : ''));
+  $('slider').max = g.states.length - 1;
+  buildMoveList();
+  drawBoardBase();
+  render();
+}
+
+/* ---------- 바둑판 그리기 (SVG) ---------- */
+const CELL = 30, PAD = 34;
+let stoneLayer, markLayer, coordLayer;
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function hoshi(size){
+  if (size === 19) return [3, 9, 15];
+  if (size === 13) return [3, 6, 9];
+  if (size === 9) return [2, 4, 6];
+  return [];
+}
+function drawBoardBase(){
+  const n = S.game.size, svg = $('board'), span = (n - 1) * CELL, W = span + PAD * 2;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + W);
+  svg.innerHTML = '';
+  el('rect', { x: 0, y: 0, width: W, height: W, fill: 'var(--board)' }, svg);
+  const grid = el('g', { stroke: 'var(--board-line)', 'stroke-width': 1 }, svg);
+  for (let i = 0; i < n; i++) {
+    const p = PAD + i * CELL;
+    el('line', { x1: PAD, y1: p, x2: PAD + span, y2: p }, grid);
+    el('line', { x1: p, y1: PAD, x2: p, y2: PAD + span }, grid);
+  }
+  el('rect', { x: PAD, y: PAD, width: span, height: span, fill: 'none', stroke: 'var(--board-line)', 'stroke-width': 2 }, svg);
+  const hs = hoshi(n);
+  for (const a of hs) for (const b of hs) el('circle', { cx: PAD + a * CELL, cy: PAD + b * CELL, r: 3.4, fill: 'var(--board-line)' }, svg);
+  coordLayer = el('g', { 'font-family': 'IBM Plex Mono, ui-monospace, monospace', 'font-size': 11, fill: 'var(--board-label)', 'text-anchor': 'middle' }, svg);
+  const COLS = 'ABCDEFGHJKLMNOPQRSTUVWXYZ';
+  for (let i = 0; i < n; i++) {
+    const p = PAD + i * CELL;
+    el('text', { x: p, y: 14 }, coordLayer).textContent = COLS[i];
+    el('text', { x: p, y: W - 6 }, coordLayer).textContent = COLS[i];
+    el('text', { x: 12, y: p + 4 }, coordLayer).textContent = n - i;
+    el('text', { x: W - 12, y: p + 4 }, coordLayer).textContent = n - i;
+  }
+  stoneLayer = el('g', {}, svg);
+  markLayer = el('g', { 'pointer-events': 'none' }, svg);
+}
+
+function render(){
+  const g = S.game, st = g.states[S.idx], n = g.size, total = g.states.length - 1;
+  stoneLayer.innerHTML = ''; markLayer.innerHTML = '';
+  coordLayer.style.display = S.showCoords ? '' : 'none';
+  const R = CELL * 0.47;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const c = st.board[y][x]; if (!c) continue;
+    const cx = PAD + x * CELL, cy = PAD + y * CELL;
+    el('circle', c === 1
+      ? { cx, cy, r: R, fill: 'var(--stone-b)' }
+      : { cx, cy, r: R - 0.6, fill: 'var(--stone-w)', stroke: 'var(--stone-w-edge)', 'stroke-width': 1.2 }, stoneLayer);
+    const num = st.nums[y][x];
+    if (S.showNums && num) {
+      el('text', { x: cx, y: cy + 4, 'text-anchor': 'middle', 'font-family': 'IBM Plex Mono, ui-monospace, monospace', 'font-size': num > 99 ? 10 : 12, 'font-weight': 600, fill: c === 1 ? '#F5F5F0' : '#111111' }, markLayer).textContent = num;
+    }
+  }
+  const mv = st.move;
+  if (mv && !mv.pass) {
+    const cx = PAD + mv.x * CELL, cy = PAD + mv.y * CELL;
+    if (!S.showNums) el('circle', { cx, cy, r: R * 0.42, fill: 'none', stroke: mv.col === 1 ? '#F5F5F0' : '#111111', 'stroke-width': 2 }, markLayer);
+    else el('circle', { cx, cy, r: R + 1.5, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 3 }, markLayer);
+  }
+  // 패널
+  $('count').innerHTML = st.moveNo + ' <small>/ ' + g.states[total].moveNo + '</small>';
+  let label = '대국 시작 전';
+  if (mv) label = mv.pass ? '<b>' + (mv.col === 1 ? '흑' : '백') + '</b> 착수 포기' : '<b>' + (mv.col === 1 ? '흑' : '백') + ' ' + xyToLabel(mv.x, mv.y, n) + '</b>' + (st.captured.length ? ' · ' + st.captured.length + '점 따냄' : '');
+  else if (S.idx > 0) label = '착수 없는 노드';
+  $('mvLabel').innerHTML = label;
+  $('boardStatus').textContent = mv ? st.moveNo + '수 — ' + $('mvLabel').textContent : '대국 시작 전 국면';
+  $('capB').textContent = st.caps[1]; $('capW').textContent = st.caps[2];
+  const nextCol = mv ? 3 - mv.col : 1;
+  $('plB').classList.toggle('turn', S.idx < total && nextCol === 1);
+  $('plW').classList.toggle('turn', S.idx < total && nextCol === 2);
+  const cm = st.comment && st.comment.trim();
+  $('comment').textContent = cm || '이 수에 붙은 해설이 없습니다.';
+  $('comment').classList.toggle('empty', !cm);
+  $('slider').value = S.idx;
+  $('bFirst').disabled = $('bBack10').disabled = $('bPrev').disabled = S.idx === 0;
+  $('bLast').disabled = $('bFwd10').disabled = $('bNext').disabled = S.idx === total;
+  // 수순표 현재 위치
+  const list = $('movelist'), prev = list.querySelector('.cur'); if (prev) prev.classList.remove('cur');
+  const cur = list.querySelector('[data-i="' + S.idx + '"]');
+  if (cur) { cur.classList.add('cur'); const top = cur.offsetTop; if (top < list.scrollTop || top > list.scrollTop + list.clientHeight - 24) list.scrollTop = top - list.clientHeight / 2; }
+}
+
+function buildMoveList(){
+  const g = S.game, frag = document.createDocumentFragment();
+  let cnt = 0;
+  g.states.forEach((st, i) => {
+    if (!st.move) return; cnt++;
+    const b = document.createElement('button');
+    b.className = 'mvb'; b.type = 'button'; b.dataset.i = i; b.setAttribute('role', 'listitem');
+    const lab = st.move.pass ? '포기' : xyToLabel(st.move.x, st.move.y, g.size);
+    b.innerHTML = '<span class="d ' + (st.move.col === 1 ? 'b' : 'w') + '"></span>' + st.moveNo + ' ' + lab;
+    b.title = st.moveNo + '수 ' + (st.move.col === 1 ? '흑' : '백') + ' ' + lab;
+    frag.appendChild(b);
+  });
+  $('movelist').innerHTML = ''; $('movelist').appendChild(frag);
+  $('mlCount').textContent = cnt + '수 · 누르면 그 수로 이동';
+}
+
+function go(i){ const max = S.game.states.length - 1; S.idx = Math.max(0, Math.min(max, i)); render(); }
+function stopPlay(){ if (S.timer) { clearInterval(S.timer); S.timer = null; } $('tPlay').checked = false; }
+function startPlay(){
+  stopPlay(); $('tPlay').checked = true;
+  if (S.idx >= S.game.states.length - 1) go(0);
+  S.timer = setInterval(() => { if (S.idx >= S.game.states.length - 1) { stopPlay(); return; } go(S.idx + 1); }, 650);
+}
+
+$('bFirst').onclick = () => { stopPlay(); go(0); };
+$('bBack10').onclick = () => { stopPlay(); go(S.idx - 10); };
+$('bPrev').onclick = () => { stopPlay(); go(S.idx - 1); };
+$('bNext').onclick = () => { stopPlay(); go(S.idx + 1); };
+$('bFwd10').onclick = () => { stopPlay(); go(S.idx + 10); };
+$('bLast').onclick = () => { stopPlay(); go(S.game.states.length - 1); };
+$('slider').oninput = e => { stopPlay(); go(+e.target.value); };
+$('board').addEventListener('click', () => { stopPlay(); go(S.idx + 1); });
+$('movelist').addEventListener('click', e => { const b = e.target.closest('.mvb'); if (b) { stopPlay(); go(+b.dataset.i); } });
+$('tNums').onchange = e => { S.showNums = e.target.checked; render(); };
+$('tCoords').onchange = e => { S.showCoords = e.target.checked; render(); };
+$('tPlay').onchange = e => { e.target.checked ? startPlay() : stopPlay(); };
+document.addEventListener('keydown', e => {
+  if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName) && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
+  const k = e.key, step = e.shiftKey ? 10 : 1;
+  if (k === 'ArrowRight') { stopPlay(); go(S.idx + step); e.preventDefault(); }
+  else if (k === 'ArrowLeft') { stopPlay(); go(S.idx - step); e.preventDefault(); }
+  else if (k === 'Home') { stopPlay(); go(0); e.preventDefault(); }
+  else if (k === 'End') { stopPlay(); go(S.game.states.length - 1); e.preventDefault(); }
+});
+
+/* ---------- 불러오기 ---------- */
+function setMsg(t, ok){ $('msg').textContent = t; $('msg').className = 'msg ' + (ok ? 'ok' : 'err'); }
+function tryLoad(text, name){
+  try { loadGame(text, null); setMsg((name ? name + ' — ' : '') + '불러왔습니다. 총 ' + S.game.states[S.game.states.length - 1].moveNo + '수.', true); window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+  catch (err) { setMsg('이 내용은 SGF로 읽을 수 없습니다: ' + err.message + '. 파일이 "(;" 로 시작하는지 확인해 주세요.', false); }
+}
+$('file').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => tryLoad(r.result, f.name); r.readAsText(f); };
+const drop = $('drop');
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => tryLoad(r.result, f.name); r.readAsText(f); });
+$('loadPaste').onclick = () => { const t = $('paste').value.trim(); if (!t) { setMsg('붙여넣은 SGF가 없습니다.', false); return; } tryLoad(t, null); };
+$('loadSample').onclick = () => { loadGame(SAMPLE_SGF, SAMPLE_DISPLAY); setMsg('견본 기보를 다시 불러왔습니다.', true); };
+
+/* ---------- 테마 토글 (13.4절) ---------- */
+function isDark(){ const t = document.documentElement.dataset.theme; return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+function syncThemeBtn(){ $('themeBtn').textContent = isDark() ? '라이트 모드' : '다크 모드'; }
+$('themeBtn').onclick = () => { document.documentElement.dataset.theme = isDark() ? 'light' : 'dark'; syncThemeBtn(); };
+syncThemeBtn();
+
+/* ---------- 사이트에서 연 기보 (kifu.html?s=출처&c=묶음&r=기보 번호&t=제목&e=날짜·대회&b=흑&w=백) ---------- */
+(function(){
+  const q = new URLSearchParams(location.search), c = q.get('c'), r = q.get('r'), src = q.get('s');
+  if (!c || !r || !/^[a-z0-9]+$/i.test(c)) { loadGame(SAMPLE_SGF, SAMPLE_DISPLAY); return; }
+  const SRC = { i: ['囲碁棋譜.COM', 'https://igo-kifu.com/'], f: ['야호(foxwq.com)', 'https://www.foxwq.com/'], w: ['101围棋网(101weiqi.com)', 'https://www.101weiqi.com/chessbook/'], h: ['한게임 바둑(baduk.hangame.com)', 'https://baduk.hangame.com/'] }[src] || ['외부 기보 사이트', ''];
+  $('loaderSec').style.display = 'none';
+  $('eyebrow').textContent = q.get('e') || '기보';
+  $('title').textContent = '기보를 불러오는 중…';
+  fetch('/k/' + c + '.json').then(x => { if (!x.ok) throw new Error('HTTP ' + x.status); return x.json(); }).then(m => {
+    const sg = m[r]; if (!sg) throw new Error('기보 묶음에 이 기보가 없습니다');
+    const sub = (k, s) => [q.get(k + 's') || ''].filter(Boolean).join(' · ');
+    loadGame(sg, {
+      title: q.get('t') || '', eyebrow: q.get('e') || '',
+      black: q.get('b') || '', blackSub: q.get('b') ? sub('b') : '',
+      white: q.get('w') || '', whiteSub: q.get('w') ? sub('w') : '',
+      source: '<b>기보 출처</b> — ' + (SRC[1] ? '<a href="' + SRC[1] + '" target="_blank" rel="noopener">' + esc(SRC[0]) + '</a>' : esc(SRC[0])) +
+        '에 공개된 SGF의 본선 수순만 보여줍니다(변화도·해설 제외). 대국 정보(대회·날짜·기사)는 이 사이트의 대국 기록(한국기원 기록실 기준)에서 가져왔고, 흑백·덤·결과 표기는 기보 파일을 따릅니다.'
+    });
+    document.title = (q.get('t') || '기보') + ' · 기보 뷰어';
+  }).catch(err => {
+    $('title').textContent = '기보를 불러오지 못했습니다';
+    $('loaderSec').style.display = '';
+    setMsg('기보 파일을 받지 못했습니다 (' + err.message + '). 잠시 뒤 다시 열거나, 아래에서 SGF를 직접 불러오세요.', false);
+    loadGame(SAMPLE_SGF, SAMPLE_DISPLAY); $('title').textContent = '기보를 불러오지 못했습니다';
+  });
+})();
+</script>
+</body>
+</html>
