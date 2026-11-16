@@ -280,14 +280,14 @@ function homeHolders(card){
   const cols=[];
   if(typeof DX!=='undefined'&&DX){
     for(const [sec,lbl,grp] of [['open','국내 종합기전',null],['women','여자기전','women']]){
-      const L=DX.se.filter(s=>s[3]===sec&&s[5]&&s[6].length&&(!grp||s[4]===grp)&&s[6][s[6].length-1][1]>=(LASTD/10000-3|0)*10000).map(s=>({n:s[1],r:s[6][s[6].length-1]})).sort((a,b)=>b.r[1]-a.r[1]).slice(0,7);
-      if(L.length)cols.push([lbl,'#/tournaments/'+sec,L.map(x=>[x.n,x.r[2],(x.r[1]/10000)|0])]);
+      const L=DX.se.filter(s=>s[3]===sec&&s[5]&&s[6].length&&(!grp||s[4]===grp)&&s[6][s[6].length-1][1]>=(LASTD/10000-3|0)*10000).map(s=>({n:s[1],r:s[6][s[6].length-1],h:dxGid(s)})).sort((a,b)=>b.r[1]-a.r[1]).slice(0,7);
+      if(L.length)cols.push([lbl,'#/tournaments/'+sec,L.map(x=>[x.n,x.r[2],(x.r[1]/10000)|0,x.h])]);
     }
   }
-  if(typeof IX!=='undefined'&&IX){const L=IX.ev.filter(e=>e[4]==='major'&&e[7]).map(e=>({n:e[1],r:e[10][e[10].length-1]})).sort((a,b)=>(b.r[1]||0)-(a.r[1]||0)).slice(0,7);
-    if(L.length)cols.push(['국제 메이저','#/tournaments/intl',L.map(x=>[x.n,x.r[2],x.r[1]])]);}
+  if(typeof IX!=='undefined'&&IX){const L=IX.ev.filter(e=>e[4]==='major'&&e[7]).map(e=>({n:e[1],r:e[10][e[10].length-1],h:e[9]&&e[9].length?'#/tournaments/'+e[9][e[9].length-1]:''})).sort((a,b)=>(b.r[1]||0)-(a.r[1]||0)).slice(0,7);
+    if(L.length)cols.push(['국제 메이저','#/tournaments/intl',L.map(x=>[x.n,x.r[2],x.r[1],x.h])]);}
   if(!cols.length)return '';
-  return card('지금 타이틀 보유자','',`<div class="hhold">${cols.map(([l,h,L])=>`<div class="hcol2"><h3><a href="${h}">${l} ›</a></h3><ul>${L.map(([n,k,y])=>`<li><span class="t">${esc(n)}</span><span class="w">${flag((PBY[k]||{}).c)}${isNK(k)?esc(k.slice(2)):plink(k)}</span><span class="y">${y||''}</span></li>`).join('')}</ul></div>`).join('')}</div>`);
+  return card('지금 타이틀 보유자','',`<div class="hhold">${cols.map(([l,h,L])=>`<div class="hcol2"><h3><a href="${h}">${l} ›</a></h3><ul>${L.map(([n,k,y,h])=>`<li><span class="t">${h?`<a class="pl" href="${h}">${esc(n)}</a>`:esc(n)}</span><span class="w">${flag((PBY[k]||{}).c)}${isNK(k)?esc(k.slice(2)):plink(k)}</span><span class="y">${y||''}</span></li>`).join('')}</ul></div>`).join('')}</div>`);
 }
 // 홈 세 단 높이 맞추기: 짧은 단의 목록(최근 대국·헤드라인·고레이팅)을 한 줄씩 더 보여 줌
 function homeFill(){
@@ -311,7 +311,7 @@ function homeSearch(){
 }
 
 /* =============== PLAYERS LIST =============== */
-const pst={q:'',c:'all',org:'all',st:'all',g:'all',era:'all',act:false,sort:'whr',page:0};
+const pst={q:'',c:'all',org:'all',st:'all',g:'all',era:'all',act:false,sort:'rank',page:0};
 const ERAS=[['all','전체'],['1950','1950년대 이전'],['1960','1960년대'],['1970','1970년대'],['1980','1980년대'],['1990','1990년대'],['2000','2000년대'],['2010','2010년대'],['2020','2020년대']];
 const eraOf=k=>{const r=rec(k);if(!r.g)return null;return r;};
 function pPlayers(q){
@@ -326,10 +326,11 @@ function pPlayers(q){
     <div class="fg"><span class="fl">현역</span><select class="q" id="ps" style="min-width:80px"><option value="all">전체</option><option ${pst.st==='현역'?'selected':''}>현역</option><option ${pst.st==='은퇴'?'selected':''}>은퇴</option></select></div>
     <div class="fg"><span class="fl">성별</span><select class="q" id="pg" style="min-width:80px"><option value="all">전체</option><option ${pst.g==='남자'?'selected':''}>남자</option><option ${pst.g==='여자'?'selected':''}>여자</option></select></div>
     <div class="fg"><span class="fl">시대</span><select class="q" id="pe" style="min-width:110px">${ERAS.map(([v,l])=>`<option value="${v}" ${pst.era===v?'selected':''}>${l}</option>`).join('')}</select></div>
-    <div class="fg"><span class="fl">정렬</span><select class="q" id="pso" style="min-width:110px"><option value="whr">실력 점수</option><option value="games">통산 대국</option><option value="wins">통산 승</option><option value="titles">우승</option><option value="recent">최근 활동</option><option value="name">이름</option></select></div>
+    <div class="fg"><span class="fl">정렬</span><select class="q" id="pso" style="min-width:110px"><option value="rank">랭킹</option><option value="whr">실력 점수</option><option value="games">통산 대국</option><option value="wins">통산 승</option><option value="titles">우승</option><option value="recent">최근 활동</option><option value="name">이름</option></select></div>
   </div>
   <div class="note" id="pcount" style="margin-top:12px"></div>
   <div id="plist"></div><div id="ppager"></div>`;
+  document.getElementById('pc').insertAdjacentHTML('beforebegin','<div id="pdash"></div>');
   const bind=(id,key,ev='change')=>{const el=document.getElementById(id);el.addEventListener(ev,()=>{pst[key]=el.value.trim?el.value.trim():el.value;pst.page=0;draw();});};
   ['po:org','ps:st','pg:g','pe:era','pso:sort'].forEach(s=>{const [i,k]=s.split(':');bind(i,k);});
   document.getElementById('pso').value=pst.sort;
@@ -351,7 +352,8 @@ function pPlayers(q){
     if(pst.org==='all'&&pst.st==='all'&&pst.g==='all'&&pst.c==='all')Object.keys(BYK).forEach(k=>{if(isNK(k)&&(!q||k.slice(2).toLowerCase().includes(q)))items.push(k);});
     let list=items;
     if(pst.era!=='all'){const e=+pst.era;list=list.filter(k=>{const r=rec(k);if(!r.g)return false;const fy=(r.first/10000)|0,ly=(r.last/10000)|0;return e===1950?fy<1960:(fy<e+10&&ly>=e);});}
-    const S={whr:k=>(ws(k)||[0])[0]||-1e9,games:k=>rec(k).g,wins:k=>rec(k).w,titles:k=>(CHB[k]||[]).length,recent:k=>rec(k).last||0};
+    pDash(pst.c);const RK=pRankMap(pst.c);
+    const S={rank:k=>RK[k]?1e7-RK[k][0]:((ws(k)||[0])[0]||-1e9)-1e7,whr:k=>(ws(k)||[0])[0]||-1e9,games:k=>rec(k).g,wins:k=>rec(k).w,titles:k=>(CHB[k]||[]).length,recent:k=>rec(k).last||0};
     if(pst.sort==='name')list.sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'ko'));else{const f=S[pst.sort];list.sort((a,b)=>f(b)-f(a)||nameOf(a).localeCompare(nameOf(b),'ko'));}
     const per=60,pages=Math.max(1,Math.ceil(list.length/per));if(pst.page>=pages)pst.page=0;
     const nk=list.filter(isNK).length;
@@ -359,7 +361,7 @@ function pPlayers(q){
     const el=document.getElementById('plist');
     if(!list.length){el.innerHTML='<div class="empty" style="margin-top:14px">조건에 맞는 기사가 없습니다. <button class="linkbtn" id="preset">필터 초기화</button></div>';document.getElementById('preset').onclick=()=>{Object.assign(pst,{q:'',c:'all',org:'all',st:'all',g:'all',era:'all',page:0});pPlayers({});};document.getElementById('ppager').innerHTML='';return;}
     el.innerHTML=`<div class="cards">${list.slice(pst.page*per,(pst.page+1)*per).map(k=>{const p=PBY[k],r=rec(k),s=ws(k);
-      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+(FLAG[p.c]?'<span class="sr">'+esc(p.c)+'</span> ':' '):''}${esc(p?[FLAG[p.c]?'':p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):nkLabel(k))}</div><div class="rec">${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
+      return `<a class="card" href="#/players/${encodeURIComponent(k)}"><div class="ph">${p&&p.ph?photo(p,nameOf(k)).replace(/data-ini="[^"]*"/,`data-ini="${esc(initial(nameOf(k)))}"`):`<span class="ini" aria-hidden="true">${esc(initial(nameOf(k)))}</span>`}</div><div class="nm">${esc(nameOf(k))}<span>${p&&p.dan?p.dan+'단':''}</span></div><div class="meta">${p?flag(p.c)+(FLAG[p.c]?'<span class="sr">'+esc(p.c)+'</span> ':' '):''}${esc(p?[FLAG[p.c]?'':p.c,p.o!==p.c?p.o:'',(p.st||'')].filter(Boolean).join(' · '):nkLabel(k))}</div><div class="rec">${RK[k]?`<b class="prk">${RK[k][1]} ${RK[k][0]}위</b> · `:''}${r.g?`통산 ${fmt(r.w)}승 ${fmt(r.l)}패`:'대국 기록 없음'}${s&&s[7]>=RANK_MIN?` · ${fmt(s[0])}`:''}</div></a>`;}).join('')}</div>`;
     const pg=document.getElementById('ppager');
     pg.innerHTML=pages>1?`<div class="pager"><span>${pst.page+1} / ${pages} 페이지</span><span><button data-p="-1" ${pst.page===0?'disabled':''}>이전</button> <button data-p="1" ${pst.page>=pages-1?'disabled':''}>다음</button></span></div>`:'';
     pg.querySelectorAll('button').forEach(b=>b.onclick=()=>{pst.page+=+b.dataset.p;draw();window.scrollTo(0,0);});
@@ -382,7 +384,7 @@ function offBar(k,r){const o=OFFICIAL[k];if(!o)return '';
   <div class="ob2">${esc(o.note)} <a href="${o.url}" target="_blank" rel="noopener noreferrer">${esc(o.src)}</a></div></div>`;}
 function kbaLine(k,r){if(!r.off)return '';
   return `<div class="kbal"><span>한국기원 기록실 <b>공식 ${fmt(r.g)}전 ${fmt(r.w)}승${r.dr?' '+fmt(r.dr)+'무':''} ${fmt(r.l)}패</b>${r.v?' · 무효 '+fmt(r.v):''}</span>${r.un?`<span>비공식 ${fmt(r.un)}국</span>`:''}</div>`;}
-const PTABS=[['','개요'],['season','시즌별 기록'],['tournaments','대회별'],['games','게임 로그'],['rivals','상대전적'],['timeline','타임라인'],['elo','점수 변동'],['records','기록·수상'],['gor','고레이팅']];
+const PTABS=[['','개요'],['season','시즌별 기록'],['tournaments','대회별'],['games','대국 로그'],['rivals','상대전적'],['timeline','타임라인'],['elo','점수 변동'],['records','기록·수상'],['gor','고레이팅']];
 function awardsOf(p){if(!p)return [];return p.nt.filter(x=>/바둑대상|수상|상$|상\s*\(|MVP|다승상|신인/.test(x)&&!/문하|출신|도장|존경/.test(x));}
 function pPlayer(k,tab,q){{const al={};P.forEach(p=>(p.alias||[]).forEach(x=>al[x]=p.k));if(al[k])k=al[k];}if(!PTABS.some(t=>t[0]===tab))tab='';
   const p=PBY[k];const gs=BYK[k]||[];
@@ -442,7 +444,7 @@ function tOverview(el,k,p,gs){
     <div style="display:grid;gap:16px;align-content:start">
       <div class="mod"><div class="hd"><span>연승·연패 ${calc('무승부·무효는 건너뜀')}</span></div><div class="bd"><div class="split" style="grid-template-columns:1fr 1fr"><div><div class="k">최다 연승</div><div class="v">${st.bw}</div><div class="s">${st.bwS?dstr(st.bwS).slice(0,7)+' ~ '+dstr(st.bwE).slice(0,7):''}</div></div><div><div class="k">최다 연패</div><div class="v">${st.bl}</div><div class="s">${st.blS?dstr(st.blS).slice(0,7)+' ~ '+dstr(st.blE).slice(0,7):''}</div></div><div><div class="k">현재</div><div class="v">${st.cur[1]?st.cur[1]+st.cur[0]:'–'}</div><div class="s">마지막 ${r.last?dstr(r.last):''}</div></div><div><div class="k">첫 대국 나이</div><div class="v">${p&&p.b&&r.first?'만 '+ageAt(p.b,r.first):'–'}</div><div class="s">${r.first?dstr(r.first):''}</div></div></div></div></div>
       <div class="mod"><div class="hd"><span>라이벌 ${calc('맞대결 수 × (1 − |승률−0.5|×2), 10국 이상')}</span><a class="more" href="#/players/${encodeURIComponent(k)}/rivals">전체 →</a></div><div class="bd">${riv.length?riv.map((x,i)=>`<div class="rk"><span class="i">${i+1}</span><span class="nm">${plink(x.o)}<small>${x.n}국</small></span><span class="v"><span class="rw">${x.w}</span>-<span class="rl">${x.l}</span></span></div>`).join(''):'<div class="empty">10국 이상 맞대결한 상대가 없습니다</div>'}</div></div>
-      <div class="mod"><div class="hd"><span>최근 10국</span><a class="more" href="#/players/${encodeURIComponent(k)}/games">게임 로그 →</a></div><div class="bd">${gs.slice(-10).reverse().map(g=>{const won=g.wk===k,o=won?g.lk:g.wk;return `<div class="gl"><span class="d">${dstr(g.d).slice(2)}</span><span><span class="${g.j?'rd':won?'rw':'rl'}">${g.j?'무':won?'승':'패'}</span> ${plink(o)}<div class="t">${esc(T[g.ti])}</div></span></div>`;}).join('')||'<div class="empty">대국 기록 없음</div>'}</div></div>
+      <div class="mod"><div class="hd"><span>최근 10국</span><a class="more" href="#/players/${encodeURIComponent(k)}/games">대국 로그 →</a></div><div class="bd">${gs.slice(-10).reverse().map(g=>{const won=g.wk===k,o=won?g.lk:g.wk;return `<div class="gl"><span class="d">${dstr(g.d).slice(2)}</span><span><span class="${g.j?'rd':won?'rw':'rl'}">${g.j?'무':won?'승':'패'}</span> ${plink(o)}<div class="t">${esc(T[g.ti])}</div></span></div>`;}).join('')||'<div class="empty">대국 기록 없음</div>'}</div></div>
       ${playerNews(k)}
       ${p&&p.pr.length?`<div class="mod"><div class="hd"><span>승단 이력</span><span class="desc">${esc(p.ps||'원본')}</span></div><div class="bd"><ul class="tl">${p.pr.map(([dn,dt,rs])=>`<li><b>${dn}단</b><span class="d">${esc(dt)}</span>${esc(rs)}</li>`).join('')}</ul></div></div>`:''}
     </div>
@@ -466,7 +468,7 @@ function tTour(el,k,p,gs){
   const tc={},ru={};(CHB[k]||[]).forEach(c=>tc[c.g]=(tc[c.g]||0)+1);(RUB[k]||[]).forEach(c=>ru[c.g]=(ru[c.g]||0)+1);
   const rows=Object.entries(bt).sort((a,b)=>(tc[b[0]]||0)-(tc[a[0]]||0)||(b[1].w+b[1].l)-(a[1].w+a[1].l));
   el.innerHTML=`<section class="panel"><h2 class="sec"><span>최근 흐름</span><span class="desc">무승부·무효 제외</span></h2><div class="split"><div><div class="k">최근 10국</div><div class="v">${w10}승 ${l10}패</div><div class="s">승률 ${pct(w10,w10+l10)}</div></div><div><div class="k">최근 30국</div><div class="v">${w30}승 ${l30}패</div><div class="s">승률 ${pct(w30,w30+l30)}</div></div><div><div class="k">통산</div><div class="v">${fmt(rec(k).w)}승 ${fmt(rec(k).l)}패</div><div class="s">승률 ${wpct(rec(k))}</div></div><div><div class="k">참가 대회</div><div class="v">${rows.length}</div><div class="s">정리된 대회명 기준</div></div></div></section>
-  <section class="panel"><h2 class="sec"><span>대회별 성적</span><span class="desc">우승 많은 순 · 대회를 누르면 대회 페이지</span></h2><div class="tw sticky"><table><thead><tr><th>대회</th><th>분류</th><th class="r">참가 연도</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th class="r">우승 ${calc('결승·도전기 다승자')}</th><th class="r">준우승</th><th>최고 단계</th></tr></thead><tbody>${rows.map(([g,o])=>`<tr><td><a class="pl" href="#/tournaments/${g}">${esc(G[g])}</a></td><td>${badge(o.c)}</td><td class="n r">${o.ys.size}</td><td class="n r">${o.w+o.l+o.d}</td><td class="n r">${o.w}</td><td class="n r">${o.l}</td><td class="n r">${pct(o.w,o.w+o.l)}</td><td class="n r">${tc[g]||''}</td><td class="n r">${ru[g]||''}</td><td class="small">${tc[g]?'우승':o.best>=0?STAGE[o.best]:'<span class="muted">단계 정보 없음</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
+  <section class="panel"><h2 class="sec"><span>대회별 성적</span><span class="desc">우승 많은 순 · 제목을 누르면 정렬 · 대회를 누르면 대회 페이지</span></h2><div class="tw sticky"><table class="srt"><thead><tr><th>대회</th><th>분류</th><th class="r">참가 연도</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th class="r">우승 ${calc('결승·도전기 다승자')}</th><th class="r">준우승</th><th>최고 단계</th></tr></thead><tbody>${rows.map(([g,o])=>`<tr><td><a class="pl" href="#/tournaments/${g}">${esc(G[g])}</a></td><td>${badge(o.c)}</td><td class="n r">${o.ys.size}</td><td class="n r">${o.w+o.l+o.d}</td><td class="n r">${o.w}</td><td class="n r">${o.l}</td><td class="n r" data-v="${o.w+o.l?o.w/(o.w+o.l):-1}">${pct(o.w,o.w+o.l)}</td><td class="n r">${tc[g]||''}</td><td class="n r">${ru[g]||''}</td><td class="small" data-v="${tc[g]?99:o.best}">${tc[g]?'우승':o.best>=0?STAGE[o.best]:'<span class="muted">단계 정보 없음</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
 }
 function tTimeline(el,k,p,gs,q){
   if(!gs.length){el.innerHTML='<div class="empty">대국 기록이 없습니다</div>';return;}
@@ -1156,14 +1158,14 @@ function tHubCards(){
 const tHf=k=>{if(!k)return '';const p=PBY[k];return (p&&FLAG[p.c]?flag(p.c)+' ':'')+dxNm(k);};
 function tHolders(){
   const cols=[];const last=s=>s[6][s[6].length-1];
-  if(typeof IX!=='undefined'&&IX){const L=IX.ev.filter(e=>e[4]==='major'&&e[7]&&e[10].length).map(e=>{const r=e[10][e[10].length-1];return {n:e[1],k:r[2],y:r[4]?(r[4]/10000)|0:r[1]};}).sort((a,b)=>b.y-a.y);cols.push(['세계 메이저','#/tournaments/intl',L]);}
+  if(typeof IX!=='undefined'&&IX){const L=IX.ev.filter(e=>e[4]==='major'&&e[7]&&e[10].length).map(e=>{const r=e[10][e[10].length-1];return {n:e[1],k:r[2],y:r[4]?(r[4]/10000)|0:r[1],h:e[9]&&e[9].length?'#/tournaments/'+e[9][e[9].length-1]:'#/tournaments/intl'};}).sort((a,b)=>b.y-a.y);cols.push(['세계 메이저','#/tournaments/intl',L]);}
   if(typeof DX!=='undefined'&&DX){
-    const mk=(f)=>DX.se.filter(s=>s[5]&&s[6].length&&f(s)).map(s=>({n:s[1],k:last(s)[2],y:dxY(last(s))})).sort((a,b)=>b.y-a.y);
+    const mk=(f)=>DX.se.filter(s=>s[5]&&s[6].length&&f(s)).map(s=>({n:s[1],k:last(s)[2],y:dxY(last(s)),h:dxGid(s)})).sort((a,b)=>b.y-a.y);
     cols.push(['한국','#/tournaments/open',mk(s=>(s[3]==='open'&&s[4]==='main')||(s[3]==='women'&&s[4]==='women')).slice(0,10)]);
     if(DX.sections.jp)cols.push(['일본','#/tournaments/jp',mk(s=>s[3]==='jp'&&(s[4]==='jp7'||s[4]==='jpw'))]);
     if(DX.sections.cn)cols.push(['중국','#/tournaments/cn',mk(s=>s[3]==='cn'&&s[4]==='cnmain').slice(0,10)]);
   }
-  return `<div class="thold">${cols.map(([t,h,L])=>`<section><header><h3>${t}</h3><a href="${h}">전체 ›</a></header><ul>${L.map(x=>`<li><span class="t">${esc(x.n)}</span><span class="w">${tHf(x.k)}</span><span class="y">${x.y}</span></li>`).join('')}</ul></section>`).join('')}</div>`;
+  return `<div class="thold">${cols.map(([t,h,L])=>`<section><header><h3>${t}</h3><a href="${h}">전체 ›</a></header><ul>${L.map(x=>`<li><span class="t">${x.h?`<a class="pl" href="${x.h}">${esc(x.n)}</a>`:esc(x.n)}</span><span class="w">${tHf(x.k)}</span><span class="y">${x.y}</span></li>`).join('')}</ul></section>`).join('')}</div>`;
 }
 function tMap(){
   const C=[];const cnt=sec=>{const ss=DX.se.filter(x=>x[3]===sec);return `${ss.length}개 기전 · 우승 ${fmt(ss.reduce((a,x)=>a+x[6].length,0))}회`;};
@@ -2130,7 +2132,7 @@ function dxYears(el,sec,q){
   draw();
 }
 /* 기전별 */
-function dxEvents(el,sec){
+function dxEvents(el,sec,q){
   const S=DX.sections[sec];
   const top=s=>{const c={};s[6].forEach(r=>c[r[2]]=(c[r[2]]||0)+1);const b=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];return b&&b[1]>1?`${dxNm(b[0])} <span class="muted">${b[1]}회</span>`:'<span class="muted">–</span>';};
   el.innerHTML=`<div class="tw ixgw"><table class="ixev2"><thead><tr><th>기전</th><th>기간</th><th class="r">우승</th><th>최다 우승</th><th>최근 우승</th></tr></thead><tbody>
@@ -2139,6 +2141,7 @@ function dxEvents(el,sec){
     <tr class="ixdet" data-for="${s[0]}" hidden><td colspan="5"><ol class="ixwl">${s[6].map(r=>`<li><span class="e">${esc(r[0])} <span class="muted">${dxY(r)}</span></span>${dxNm(r[2])}${r[3]?` <span class="muted">· ${esc(nameOf(r[3]))}</span>`:''}${r[5]!=='m'&&r[6]&&/^\d+[-:]\d+$/.test(r[6])?` <span class="muted small">${esc(r[6])}</span>`:''}${r[5]==='m'?` <span class="muted" title="${esc(r[6])}">*</span>`:''}</li>`).join('')}</ol>${[...new Set(s[6].map(r=>r[4]).filter(x=>x>=0))].map(gid=>`<a class="more" href="#/tournaments/${gid}">${esc(G[gid])} 대국 기록 ›</a>`).join(' ')}</td></tr>`;}).join('');}).join('')}
   </tbody></table></div><p class="note">줄을 누르면 회차별 우승자(· 준우승자)가 펼쳐집니다.</p>`;
   el.querySelectorAll('.ixer').forEach(tr=>{const tog=()=>{const d=el.querySelector(`.ixdet[data-for="${tr.dataset.id}"]`);d.hidden=!d.hidden;tr.classList.toggle('open',!d.hidden);};tr.onclick=e=>{if(e.target.closest('a'))return;tog();};tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}};});
+  if(q&&q.open){const tr=el.querySelector(`.ixer[data-id="${CSS.escape(q.open)}"]`);if(tr){tr.click();tr.classList.add('hit');setTimeout(()=>tr.scrollIntoView({block:'center'}),60);}}
 }
 /* 기사 순위 */
 function dxPlayers(el,sec){
@@ -2166,31 +2169,111 @@ function splitTitles(names){
   return head.length>=4?{head,rest:n=>n.slice(head.length).trim()}:{head:'',rest:n=>n};
 }
 function pDiary(q){
-  const st={c:CATS.includes(q.c)?q.c:'all',n:10};
-  app.innerHTML=gHead('')+`<p class="lede">한국기원 기록실에 올라온 대국을 날짜별·대회별로 모은 대국 일지입니다. 가장 최근 대국은 <b>${dstr(LASTD).replace(/-/g,'.')}</b>입니다.</p>
-  ${schedPeek()}
-  <div class="fbar">${pillGroup('dc','분류',[['all','전체']].concat(CATS.map(c=>[c,CLABEL[c]])),st.c)}</div>
-  <div id="dy" class="diary"></div><div class="dmore"><button type="button" class="pill" id="dmore">이전 날짜 더 보기</button></div>`;
-  bindPills('dc',v=>{st.c=v;st.n=10;draw();});
+  const st={r:REGS.some(x=>x[0]===q.r)?q.r:'all',n:10};
+  app.innerHTML=gHead('')+`<div id="gdash"></div>
+  <div class="dlay"><div class="dmain">
+  <div class="fbar">${pillGroup('dr','구분',REGS.map(([v,l])=>[v,l]),st.r)}</div>
+  <div id="dy" class="diary"></div><div class="dmore"><button type="button" class="pill" id="dmore">이전 날짜 더 보기</button></div></div>
+  <aside class="dside">${schedPeek(true)}<p class="dnote">한국기원 기록실·중국바둑협회·일본·대만 기록을 날짜별·대회별로 모은 대국 일지입니다.</p></aside></div>`;
+  bindPills('dr',v=>{st.r=v;st.n=10;try{history.replaceState(null,'','#/games'+(v==='all'?'':'?r='+v));}catch(_){}draw();});
   document.getElementById('dmore').onclick=()=>{st.n+=10;draw(true);};
   draw();
   function draw(keep){
+    document.getElementById('gdash').innerHTML=gDash(st.r);
     const days=[];let cur=null,more=false;
-    for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(st.c!=='all'&&g.c!==st.c)continue;
+    for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(st.r!=='all'&&regOf(g.c)!==st.r)continue;
       if(!cur||cur.d!==g.d){if(days.length>=st.n){more=true;break;}cur={d:g.d,gs:[]};days.push(cur);}cur.gs.push(g);}
     const y0=window.scrollY;
     document.getElementById('dy').innerHTML=days.length?days.map(day=>{
       const L=dayLabel(day.d);const gs=day.gs.slice().reverse();
-      const grp=new Map();gs.forEach(g=>{if(!grp.has(g.g))grp.set(g.g,[]);grp.get(g.g).push(g);});
-      return `<section class="dday"><h2 class="dday-h"><span class="dd">${L.m}월 ${L.dd}일</span><span class="dw">${L.w}요일</span><span class="dn">${gs.length}국</span><a class="dcal" href="#/games/calendar?y=${L.y}&m=${L.m}&d=${L.dd}&keep=1">달력</a></h2>
-      ${[...grp.entries()].map(([gid,a])=>{const sp=splitTitles(a.map(g=>T[g.ti]));const off=a.every(g=>g.of===0);
-        return `<div class="dgrp"><div class="dgrp-h"><a href="#/tournaments/${gid}">${esc(sp.head||G[gid])}</a>${badge(a[0].c)}${off?'<span class="unof">비공식</span>':''}<span class="muted small">${a.length}국</span></div>
-        <ul class="dgl${a.every(g=>!sp.rest(T[g.ti]))?' nost':''}">${a.map(g=>{const s=sp.rest(T[g.ti]);const jt=g.j?(g.j===1?'무승부':g.j===3?'양패':'무효'):'';
-          return `<li><span class="ds" title="${esc(T[g.ti])}">${esc(s)}</span><span class="dw">${plink(g.wk,'w')}<em>${jt||'승'}</em></span><span class="dl">${plink(g.lk)}</span><a class="dr glink" href="#/games/g/${g.i}">${stone(g)}${resText(g)}</a><a class="dh" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="두 기사 통산 맞대결 (무승부·무효 제외)">${(()=>{const c=h2hCount(g.wk,g.lk);return '통산 '+c[0]+':'+c[1];})()}</a></li>`;}).join('')}</ul></div>`;}).join('')}</section>`;}).join(''):'<div class="empty">조건에 맞는 대국이 없습니다</div>';
+      let body;
+      if(st.r==='all'){const by={};gs.forEach(g=>{const r=regOf(g.c);(by[r]=by[r]||[]).push(g);});
+        body=REGS.slice(1).filter(([r])=>by[r]).map(([r,l])=>`<div class="dreg"><h3 class="dreg-h"><span>${l}</span><em>${by[r].length}국</em></h3>${dayGroupsHtml(by[r])}</div>`).join('');}
+      else body=dayGroupsHtml(gs);
+      return `<section class="dday"><h2 class="dday-h"><span class="dd">${L.m}월 ${L.dd}일</span><span class="dw">${L.w}요일</span><span class="dn">${gs.length}국</span><a class="dcal" href="#/games/calendar?y=${L.y}&m=${L.m}&d=${L.dd}&keep=1">달력</a></h2>${body}</section>`;}).join(''):'<div class="empty">조건에 맞는 대국이 없습니다</div>';
     document.getElementById('dmore').hidden=!more;
     if(keep)window.scrollTo(0,y0);
   }
 }
+/* UI9_V1 — 구분(지역)·대국 묶음·미니 대시보드·정렬 표 */
+const REGS=[['all','전체'],['kr','한국'],['w','세계'],['cn','중국'],['jp','일본'],['tw','대만']];
+const REGL={kr:'한국',w:'세계',cn:'중국',jp:'일본',tw:'대만'};
+function regOf(c){return c==='세계기전'?'w':(c==='중국기전'||c==='해외리그')?'cn':c==='일본기전'?'jp':c==='대만기전'?'tw':'kr';}
+function dayGroupsHtml(gs){
+  const grp=new Map();gs.forEach(g=>{if(!grp.has(g.g))grp.set(g.g,[]);grp.get(g.g).push(g);});
+  return [...grp.entries()].map(([gid,a])=>{const sp=splitTitles(a.map(g=>T[g.ti]));const off=a.every(g=>g.of===0);
+    return `<div class="dgrp"><div class="dgrp-h"><a href="#/tournaments/${gid}">${esc(sp.head||G[gid])}</a>${badge(a[0].c)}${off?'<span class="unof">비공식</span>':''}<span class="muted small">${a.length}국</span></div>
+    <ul class="dgl${a.every(g=>!sp.rest(T[g.ti]))?' nost':''}">${a.map(g=>{const s=sp.rest(T[g.ti]);const jt=g.j?(g.j===1?'무승부':g.j===3?'양패':'무효'):'';
+      return `<li><span class="ds" title="${esc(T[g.ti])}">${esc(s)}</span><span class="dw">${plink(g.wk,'w')}<em>${jt||'승'}</em></span><span class="dl">${plink(g.lk)}</span><a class="dr glink" href="#/games/g/${g.i}">${stone(g)}${resText(g)}</a><a class="dh" href="#/players/compare?p1=${encodeURIComponent(g.wk)}&p2=${encodeURIComponent(g.lk)}" title="두 기사 통산 맞대결 (무승부·무효 제외)">${(()=>{const c=h2hCount(g.wk,g.lk);return '통산 '+c[0]+':'+c[1];})()}</a></li>`;}).join('')}</ul></div>`;}).join('');
+}
+const ymdAdd=(d,n)=>{const x=new Date(Date.UTC((d/10000)|0,((d/100)|0)%100-1,d%100+n));return x.getUTCFullYear()*10000+(x.getUTCMonth()+1)*100+x.getUTCDate();};
+const mdLabel=d=>`${((d/100)|0)%100}.${d%100}`;
+// 막대 몇 개짜리 작은 추이 그림
+function miniBars(vals,labels,hi){const mx=Math.max(1,...vals),w=8,g=3,h=34;
+  return `<svg class="mspk" viewBox="0 0 ${vals.length*(w+g)} ${h}" width="${vals.length*(w+g)}" height="${h}" aria-hidden="true">${vals.map((v,i)=>`<rect x="${i*(w+g)}" y="${h-Math.max(1.5,v/mx*h)}" width="${w}" height="${Math.max(1.5,v/mx*h)}" rx="1.5" class="${i===vals.length-1||i===hi?'on':''}"><title>${labels[i]} ${fmt(v)}</title></rect>`).join('')}</svg>`;}
+function mdTile(lbl,val,sub,extra){return `<div class="md-t"><div class="md-l">${lbl}</div><div class="md-v">${val}</div>${sub?`<div class="md-s">${sub}</div>`:''}${extra||''}</div>`;}
+// 대국 미니 대시보드
+const GDC={};
+function gDash(r){
+  if(GDC[r])return GDC[r];
+  const inR=g=>r==='all'||regOf(g.c)===r;
+  let last=0;for(let i=GAMES.length-1;i>=0;i--){if(inR(GAMES[i])){last=GAMES[i].d;break;}}
+  if(!last)return GDC[r]='';
+  const Y=(last/10000)|0,M=(last/100)|0,d7=ymdAdd(last,-6),y0=(Y-1)*10000+(M%100)*100;
+  let nLast=0,n7=0,nM=0,nY=0;const wins={},mon={};
+  for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(g.d<=y0)break;if(!inR(g))continue;
+    const mm=(g.d/100)|0;mon[mm]=(mon[mm]||0)+1;
+    if(g.y===Y){nY++;if(!g.j)wins[g.wk]=(wins[g.wk]||0)+1;}
+    if(mm===M)nM++;if(g.d>=d7)n7++;if(g.d===last)nLast++;}
+  const ms=[];for(let k=11;k>=0;k--){let yy=Y,mo=(M%100)-k;while(mo<1){mo+=12;yy--;}ms.push(yy*100+mo);}
+  const top=Object.entries(wins).filter(([k])=>!isNK(k)).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const sc=SCHED?(()=>{const tn=todayN();return SCHED.rows.filter(x=>x[0]>=tn&&x[0]<=ymdAdd(tn,6)).length;})():0;
+  const L=dayLabel(last);
+  return GDC[r]=`<div class="mdash">${mdTile('가장 최근 대국',`${L.m}.${L.dd} <small>(${L.w})</small>`,`${fmt(nLast)}국 · ${r==='all'?'전체':REGL[r]}`)}
+  ${mdTile('최근 7일',fmt(n7)+'<small>국</small>',`${mdLabel(d7)}–${mdLabel(last)}`)}
+  ${mdTile(`${M%100}월`,fmt(nM)+'<small>국</small>',`${Y}년 ${fmt(nY)}국`)}
+  ${mdTile('월별 대국',`<span class="md-sp">${miniBars(ms.map(m=>mon[m]||0),ms.map(m=>`${(m/100)|0}.${m%100}`))}</span>`,'최근 12개월')}
+  ${mdTile(`${Y} 다승`,top.length?plink(top[0][0]):'–',top.length?top.map(([k,v],i)=>i?`${esc(nameOf(k))} ${v}`:`${v}승`).join(' · '):'')}
+  ${r==='all'||r==='kr'?mdTile('앞으로 7일 일정',fmt(sc)+'<small>건</small>','<a href="#/games/schedule">대국 일정 ›</a>'):''}</div>`;
+}
+// 기사 목록 랭킹: 국가 탭이면 그 나라 공식 랭킹, 전체·기타는 고레이팅 세계 순위
+const PRKC={};
+function pRankMap(c){
+  if(PRKC[c])return PRKC[c];const m={};
+  const add=(rows,ki,ri,lbl)=>(rows||[]).forEach(r=>{const k=r[ki];if(k&&PBY[k]&&!m[k])m[k]=[r[ri],lbl];});
+  if(c==='한국'){const ms=Object.keys(KO).sort();add(KO[ms[ms.length-1]],1,0,'한국기원');}
+  else if(c==='중국'&&CNR&&CNR.months&&CNR.last)add(CNR.months[CNR.last].open,2,0,'중국');
+  else if(c==='일본'&&JPR&&JPR.last)add(JPR.months[JPR.last].open,2,0,'일본 碁力');
+  if(GR&&!Object.keys(m).length)add(GR.rows,6,0,c==='all'||c==='기타'?'세계':'고레이팅');
+  else if(GR&&c==='대만')add(GR.rows,6,0,'고레이팅');
+  return PRKC[c]=m;
+}
+function pDash(c){
+  const el=document.getElementById('pdash');if(!el)return;
+  const inC=p=>c==='all'||(c==='기타'?!['한국','중국','일본','대만'].includes(p.c):p.c===c);
+  const ps=P.filter(inC),act=ps.filter(p=>(p.st||'').includes('현역')).length,fem=ps.filter(p=>p.g==='여자').length;
+  const ks=new Set(ps.map(p=>p.k));
+  const Y=(LASTD/10000)|0;const w={},n={};
+  for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(g.y<Y)break;if(g.j)continue;
+    if(ks.has(g.wk)){w[g.wk]=(w[g.wk]||0)+1;n[g.wk]=(n[g.wk]||0)+1;}if(ks.has(g.lk))n[g.lk]=(n[g.lk]||0)+1;}
+  const RK=pRankMap(c);const r1=Object.entries(RK).filter(([k])=>ks.has(k)).sort((a,b)=>a[1][0]-b[1][0]).slice(0,3);
+  const tw=Object.entries(w).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const tp=Object.keys(n).filter(k=>n[k]>=20).map(k=>[k,(w[k]||0)/n[k]]).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const lst=a=>a.slice(1).map(([k,v])=>`${esc(nameOf(k))} ${v}`).join(' · ');
+  el.innerHTML=`<div class="mdash">${mdTile(c==='all'?'기사':c==='기타'?'기타 나라 기사':c+' 기사',fmt(ps.length)+'<small>명</small>',`현역 ${fmt(act)} · 여자 ${fmt(fem)}`)}
+  ${mdTile(r1.length?`${r1[0][1][1]} 랭킹 1위`:'랭킹 1위',r1.length?plink(r1[0][0]):'–',r1.length>1?r1.slice(1).map(([k,v])=>`${v[0]}위 ${esc(nameOf(k))}`).join(' · '):'')}
+  ${mdTile(`${Y} 다승`,tw.length?plink(tw[0][0]):'–',tw.length?`${tw[0][1]}승${tw.length>1?' · '+lst(tw):''}`:'')}
+  ${mdTile(`${Y} 승률 ${calc('20국 이상, 무승부·무효 제외')}`,tp.length?plink(tp[0][0]):'–',tp.length?`${(tp[0][1]*100).toFixed(1)}%${tp.length>1?' · '+tp.slice(1).map(([k,v])=>`${esc(nameOf(k))} ${(v*100).toFixed(0)}%`).join(' · '):''}`:'')}
+  ${mdTile(`${Y} 대국한 기사`,fmt(Object.keys(n).length)+'<small>명</small>',`${Y}년 1국 이상`)}</div>`;
+}
+// 제목 칸을 누르면 정렬되는 표 (table.srt)
+document.addEventListener('click',e=>{const th=e.target.closest('table.srt thead th');if(!th)return;const tb=th.closest('table'),body=tb.tBodies[0];if(!body)return;
+  const i=[...th.parentNode.children].indexOf(th);
+  const val=td=>{if(!td)return '';if(td.dataset.v!=null)return +td.dataset.v;const s=td.textContent.trim().replace(/,/g,'');const x=parseFloat(s);return s===''?-1e15:isNaN(x)?s:x;};
+  const pv=th.dataset.dir,dir=pv?(pv==='d'?'a':'d'):(typeof val(body.rows[0]&&body.rows[0].cells[i])==='string'?'a':'d');tb.querySelectorAll('thead th').forEach(x=>{delete x.dataset.dir;});th.dataset.dir=dir;
+  const rows=[...body.rows];rows.sort((a,b)=>{const x=val(a.cells[i]),y=val(b.cells[i]);const c=typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),'ko');return dir==='a'?c:-c;});
+  rows.forEach(r=>body.appendChild(r));});
+function dxGid(s){for(let i=s[6].length-1;i>=0;i--){const g=s[6][i][4];if(g!=null&&g>=0)return '#/tournaments/'+g;}return `#/tournaments/${s[3]}/events?open=${encodeURIComponent(s[0])}`;}
 
 /* =============== 기록 — 역대·통산 기록 (예전 '기록실'의 역대 기록 + 랭킹의 통산·국제 우승·역대 1위·GOAT) =============== */
 const RECSUB=[['','통산 기록'],['intl','국제 우승'],['legacy','역대 1위'],['goat','GOAT'],['peak','최고 점수'],['rivalry','역대 라이벌'],['matches','명승부'],['seasons','시즌 리더보드'],['nations','국가별'],['milestones','기록 임박'],['streaks','연속·최다 기록']];
@@ -2318,10 +2401,10 @@ function pUpcoming(q){
   }
 }
 // 최근 대국(일지) 위쪽: 오늘·다음 이틀 일정 미리보기
-function schedPeek(){
-  if(!SCHED)return '';const tn=todayN();const days=[...new Set(SCHED.rows.filter(r=>r[0]>=tn).map(r=>r[0]))].slice(0,3);
+function schedPeek(small){
+  if(!SCHED)return '';const tn=todayN();const days=[...new Set(SCHED.rows.filter(r=>r[0]>=tn).map(r=>r[0]))].slice(0,small?4:3);
   if(!days.length)return '';const rows=SCHED.rows.filter(r=>days.includes(r[0]));
-  return `<div class="speek"><div class="speek-h"><b>다가오는 대국</b><a href="#/games/schedule">일정 전체 ›</a></div>${days.map(d=>{const L=dayLabel(d);const a=rows.filter(r=>r[0]===d);
+  return `<div class="speek${small?' sm':''}"><div class="speek-h"><b>다가오는 대국</b><a href="#/games/schedule">일정 전체 ›</a></div>${days.map(d=>{const L=dayLabel(d);const a=rows.filter(r=>r[0]===d);
     return `<div class="speek-d"><span class="sd">${L.m}.${L.dd} (${L.w})${d===tn?' 오늘':''}</span><ul>${a.slice(0,5).map(r=>`<li><span class="st">${esc(r[2]||'종일')}</span> ${schedText(r[3]).html}</li>`).join('')}${a.length>5?`<li class="muted">외 ${a.length-5}건</li>`:''}</ul></div>`;}).join('')}</div>`;
 }
 
@@ -2356,25 +2439,56 @@ function pFederations(){
 
 /* =============== SCHEDULE =============== */
 function pSchedule(q){
-  // 지난 날은 대국 수(한국기원 기록실), 앞으로의 날은 대국 일정(한국기원 발표)
+  // 지난 날은 대국 수(기록), 앞으로의 날은 대국 일정(한국기원 발표)
   const tn=todayN();const dy=SCHED?((tn/10000)|0):((LASTD/10000)|0),dm=SCHED?(((tn/100)|0)%100):(((LASTD/100)|0)%100);
-  const y=+q.y||dy,m=+q.m||dm;
-  const pre=y*10000+m*100;const gs=GAMES.filter(g=>g.d>pre&&g.d<pre+100);
-  const byD={};gs.forEach(g=>{const dd=g.d%100;(byD[dd]=byD[dd]||[]).push(g);});
+  const y=+q.y||dy,m=+q.m||dm;const st={r:REGS.some(x=>x[0]===q.r)?q.r:'all'};
+  const pre=y*10000+m*100;
+  const allG=[];for(let i=GAMES.length-1;i>=0;i--){const g=GAMES[i];if(g.d<pre)break;if(g.d<pre+100)allG.push(g);}allG.reverse();
   const evD={};(SCHED?SCHED.rows:[]).forEach(r=>{if(r[0]>pre&&r[0]<pre+100){const dd=r[0]%100;(evD[dd]=evD[dd]||[]).push(r);}});
   const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),days=new Date(Date.UTC(y,m,0)).getUTCDate();
-  const mx=Math.max(1,...Object.values(byD).map(a=>a.length));
   const prev=m===1?[y-1,12]:[y,m-1],next=m===12?[y+1,1]:[y,m+1];
-  const sel=+q.d||0;
-  app.innerHTML=gHead('calendar')+`<h2 class="calh"><a class="pl" href="#/games/calendar?y=${prev[0]}&m=${prev[1]}" aria-label="이전 달">‹</a>${y}년 ${m}월<a class="pl" href="#/games/calendar?y=${next[0]}&m=${next[1]}" aria-label="다음 달">›</a></h2>
-  <p class="lede">색이 진할수록 대국이 많은 날입니다(한국기원 기록실). <span class="calev-k"></span> 표시는 한국기원 대국 일정이 있는 날입니다. 날짜를 누르면 그날의 대국과 일정이 나옵니다.</p>
-  <div class="cal">${['일','월','화','수','목','금','토'].map(x=>`<div class="h">${x}</div>`).join('')}${Array(first).fill('<div class="x"></div>').join('')}${Array.from({length:days},(_,i)=>{const dd=i+1,n=(byD[dd]||[]).length,e=(evD[dd]||[]).length,d=pre+dd;return `<button class="${n||e?'':'z'} ${sel===dd?'on':''} ${d===tn?'today':''}" ${n||e?`data-d="${dd}"`:'disabled'} style="${n?`background:rgba(0,93,249,${.1+.55*n/mx})`:''}" aria-label="${m}월 ${dd}일 ${n}국${e?' 일정 '+e+'건':''}"><span>${dd}</span><span class="c">${n||''}</span>${e?`<span class="calev" title="일정 ${e}건">${e}</span>`:''}</button>`;}).join('')}</div>
-  <div id="cd" style="margin-top:16px"></div>`;
-  app.querySelectorAll('.cal button[data-d]').forEach(b=>b.onclick=()=>{location.hash=`#/games/calendar?y=${y}&m=${m}&d=${b.dataset.d}&keep=1`;});
-  if(sel&&(byD[sel]||evD[sel])){const el=document.getElementById('cd');
-    el.innerHTML=(evD[sel]?`<h2 class="sec"><span>${y}.${m}.${sel} 일정</span><span class="desc">${evD[sel].length}건 · 한국기원</span></h2>${schedRowsHtml(evD[sel]).replace(/<h2 class="dday-h">[\s\S]*?<\/h2>/,'')}`:'')+
-      (byD[sel]?`<h2 class="sec"><span>${y}.${m}.${sel} 대국</span><span class="desc">${byD[sel].length}국</span></h2><div id="cdl"></div>`:'');
-    if(byD[sel])pagedTable(document.getElementById('cdl'),byD[sel],GAME_HEAD,x=>gameRows(x),100);}
+  let byD={},sel=+q.d||0;
+  const plain=t=>schedText(t).html.replace(/<[^>]+>/g,'');
+  app.innerHTML=gHead('calendar')+`<div class="cal2-top"><div class="cal2-nav"><a href="#/games/calendar?y=${prev[0]}&m=${prev[1]}${st.r!=='all'?'&r='+st.r:''}" aria-label="이전 달">‹</a><h2>${y}년 <b>${m}월</b></h2><a href="#/games/calendar?y=${next[0]}&m=${next[1]}${st.r!=='all'?'&r='+st.r:''}" aria-label="다음 달">›</a>${y*100+m!==((tn/100)|0)?`<a class="cal2-today" href="#/games/calendar">오늘</a>`:''}</div><div class="cal2-sum" id="csum"></div></div>
+  <div class="fbar">${pillGroup('cr','구분',REGS,st.r)}</div>
+  <div class="cal2-lay"><div><div class="cal2-wd">${WDAY.map((x,i)=>`<span class="${i===0?'sun':i===6?'sat':''}">${x}</span>`).join('')}</div><div class="cal2" id="cgrid"></div>
+  <p class="cal2-key"><span><i class="k1"></i>대국 기록</span><span><i class="k2"></i>대국 일정(한국기원 발표)</span><span>막대 길이 = 그날 대국 수</span></p></div>
+  <aside class="cal2-side" id="cside"></aside></div>`;
+  bindPills('cr',v=>{st.r=v;build();});
+  build();
+  function build(){
+    byD={};allG.forEach(g=>{if(st.r!=='all'&&regOf(g.c)!==st.r)return;const dd=g.d%100;(byD[dd]=byD[dd]||[]).push(g);});
+    const showEv=st.r==='all'||st.r==='kr'||st.r==='w';
+    const mx=Math.max(1,...Object.values(byD).map(a=>a.length));
+    if(!sel||!(byD[sel]||(showEv&&evD[sel]))){const td=pre<tn&&tn<pre+100?tn%100:0;
+      sel=td&&(byD[td]||(showEv&&evD[td]))?td:+(Object.keys(byD).map(Number).sort((a,b)=>b-a)[0]||0)||(showEv?+(Object.keys(evD).map(Number).sort((a,b)=>a-b)[0]||0):0);}
+    const tot=Object.values(byD).reduce((a,x)=>a+x.length,0),nd=Object.keys(byD).length,ne=showEv?Object.values(evD).reduce((a,x)=>a+x.length,0):0;
+    const pk=Object.entries(byD).sort((a,b)=>b[1].length-a[1].length)[0];
+    document.getElementById('csum').innerHTML=`<span><b>${fmt(tot)}</b>국</span><span>대국 있는 날 <b>${nd}</b>일</span>${ne?`<span>일정 <b>${ne}</b>건</span>`:''}${pk?`<span>가장 많은 날 <b>${m}.${pk[0]}</b> ${fmt(pk[1].length)}국</span>`:''}`;
+    let h='';for(let i=0;i<first;i++)h+='<div class="cd x"></div>';
+    for(let dd=1;dd<=days;dd++){const gs=byD[dd]||[],ev=showEv?evD[dd]||[]:[],d=pre+dd,w=(first+dd-1)%7;
+      const cnt={};gs.forEach(g=>{cnt[g.g]=(cnt[g.g]||0)+1;});const tops=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+      const lines=tops.slice(0,3).map(([gid,n])=>`<li class="r-${regOf((gs.find(g=>g.g==+gid)||{}).c)}"><span>${esc(G[gid])}</span>${n>1?`<em>${n}</em>`:''}</li>`);
+      if(!gs.length)ev.slice(0,3).forEach(r=>lines.push(`<li class="ev"><span>${esc((r[2]?r[2]+' ':'')+plain(r[3]))}</span></li>`));
+      const more=(gs.length?tops.length:ev.length)-3;
+      h+=`<button type="button" class="cd${w===0?' sun':w===6?' sat':''}${d===tn?' today':''}${dd===sel?' on':''}${gs.length||ev.length?'':' z'}${d>tn?' fut':''}" data-d="${dd}" ${gs.length||ev.length?'':'disabled'} aria-label="${m}월 ${dd}일 ${gs.length}국${ev.length?' 일정 '+ev.length+'건':''}">
+        <span class="cd-h"><span class="cd-n">${dd}</span>${gs.length?`<span class="cd-c">${fmt(gs.length)}<small>국</small></span>`:''}${ev.length?`<span class="cd-e" title="일정 ${ev.length}건">${ev.length}</span>`:''}</span>
+        ${lines.length?`<ul>${lines.join('')}${more>0?`<li class="more">+${more}</li>`:''}</ul>`:''}${gs.length?`<i class="cd-bar" style="width:${Math.max(6,Math.round(gs.length/mx*100))}%"></i>`:''}</button>`;}
+    const cg=document.getElementById('cgrid');cg.innerHTML=h;
+    cg.onclick=e=>{const b=e.target.closest('button.cd[data-d]');if(!b||b.disabled)return;sel=+b.dataset.d;cg.querySelectorAll('.cd.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');side();
+      try{history.replaceState(null,'',`#/games/calendar?y=${y}&m=${m}&d=${sel}${st.r!=='all'?'&r='+st.r:''}&keep=1`);}catch(_){}
+      if(window.innerWidth<900)document.getElementById('cside').scrollIntoView({behavior:'smooth',block:'start'});};
+    side();
+    function side(){
+      const el=document.getElementById('cside');
+      if(!sel){el.innerHTML='<div class="empty">이 달에는 대국 기록이 없습니다</div>';return;}
+      const L=dayLabel(pre+sel),gs=byD[sel]||[],ev=showEv?evD[sel]||[]:[];
+      el.innerHTML=`<div class="cs-h"><div class="cs-d">${L.m}월 ${L.dd}일 <span>${L.w}요일</span></div><div class="cs-s">${gs.length?`대국 ${fmt(gs.length)}국`:''}${gs.length&&ev.length?' · ':''}${ev.length?`일정 ${ev.length}건`:''}</div></div>
+      ${ev.length?`<div class="cs-sec"><h3>대국 일정</h3><ul class="sgl">${ev.map(r=>{const c=SCLS[r[1]]||['기타','b-O'];const t=schedText(r[3]);return `<li><span class="st">${esc(r[2]||'종일')}</span><span class="badge ${c[1]}">${c[0]}</span><span class="sx">${t.html}</span>${t.live?'<span class="slive" title="온라인 중계">중계</span>':''}</li>`;}).join('')}</ul></div>`:''}
+      ${gs.length?`<div class="cs-sec"><h3>대국 결과</h3><div class="diary cs-dy">${dayGroupsHtml(gs)}</div></div>`:''}
+      ${gs.length?`<a class="cs-more" href="#/games/list?y=${y}">대국 목록에서 더 보기 ›</a>`:''}`;
+    }
+  }
 }
 
 /* =============== DATA =============== */
