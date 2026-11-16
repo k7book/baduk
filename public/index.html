@@ -1745,6 +1745,11 @@ tr.fxg-on td{background:color-mix(in srgb,var(--gold) 18%,transparent)}
 .cnl-days details{border-top:1px solid var(--rule)}.cnl-days summary{display:flex;gap:10px;align-items:baseline;padding:8px 2px;cursor:pointer;list-style:none}.cnl-days summary::-webkit-details-marker{display:none}.cnl-days summary::before{content:'▸';color:var(--muted);font-size:11px}.cnl-days details[open] summary::before{content:'▾'}
 .cnl-days ul{list-style:none;margin:0 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:2px 18px}.cnl-days li{display:flex;align-items:center;gap:5px;font-size:13px;padding:3px 0;border-bottom:1px dashed var(--rule)}.cnl-days li em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);margin:0 2px}.cnl-days li .vs{display:flex;align-items:center;gap:5px;opacity:.7}.cnl-days li .rs{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .fxb-pod{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 16px;margin:0 0 16px;border-radius:12px;background:color-mix(in srgb,var(--gold) 14%,var(--card));border:1px solid color-mix(in srgb,var(--gold) 45%,var(--rule))}.fxb-pod>div{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.fxb-pod .t{font-size:11.5px;font-weight:800;color:var(--muted);margin-right:2px}.fxb-pod .p1{font-size:16px;font-weight:800}.fxb-pod .p1 .sc{font-size:18px;font-variant-numeric:tabular-nums;margin-left:4px}.fxb-pod .p2{font-size:14px;font-weight:600}.fxb-pod .p3{font-size:13px;gap:4px 10px}.fxb-pod .p3 .t{margin-right:0}
+.src-flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;counter-reset:s}.src-flow li{position:relative;padding:12px 14px;border:1px solid var(--rule);border-radius:10px;background:var(--card);display:flex;flex-direction:column;gap:4px}.src-flow li b{font-size:14.5px}.src-flow li span{font-size:13px;color:var(--muted);line-height:1.5}.src-flow li:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;z-index:1}
+.src-t td{vertical-align:top;padding-top:9px;padding-bottom:9px}.src-sc{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;margin:3px 0}
+.src-calc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}.src-calc>div{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--card)}.src-calc span{font-size:13px;color:var(--muted);line-height:1.5}
+.src-steps{margin:0;padding-left:20px;line-height:1.9;font-size:14px}
+@media (max-width:760px){.src-flow{grid-template-columns:1fr 1fr}.src-flow li::after{display:none}}
 .fxb-champ{position:absolute;width:156px;box-sizing:border-box;padding:8px 10px;border:2px solid var(--gold);border-radius:10px;background:var(--card)}.fxb-champ .t{font-size:12px;font-weight:800;color:var(--muted)}.fxb-champ .n{font-size:14.5px;font-weight:800;display:flex;gap:5px;align-items:center;margin:2px 0}.fxb-champ .r{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .fxw-teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.fxw-team{border:1px solid var(--rule);border-radius:var(--radius);background:var(--card);padding:10px 12px}.fxw-th{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;margin:0 0 6px}.fxw-th b{font-size:15px}.fxw-th .muted{width:100%}.fxw-team ul{list-style:none;margin:0;padding:0}.fxw-team li{display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px dashed var(--rule);font-size:13.5px}.fxw-team li .n{margin-left:auto;font-variant-numeric:tabular-nums}.fxw-team li em{font-style:normal;color:var(--muted);font-size:12px}
 .fxw-m{display:grid;grid-template-columns:52px 1fr 56px 1fr;gap:6px;align-items:center;padding:5px 0;border-top:1px solid var(--rule);font-size:13.5px}.fxw-m .d{color:var(--muted);font-size:12px}.fxw-m a{text-decoration:none;color:var(--ink)}.fxw-m a.w{font-weight:800}.fxw-m>b{text-align:center}.fxw-m a:nth-of-type(2){text-align:left}.fxw-m details{grid-column:1/-1;font-size:13px;padding:0 0 0 58px}.fxw-m summary{cursor:pointer;color:var(--muted);font-size:12px}
@@ -1770,7 +1775,7 @@ tr.fxg-on td{background:color-mix(in srgb,var(--gold) 18%,transparent)}
       <a href="#/players/compare" data-r="compare">상대전적</a>
       <a href="#/news" data-r="news">뉴스</a>
       <div class="more"><button type="button" aria-haspopup="true">기타 ▾</button><div class="dd">
-        <a href="#/federations" data-r="federations">소속·국가</a><a href="#/data" data-r="data">오픈데이터</a><a href="#/about" data-r="about">자료에 대하여</a><a href="#/brand" data-r="brand">로고타입</a>
+        <a href="#/federations" data-r="federations">소속·국가</a><a href="#/sources" data-r="sources">데이터 수집</a><a href="#/data" data-r="data">오픈데이터</a><a href="#/about" data-r="about">자료에 대하여</a><a href="#/brand" data-r="brand">로고타입</a>
       </div></div>
     </nav>
     <div class="gtools">
@@ -1973,7 +1978,7 @@ function rankAt(ym){
 const mvHtml=(now,prev)=>prev==null?'<span class="mv new">NEW</span>':now<prev?`<span class="mv up">▲${prev-now}</span>`:now>prev?`<span class="mv dn">▼${now-prev}</span>`:'<span class="mv">–</span>';
 
 (function(){const m=document.querySelector('.gnav .more');if(!m)return;const b=m.querySelector('button'),d=m.querySelector('.dd');
-const place=()=>{const r=b.getBoundingClientRect();const w=Math.max(170,d.offsetWidth||170);d.style.top=r.bottom+'px';d.style.left=Math.max(8,Math.min(r.left,window.innerWidth-w-8))+'px';};
+const place=()=>{if(getComputedStyle(d).position!=='fixed'){d.style.left='';d.style.top='';return;}const r=b.getBoundingClientRect();const w=Math.max(170,d.offsetWidth||170);d.style.top=r.bottom+'px';d.style.left=Math.max(8,Math.min(r.left,window.innerWidth-w-8))+'px';};
 const open=()=>{m.classList.add('open');place();b.setAttribute('aria-expanded','true');};const close=()=>{m.classList.remove('open');b.setAttribute('aria-expanded','false');};
 const hov=matchMedia('(hover:hover)').matches;let ot=0;b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(m.classList.contains('open')&&Date.now()-ot>400)close();else open();});
 if(hov){let t;m.addEventListener('mouseenter',()=>{clearTimeout(t);if(!m.classList.contains('open')){ot=Date.now();open();}});m.addEventListener('mouseleave',()=>{t=setTimeout(close,180);});d.addEventListener('mouseenter',()=>clearTimeout(t));d.addEventListener('mouseleave',()=>{t=setTimeout(close,180);});}
@@ -4829,6 +4834,32 @@ function pCnLeague(q){
   const on=app.querySelector('.cnl-seasons a.on');if(on)on.scrollIntoView({block:'nearest',inline:'center'});
 }
 const o_label=o=>o.lg.startsWith('w')&&/^제/.test(o.label)?o.label+' ('+o.y+')':o.label+(o.lg.startsWith('w')?'':' 시즌');
+/* ---------- 데이터 수집 경로 — 어디서 무엇을 어떻게 받아 사이트를 만드는지 ---------- */
+function pSources(){
+  const n=x=>fmt(x||0);const fd=s=>s?esc(String(s).slice(0,10).replace(/-/g,'.')):'–';
+  const S=[
+    ['한국기원 기록실','baduk.or.kr','대국결과 전부(공식·비공식), 기사별 대국 목록, 통산 전적','공개 웹페이지','kba_collect.mjs · kba_byplayer.mjs · kba_recent.mjs','한국기원_기록수집.bat(전체) · 한국기원_기사별수집.bat · 최근기록_갱신.bat(최근 2주)','수시','대국·전적·우승·랭킹·시즌 — 사이트의 기본 기록',`${n(GAMES.length)}국 · ${META.kba?fd(META.kba.fetched)+' 전체 수집':''}`],
+    ['한국기원 랭킹·일정','baduk.or.kr','남녀 월간 랭킹, 대국 일정(지난달~3달 뒤)','공개 웹페이지','extra_fetch.mjs','최근기록_갱신.bat','매달 · 수시','랭킹, 한국랭킹 추이 검증, 일정',''],
+    ['중국바둑협회','weiqi.org.cn (wqapi.cwql.org.cn)','기사 프로필, 월간 랭킹, 중국 리그 대국(갑조 1999~·여자 갑조 2013~·을조·병조), 세계대회 대국','공개 API','cn_collect.mjs · extra_fetch.mjs · cn_league_collect.mjs','중국기사프로필_받기.bat · 최근기록_갱신.bat · 중국기록_받기.bat','매달(랭킹) · 수시','중국 기사 정보·랭킹, 중국 리그, 대진표 빈 칸',X.CNL&&X.CNL.d?`리그 ${n(X.CNL.d.length)}국 · ${fd(X.CNL.fetched)}`:''],
+    ['囲碁棋譜.COM','igo-kifu.com','일본 랭킹(碁力), 일본 기전 중계 대국(최근 30일)','공개 웹페이지','extra_fetch.mjs','최근기록_갱신.bat','매달 · 수시','일본 랭킹, 일본 최근 대국',''],
+    ['일본기원·관서기원','nihonkiin.or.jp · kansaikiin.jp','일본 기사 프로필(원본 HTML)','공개 웹페이지','jp_collect.mjs','일본기사프로필_받기.bat','가끔','일본 기사 정보',''],
+    ['하이펑기원(海峰棋院)','대만','대만 프로기사 명단·프로필','공개 웹페이지','tw_collect.mjs','대만기사프로필_받기.bat','가끔','대만 기사 정보',''],
+    ['고레이팅','goratings.org','해외 기사 대국 목록·레이팅','공개 웹페이지·JSON','gor_collect.mjs','고레이팅_수집.bat · 고레이팅_반영.bat','가끔','실력 점수(WHR) 계산에만 — 화면의 대국 기록에는 넣지 않음',''],
+    ['한국여자바둑리그','w.baduk.or.kr','2015~ 시즌별 경기 결과·팀 명단','공개 웹페이지','wleague_collect.mjs','바둑리그_받기.bat','시즌 중 수시','여자바둑리그 팀 순위·팀 페이지',X.WLG&&X.WLG.w?`${Object.keys(X.WLG.w.s||{}).length}시즌 · ${fd(X.WLG.w.fetched)}`:''],
+    ['한국바둑리그','kleague.baduk.or.kr','다음 시즌 선수 선발 현황','공개 웹페이지','wleague_collect.mjs','바둑리그_받기.bat','선발 기간','리그 시즌 기록의 선발 현황',X.WLG&&X.WLG.k?`${(X.WLG.k.teams||[]).length}팀`:''],
+    ['바둑 뉴스',Object.values(NSRC).map(v=>v[0]).join(' · '),'바둑 뉴스 제목·링크','서버가 주기적으로 모음','—','배포.bat 이 새로고침 요청','수시','뉴스, 기사 페이지 관련 뉴스',''],
+  ];
+  const flow=[['① 받기','출처마다 수집 스크립트(kba\\*.mjs)가 원본을 받아 kba_data 폴더에 그대로 저장'],['② 정리·계산','pipeline\\update.py 가 대회명 정리·기사 연결·통산 검증·실력 점수 등을 계산해 base_data.json 으로 묶음'],['③ 사이트 만들기','pipeline\\rebuild_site.py 가 화면 틀(template.html)에 데이터를 넣어 site\\index.html 한 파일로 만듦'],['④ 배포','배포.bat 이 사이트 파일을 올리고 뉴스 새로고침을 요청']];
+  const C=[['대회명 정리·분류','대회명에서 회차·단계를 떼어 대회를 묶고 한국기원 공식 기전 분류를 붙임'],['기사 연결','대국 기록의 이름을 기사 정보에 연결(한자·외래어 표기·별칭)'],['실력 점수(WHR)','전체 기록을 한꺼번에 놓고 계산, 고레이팅 대국으로 해외 기사 보강'],['한국랭킹 추이','한국기원 랭킹 규칙을 재현해 2000년부터 매달 계산'],['대진표','단계 표기가 없는 본선 대국의 단계를 추정하고, 빈 칸을 중국바둑협회 세계대회 기록으로 채움'],['중국 리그','중국바둑협회 기록과 한국기원 기록을 합쳐 시즌별로 묶음(같은 대국은 한 번만)']];
+  app.innerHTML=crumb([['홈','#/'],['데이터 수집']])+`<h1 class="pt">데이터 수집</h1>
+  <p class="lede">이 사이트의 기록을 어디서 받아 어떻게 만드는지 정리했습니다. 모든 자료는 공개된 웹페이지·공개 API에서 받으며, 원본의 대회명·승패·결과는 고치지 않고 그대로 씁니다. 계산이 들어간 값은 화면에 <span class="calc">계산값</span>으로 표시합니다.</p>
+  <div class="fx-tiles"><div class="fx-tile"><div class="k">대국 기록</div><div class="v">${n(GAMES.length)}</div></div><div class="fx-tile"><div class="k">기사</div><div class="v">${n(P.length)}</div></div><div class="fx-tile"><div class="k">마지막 대국일</div><div class="v" style="font-size:18px">${dstr(LASTD).replace(/-/g,'.')}</div></div><div class="fx-tile"><div class="k">출처</div><div class="v">${S.length}곳</div></div></div>
+  ${fxPanel('만드는 순서','',`<ol class="src-flow">${flow.map(([t,d])=>`<li><b>${t}</b><span>${esc(d)}</span></li>`).join('')}</ol>`)}
+  ${fxPanel('출처별 수집','공개 자료만 받습니다',`<div class="tw"><table class="src-t"><thead><tr><th>출처</th><th>받는 것</th><th>방법</th><th>화면에서 쓰는 곳</th><th>현재</th></tr></thead><tbody>${S.map(r=>`<tr><td><b>${esc(r[0])}</b><div class="muted small">${esc(r[1])}</div></td><td class="small">${esc(r[2])}<div class="muted small">주기: ${esc(r[6])}</div></td><td class="small">${esc(r[3])}<div class="src-sc">${esc(r[4])}</div><div class="muted small">${esc(r[5])}</div></td><td class="small">${esc(r[7])}</td><td class="small n">${r[8]||''}</td></tr>`).join('')}</tbody></table></div>`)}
+  ${fxPanel('정리·계산 단계','pipeline\\update.py',`<div class="src-calc">${C.map(([t,d])=>`<div><b>${esc(t)} <span class="calc">계산값</span></b><span>${esc(d)}</span></div>`).join('')}</div><p class="small" style="margin:12px 0 0"><a class="pl" href="#/about">계산 방법 자세히 — 자료에 대하여 ›</a> · <a class="pl" href="#/data">오픈데이터 ›</a></p>`)}
+  ${fxPanel('갱신 순서 (관리용)','',`<ol class="src-steps"><li><b>최근기록_갱신.bat</b> — 한국기원 최근 2주 대국, 랭킹·일정, 중국·일본 랭킹을 받고 사이트를 다시 만듦</li><li>필요할 때만: <b>중국기록_받기.bat</b>(중국 리그·세계대회) · <b>바둑리그_받기.bat</b>(여자바둑리그·선발 현황) · <b>고레이팅_수집.bat</b> · 기사 프로필 받기 bat</li><li><b>배포.bat</b> — 사이트에 올림</li></ol>`)}
+  <div class="note">원본 사이트의 이용 조건을 지키며, 요청 사이에 쉬는 시간을 두고 받습니다. 원본에 없는 대국은 만들어 넣지 않습니다(대진표의 '中' 표시 칸은 중국바둑협회 기록에서 가져온 실제 대국입니다).</div>`;
+}
 /* =============== fx 끝 =============== */
 function parseHash(){const h=location.hash.replace(/^#\/?/,'');const i=h.indexOf('?');const path=i<0?h:h.slice(0,i),qs=i<0?'':h.slice(i+1);return {parts:path.split('/').filter(Boolean).map(decodeURIComponent),q:Object.fromEntries(new URLSearchParams(qs))};}
 let lastPath='';
@@ -4855,7 +4886,7 @@ function route(){
     else if(r==='games'){if(parts[1]==='g')pGame(parts[2]);else if(parts[1]==='schedule')pUpcoming(q);else if(parts[1]==='japan')pJpGames(q);else if(parts[1]==='calendar')pSchedule(q);else if(parts[1]==='list')pGames(q);else if(parts[1]==='search')pSearch(q);else pDiary(q);}
     else if(r==='news')pNews(q);
     else if(r==='data')pData();
-    else if(r==='about')pAbout(parts[1]);
+    else if(r==='about')pAbout(parts[1]);else if(r==='sources')pSources();
     else if(r==='brand')pBrand();
     else if(r==='overview')pOverview(q);
     else pHome();
