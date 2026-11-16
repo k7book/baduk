@@ -4695,7 +4695,7 @@ function fxBracketView(host,gq,qe,hashOf){
   // 아직 안 둔 다음 판: 아래 단계 승자로 채움
   const pend=slots.map(()=>[]);
   for(let c=1;c<nC;c++)slots[c].forEach((m,j)=>{if(m)return;const pa=win(slots[c-1][2*j]),pb=win(slots[c-1][2*j+1]);if(pa||pb)pend[c][j]=[pa,pb];});
-  const ser0=pool[0].some(m=>m.gs.length>1);const U=ser0?68:50,CH=42,CW=176,GX=34,TOP=0;const H=slots[0].length*U;
+  const ser0=pool[0].some(m=>m.gs.length>1);const U=ser0?78:60,CH=42,CW=176,GX=34,TOP=0;const H=slots[0].length*U;
   const X=c=>c*(CW+GX),Y=(c,j)=>(j+.5)*Math.pow(2,c)*U;
   const lab=s=>s===2?'결승':s===4?'4강':(sl[s]||s)+'강';
   const md=d=>{const s=String(d);return +s.slice(4,6)+'.'+ +s.slice(6,8);};
