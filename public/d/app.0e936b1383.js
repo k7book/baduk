@@ -2491,25 +2491,6 @@ function pSchedule(q){
   }
 }
 
-/* =============== DATA =============== */
-function pData(){
-  app.innerHTML=crumb([['홈','#/'],['데이터']])+`<h1 class="pt">오픈데이터</h1><p class="lede">검색 없이 전체 데이터셋을 CSV로 내려받습니다. 파일 첫 줄에 출처·기준일·계산값 안내가 들어 있습니다.</p>
-  <section class="panel"><div class="tw"><table><thead><tr><th>데이터셋</th><th class="r">건수</th><th>기준일</th><th></th></tr></thead><tbody>
-  <tr><td>대국 기록 (원본 대회명·결과 + 정리된 대회명·분류·단계·판정)</td><td class="n r">${fmt(GAMES.length)}</td><td class="d">${dstr(LASTD)}</td><td><button class="btn" data-x="games">CSV</button></td></tr>
-  <tr><td>기사 정보 + 통산 기록·실력 점수</td><td class="n r">${fmt(P.length)}</td><td class="d">${dstr(LASTD)}</td><td><button class="btn" data-x="players">CSV</button></td></tr>
-  <tr><td>대회(정리된 대회명)와 분류</td><td class="n r">${fmt(G.length)}</td><td class="d">${dstr(LASTD)}</td><td><button class="btn" data-x="tours">CSV</button></td></tr>
-  <tr><td>회차별 우승 판정</td><td class="n r">${fmt(CHAMP.length)}</td><td class="d">${dstr(LASTD)}</td><td><button class="btn" data-x="champs">CSV</button></td></tr>
-  </tbody></table></div></section>
-  <section class="panel"><h2 class="sec"><span>이용 조건</span></h2><div class="note">라이선스 안내는 추후 안내 예정입니다.</div><p class="small">각 열의 뜻과 계산 방법은 <a class="pl" href="#/about/methodology">수집·집계 방법</a>을 참고하세요.</p></section>`;
-  const pre=[[`# 바둑DB 오픈데이터 · 기준일 ${dstr(LASTD)} · 출처 한국기원(baduk.or.kr) · '(계산)' 표시 열은 원본이 아닌 계산값`]];
-  const act={
-    games:()=>downloadCSV(`바둑DB_대국기록_${dstr(LASTD)}.csv`,pre,['날짜','대회(원본)','대회(정리·계산)','분류(계산)','단계(계산)','승','패','결과(원본)','판정(계산)','승 pkey','패 pkey'],GAMES.map(g=>[dstr(g.d),T[g.ti],G[g.g],CLABEL[g.c],g.s>=0?STAGE[g.s]:'',g.wn,g.ln,g.rs,['정상','무승부','무효'][g.j],isNK(g.wk)?'':g.wk,isNK(g.lk)?'':g.lk])),
-    players:()=>downloadCSV(`바둑DB_기사정보_${dstr(LASTD)}.csv`,pre,['pkey','이름','한자명','영문명','단','생년월일','현역','국가','소속','성별','통산 대국(계산)','승(계산)','패(계산)','우승(계산)','실력 점수(계산)','점수 오차(계산)','역대 최고점(계산)'],P.map(p=>{const r=rec(p.k),s=ws(p.k);return [p.k,p.n,p.hn,p.en,p.dan,p.b,p.st,p.c,p.o,p.g,r.g,r.w,r.l,(CHB[p.k]||[]).length,s?s[0]:'',s?s[1]:'',s?s[3]:''];})),
-    tours:()=>{const A=tagg();downloadCSV(`바둑DB_대회_${dstr(LASTD)}.csv`,pre,['대회(정리·계산)','분류(계산)','한국기원 pkey','첫 해','마지막 해','대국','참가 기사'],G.map((g,i)=>{const a=A[i];return [g,a?CLABEL[a.c]:'',GP[i],a?a.y0:'',a?a.y1:'',a?a.n:0,a?a.ps.size:0];}));},
-    champs:()=>downloadCSV(`바둑DB_우승판정_${dstr(LASTD)}.csv`,pre,['대회(정리)','회차','마지막 결승 날짜','우승(계산)','준우승(계산)','판정','근거 대국 수'],CHAMP.map(c=>[G[c.g],c.ed,dstr(c.d),c.ck?nameOf(c.ck):'',c.rk?nameOf(c.rk):'',['확정','미확정(동점)','미확정(진행·근거 부족)'][c.st],c.gi.length]))};
-  app.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>act[b.dataset.x]());
-}
-
 /* =============== ABOUT =============== */
 function pAbout(sub){
   sub=sub||'methodology';const L=META.link;
@@ -3182,7 +3163,7 @@ function pSources(){
   <div class="fx-tiles"><div class="fx-tile"><div class="k">대국 기록</div><div class="v">${n(GAMES.length)}</div></div><div class="fx-tile"><div class="k">기사</div><div class="v">${n(P.length)}</div></div><div class="fx-tile"><div class="k">마지막 대국일</div><div class="v" style="font-size:18px">${dstr(LASTD).replace(/-/g,'.')}</div></div><div class="fx-tile"><div class="k">출처</div><div class="v">${S.length}곳</div></div></div>
   ${fxPanel('만드는 순서','',`<ol class="src-flow">${flow.map(([t,d])=>`<li><b>${t}</b><span>${esc(d)}</span></li>`).join('')}</ol>`)}
   ${fxPanel('출처별 수집','공개 자료만 받습니다',`<div class="tw"><table class="src-t"><thead><tr><th>출처</th><th>받는 것</th><th>방법</th><th>화면에서 쓰는 곳</th><th>현재</th></tr></thead><tbody>${S.map(r=>`<tr><td><b>${esc(r[0])}</b><div class="muted small">${esc(r[1])}</div></td><td class="small">${esc(r[2])}<div class="muted small">주기: ${esc(r[6])}</div></td><td class="small">${esc(r[3])}<div class="src-sc">${esc(r[4])}</div><div class="muted small">${esc(r[5])}</div></td><td class="small">${esc(r[7])}</td><td class="small n">${r[8]||''}</td></tr>`).join('')}</tbody></table></div>`)}
-  ${fxPanel('정리·계산 단계','pipeline\\update.py',`<div class="src-calc">${C.map(([t,d])=>`<div><b>${esc(t)} <span class="calc">계산값</span></b><span>${esc(d)}</span></div>`).join('')}</div><p class="small" style="margin:12px 0 0"><a class="pl" href="#/about">계산 방법 자세히 — 자료에 대하여 ›</a> · <a class="pl" href="#/data">오픈데이터 ›</a></p>`)}
+  ${fxPanel('정리·계산 단계','pipeline\\update.py',`<div class="src-calc">${C.map(([t,d])=>`<div><b>${esc(t)} <span class="calc">계산값</span></b><span>${esc(d)}</span></div>`).join('')}</div><p class="small" style="margin:12px 0 0"><a class="pl" href="#/about">계산 방법 자세히 — 자료에 대하여 ›</a></p>`)}
   ${fxPanel('갱신 순서 (관리용)','',`<ol class="src-steps"><li><b>최근기록_갱신.bat</b> — 한국기원 최근 2주 대국, 랭킹·일정, 중국·일본 랭킹을 받고 사이트를 다시 만듦</li><li>필요할 때만: <b>중국기록_받기.bat</b>(중국 리그·세계대회) · <b>바둑리그_받기.bat</b>(여자바둑리그·선발 현황) · <b>고레이팅_수집.bat</b> · 기사 프로필 받기 bat</li><li><b>배포.bat</b> — 사이트에 올림</li></ol>`)}
   <div class="note">원본 사이트의 이용 조건을 지키며, 요청 사이에 쉬는 시간을 두고 받습니다. 원본에 없는 대국은 만들어 넣지 않습니다(대진표의 '中' 표시 칸은 중국바둑협회 기록에서 가져온 실제 대국입니다).</div>`;
 }
@@ -3212,7 +3193,7 @@ function route(){
     else if(r==='schedule'){location.replace('#/games/calendar'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
     else if(r==='games'){if(parts[1]==='g')pGame(parts[2]);else if(parts[1]==='schedule')pUpcoming(q);else if(parts[1]==='japan')pJpGames(q);else if(parts[1]==='calendar')pSchedule(q);else if(parts[1]==='list')pGames(q);else if(parts[1]==='search')pSearch(q);else pDiary(q);}
     else if(r==='news')pNews(q);
-    else if(r==='data')pData();
+    else if(r==='data'){location.replace('#/');return;}
     else if(r==='about')pAbout(parts[1]);else if(r==='sources')pSources();
     else if(r==='brand')pBrand();
     else if(r==='overview')pOverview(q);
