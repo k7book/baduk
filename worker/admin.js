@@ -6,6 +6,7 @@
 // /api/admin/refresh  지금 뉴스 수집 (POST)
 // /api/admin/news/set 숨기기·고정·기사 이름 고치기 (POST)
 import { NAMES } from './names.js';
+import { PC_JS } from './admin_pc.js';
 
 const NOT_FOUND = () => new Response('Not Found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
 const JX = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
@@ -31,6 +32,7 @@ export async function handleAdmin(req, env, ctx, u, refresh) {
   if (!ipAllowed(ip, env.ADMIN_IPS)) return NOT_FOUND();
   const p = u.pathname;
   if (p === '/admin' || p === '/admin/') return new Response(ADMIN_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+  if (p === '/admin/pc.js') return new Response(PC_JS, { headers: { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
   if (p === '/api/admin/ping') return JX({ ok: true, ip });
   if (p === '/api/admin/status') {
     const [meta, list, ovr, site] = await Promise.all([
@@ -144,6 +146,10 @@ async function loadStatus(){
   if(si.cn_rank&&si.cn_rank<ym)todo.push('중국 랭킹이 '+esc(si.cn_rank)+'입니다. 새 달 표가 나오면 <code>pipeline/cn_ranking.json</code>에 추가');
   if(wD>=7)todo.push('실력 점수 계산이 '+wD+'일 전입니다. PC에서 <code>최근기록_갱신.bat</code>을 돌리면 함께 계산됩니다(10분 안팎).');
   if(grD>=7)todo.push('고레이팅 순위가 '+esc(si.goratings)+' 기준입니다. <code>고레이팅_수집.bat</code>');
+  const cD=daysSince(si.cnl_fetched),lD=daysSince(si.wlg_fetched);
+  if(si.cnl_fetched&&cD>=31)todo.push('중국 리그·세계대회 기록이 '+esc(si.cnl_fetched)+' 수집입니다. <code>중국기록_받기.bat</code> (10~20분)');
+  if(si.wlg_fetched&&lD>=15)todo.push('여자바둑리그 결과가 '+esc(si.wlg_fetched)+' 수집입니다. 시즌 중이면 <code>바둑리그_받기.bat</code>');
+  if([kD>=7,wD>=14,grD>=14,si.cnl_fetched&&cD>=45].filter(Boolean).length>=2)todo.push('밀린 자료가 여럿입니다. <code>전체_받기_배포.bat</code> 하나로 모두 받고 배포까지 합니다(40분~1시간).');
   $('cards').innerHTML=
     card('뉴스 수집',kst(m.tried),ago(m.tried)+' · 새 기사 '+(m.added??'–')+'건 · 전체 '+(n.total??'–')+'건<div class="src">'+srcs+'</div>',nb)+
     card('출처별 최신 뉴스',(n.last&&Object.values(n.last).sort().pop()?ymd(Object.values(n.last).sort().pop()):'–'),lastNews+'<br>숨김 '+(n.hidden||0)+' · 고정 '+(n.pinned||0))+
@@ -155,6 +161,10 @@ async function loadStatus(){
     card('상금 순위',esc(si.prize||'–'),'표 이미지로 받아 넣음',si.prize?st('ok','입력됨'):'')+
     card('고레이팅',esc(si.goratings||'–'),'goratings.org 순위',si.goratings?(grD<7?st('ok','최신'):st('warn',grD+'일 전')):'')+
     card('실력 점수',esc(si.whr||'–'),'7일마다 PC에서 계산',si.whr?(wD<8?st('ok','최신'):st('warn',wD+'일 전')):'')+
+    card('중국 리그·세계대회',esc(si.cnl_fetched||'–'),si.cnl_games!=null?'중국바둑협회 · 리그 '+Number(si.cnl_games||0).toLocaleString()+'국 · '+(si.cnl_seasons||0)+'시즌':'중국기록_받기.bat',si.cnl_fetched?(daysSince(si.cnl_fetched)<31?st('ok','최신'):st('warn',daysSince(si.cnl_fetched)+'일 전')):'')+
+    card('여자바둑리그',esc(si.wlg_fetched||'–'),si.wlg_seasons?si.wlg_seasons+'시즌 · w.baduk.or.kr':'바둑리그_받기.bat',si.wlg_fetched?(daysSince(si.wlg_fetched)<15?st('ok','최신'):st('warn',daysSince(si.wlg_fetched)+'일 전')):'')+
+    card('바둑리그 선발',esc(si.kls_updated||'–'),si.kls_teams?si.kls_teams+'팀 · kleague.baduk.or.kr':'바둑리그_받기.bat',si.kls_teams?st('ok','입력됨'):'')+
+    card('대진표 보강',si.bx_filled!=null?Number(si.bx_filled||0).toLocaleString()+'국':'–','중국 기록으로 채운 칸 · 단계 추정 '+Number(si.bs_assigned||0).toLocaleString()+'국',si.bx_filled?st('ok','적용'):'')+
     card('사이트 파일',esc(si.built||'–'),si.players?Number(si.players).toLocaleString()+'명 기사 정보':'');
   $('todo').innerHTML=todo.length?todo.map(t=>'<li><span>•</span><span>'+t+'</span></li>').join(''):'<li><span>✓</span><span>밀린 일이 없습니다.</span></li>';
 }
@@ -183,4 +193,4 @@ $('more').onclick=()=>{LIM+=60;draw();};
 $('reload').onclick=()=>{loadStatus();loadNews();};
 $('refresh').onclick=async()=>{const b=$('refresh');b.disabled=true;b.textContent='수집 중…';try{const r=await api('/api/admin/refresh',{});toast('수집 완료 — 새 기사 '+((r.meta||{}).added??0)+'건');}catch(e){toast('수집 실패');}b.disabled=false;b.textContent='지금 뉴스 수집';loadStatus();loadNews();};
 loadStatus().catch(()=>toast('현황을 불러오지 못했습니다'));loadNews().catch(()=>toast('뉴스를 불러오지 못했습니다'));
-</script></body></html>`;
+</script><script src="/admin/pc.js"></script></body></html>`;
