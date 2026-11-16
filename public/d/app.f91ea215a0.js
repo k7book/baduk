@@ -314,6 +314,7 @@ function homeSearch(){
 const pst={q:'',c:'all',org:'all',st:'all',g:'all',era:'all',act:false,sort:'rank',page:0};
 const ERAS=[['all','전체'],['1950','1950년대 이전'],['1960','1960년대'],['1970','1970년대'],['1980','1980년대'],['1990','1990년대'],['2000','2000년대'],['2010','2010년대'],['2020','2020년대']];
 const eraOf=k=>{const r=rec(k);if(!r.g)return null;return r;};
+const NONP=new Set(['양자패','기권승']);   // 부전·기권 표기(기사가 아님)
 function pPlayers(q){
   if(q.org)pst.org=q.org;if(q.c)pst.c=q.c;if(q.q!=null){pst.q=q.q.trim();pst.page=0;}
   const orgs=[...new Set(P.map(p=>p.o).filter(Boolean))].sort();
@@ -349,7 +350,7 @@ function pPlayers(q){
       if(pst.g!=='all'&&p.g!==pst.g)return;
       if(q&&!(p.n.toLowerCase().includes(q)||p.n.replace(/\s/g,'').includes(pst.q.replace(/\s/g,''))||(p.n0||'').includes(pst.q)||[...(KALL[p.k]||[])].some(x=>x.includes(pst.q))||(p.hn||'').includes(pst.q)||(p.en||'').toLowerCase().includes(q)||(KNAME[p.k]||'').includes(pst.q)))return;
       items.push(p.k);});
-    if(pst.org==='all'&&pst.st==='all'&&pst.g==='all'&&pst.c==='all')Object.keys(BYK).forEach(k=>{if(isNK(k)&&(!q||k.slice(2).toLowerCase().includes(q)))items.push(k);});
+    if(pst.org==='all'&&pst.st==='all'&&pst.g==='all'&&pst.c==='all')Object.keys(BYK).forEach(k=>{if(isNK(k)&&!NONP.has(k.slice(2))&&(!q||k.slice(2).toLowerCase().includes(q)))items.push(k);});
     let list=items;
     if(pst.era!=='all'){const e=+pst.era;list=list.filter(k=>{const r=rec(k);if(!r.g)return false;const fy=(r.first/10000)|0,ly=(r.last/10000)|0;return e===1950?fy<1960:(fy<e+10&&ly>=e);});}
     pDash(pst.c);const RK=pRankMap(pst.c);
