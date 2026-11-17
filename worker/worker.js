@@ -271,9 +271,42 @@ function fromOurPage(req, u) {
 const DENY = () => new Response('이 자료는 바둑DB 화면에서만 볼 수 있습니다. 자동 수집·대량 복제는 허락하지 않습니다 (https://baduk.rajin.live/robots.txt).\n',
   { status: 403, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
 
+// 보안 헤더(SEC_V1) — 워커가 내주는 모든 응답에 붙임(정적 파일은 _headers 에도 같은 값)
+const SEC = {
+  'strict-transport-security': 'max-age=31536000',
+  'x-content-type-options': 'nosniff',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'x-frame-options': 'SAMEORIGIN',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'content-security-policy-report-only': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src \'self\' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src \'self\' data: blob: https:; connect-src \'self\' https://cloudflareinsights.com http://127.0.0.1:47815; object-src \'none\'; base-uri \'self\'; form-action \'self\'; frame-ancestors \'self\'; report-uri /api/csp',
+};
+function withSec(res) {
+  if (!res || res.status === 101) return res;
+  const r = new Response(res.body, res);
+  for (const [k, v] of Object.entries(SEC)) if (!r.headers.has(k)) r.headers.set(k, v);
+  return r;
+}
+// CSP 위반 보고 받기 — 기록만 남김(wrangler tail 로 확인). 저장소에는 쓰지 않음
+async function cspReport(req) {
+  if (req.method === 'POST') {
+    try { const t = (await req.text()).slice(0, 2000); console.log('CSP', t); } catch (e) { /* ignore */ }
+  }
+  return new Response(null, { status: 204 });
+}
+
 export default {
   async fetch(req, env, ctx) {
+    return withSec(await route(req, env, ctx));
+  },
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(refresh(env));
+  },
+};
+
+async function route(req, env, ctx) {
+  {
     const u = new URL(req.url);
+    if (u.pathname === '/api/csp') return cspReport(req);
     if (DATA_PATH.test(u.pathname) && !fromOurPage(req, u)) return DENY();
     if (u.pathname === '/api/news') {
       const [list, meta, ovr] = await Promise.all([env.NEWS_KV.get('news', 'json'), env.NEWS_KV.get('meta'), getOvr(env)]);
@@ -291,8 +324,5 @@ export default {
       return J(await refresh(env));
     }
     return env.ASSETS.fetch(req);
-  },
-  async scheduled(event, env, ctx) {
-    ctx.waitUntil(refresh(env));
-  },
-};
+  }
+}

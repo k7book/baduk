@@ -3,7 +3,9 @@
   "name": "baduk",
   "main": "worker/worker.js",
   "compatibility_date": "2026-10-01",
-  "workers_dev": true,
+  // 예비 주소(*.workers.dev)와 미리보기 주소는 끔 — 보안 설정을 우회하는 뒷문 방지 (SEC_V1)
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
