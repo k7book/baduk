@@ -3218,12 +3218,12 @@ function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]
   const col=r[4]||(g.r&&g.r[0]);const bk=col===1?g.wk:col===2?g.lk:null,wk=col===1?g.lk:col===2?g.wk:null;
   if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
   return '/kifu.html?'+q.toString();}
-function kfOpen(a){try{const w=window.open(a.href,'kifu','width=1200,height=880');if(w){w.focus();return false;}}catch(e){}return true;}
+function kfOpen(a){try{const w=window.open(a.href,'_blank','popup=yes,width=1200,height=880');if(w){try{w.focus();}catch(e){}return false;}}catch(e){}return true;}
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a.kfb');if(!a||a.classList.contains('oro')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;if(kfOpen(a)===false)e.preventDefault();});
 /* KIFU_ICON */const KFI='<svg class="kfi" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 2v12M10.5 2v12M2 5.5h12M2 10.5h12" stroke="currentColor" stroke-width=".8"/><circle cx="10.5" cy="5.5" r="2.2" fill="currentColor"/><circle cx="5.5" cy="10.5" r="2.1" fill="var(--card)" stroke="currentColor" stroke-width="1"/></svg>';
 function kfBtn(g,big){if(!g)return '';const r=kfOf(g.i);if(!r)return '';const c='kfb'+(big?' kfg':'')+(r[1]==='o'?' oro':'');
   if(r[1]==='o')return `<a class="${c}" href="https://www.cyberoro.com/gibo/gibo_view.oro?gibo=https://open.cyberoro.com/gibo/${esc(r[3])}&gibonum=${esc(r[2])}" target="_blank" rel="noopener" title="사이버오로에서 기보 보기 (새 창)" aria-label="사이버오로에서 기보 보기 (새 창)">${KFI}${big?'<span>사이버오로에서 기보 보기</span>':''}</a>`;
-  return `<a class="${c}" href="${esc(kfUrl(g,r))}" target="kifu" title="기보 보기 (새 창) · 기보 출처 ${KFSRC[r[1]]}" aria-label="기보 보기 (새 창)">${KFI}${big?'<span>기보 보기</span>':''}</a>`;}
+  return `<a class="${c}" href="${esc(kfUrl(g,r))}" target="_blank" rel="noopener" title="기보 보기 (새 창) · 기보 출처 ${KFSRC[r[1]]}" aria-label="기보 보기 (새 창)">${KFI}${big?'<span>기보 보기</span>':''}</a>`;}
 /* 자주 안 쓰는 데이터(로더가 받음) — 도착하면 X 에 채우고 지금 화면을 다시 그림 */
 let EXTRA_OK=!window.__EXTRA;
 if(window.__EXTRA)window.__EXTRA.then(ex=>{for(const k in ex){const v=ex[k],o=X[k];if(o&&v&&typeof o==='object'&&typeof v==='object'&&!Array.isArray(o)&&!Array.isArray(v))Object.assign(o,v);else X[k]=v;}
