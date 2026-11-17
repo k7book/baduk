@@ -579,13 +579,13 @@ syncThemeBtn();
 /* ---------- 사이트에서 연 기보 (kifu.html?s=출처&c=묶음&r=기보 번호&t=제목&e=날짜·대회&b=흑&w=백) ---------- */
 (function(){
   const q = new URLSearchParams(location.search), c = q.get('c'), r = q.get('r'), src = q.get('s');
-  if (!c || !r || !/^[a-z0-9]+$/i.test(c)) { loadGame(SAMPLE_SGF, SAMPLE_DISPLAY); return; }
-  const SRC = { i: ['囲碁棋譜.COM', 'https://igo-kifu.com/'], f: ['야호(foxwq.com)', 'https://www.foxwq.com/'], w: ['101围棋网(101weiqi.com)', 'https://www.101weiqi.com/chessbook/'], h: ['한게임 바둑(baduk.hangame.com)', 'https://baduk.hangame.com/'] }[src] || ['외부 기보 사이트', ''];
+  if (!c || !r || !/^[a-z0-9]+(\.[0-9a-f]+)?$/i.test(c)) { loadGame(SAMPLE_SGF, SAMPLE_DISPLAY); return; }
+  const SRC = { i: ['囲碁棋譜.COM', 'https://igo-kifu.com/'], f: ['야호(foxwq.com)', 'https://www.foxwq.com/'], w: ['101围棋网(101weiqi.com)', 'https://www.101weiqi.com/chessbook/'], h: ['한게임 바둑(baduk.hangame.com)', 'https://baduk.hangame.com/'], t: ['타이젬(tygem.com)', 'https://www.tygem.com/'] }[src] || ['외부 기보 사이트', ''];
   $('loaderSec').style.display = 'none';
   $('eyebrow').textContent = q.get('e') || '기보';
   $('title').textContent = '기보를 불러오는 중…';
   fetch('/k/' + c + '.json').then(x => { if (!x.ok) throw new Error('HTTP ' + x.status); return x.json(); }).then(m => {
-    const sg = m[r]; if (!sg) throw new Error('기보 묶음에 이 기보가 없습니다');
+    const sg = m[(src || '') + r] || m[r]; if (!sg) throw new Error('기보 묶음에 이 기보가 없습니다');
     const sub = (k, s) => [q.get(k + 's') || ''].filter(Boolean).join(' · ');
     loadGame(sg, {
       title: q.get('t') || '', eyebrow: q.get('e') || '',

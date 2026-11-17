@@ -258,7 +258,7 @@ const J = (o, s = 200, extra = {}) => new Response(JSON.stringify(o), { status: 
 
 // 데이터 파일 문지기 — 기록 자료(/d 데이터 · /k 기보 묶음 · /gr 고레이팅)는 이 사이트 화면이 부를 때만 내줍니다.
 // 주소를 직접 찍어 통째로 받아 가는 자동 수집을 막는 용도이며, 화면에서 보는 데는 영향이 없습니다.
-const DATA_PATH = /^\/(d|k|gr)\//;
+const DATA_PATH = /^\/(d|k|g|gr)\//;   // g = 고레이팅 묶음(GR_B1)
 const OUR_HOSTS = new Set(['baduk.rajin.live', 'baduk.k7book.workers.dev', 'localhost', '127.0.0.1']);
 function fromOurPage(req, u) {
   const sfs = req.headers.get('sec-fetch-site');

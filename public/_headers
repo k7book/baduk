@@ -7,6 +7,10 @@
   Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://cloudflareinsights.com http://127.0.0.1:47815; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /api/csp
 /d/*
   Cache-Control: public, max-age=31536000, immutable
+/k/*
+  Cache-Control: public, max-age=31536000, immutable
+/g/*
+  Cache-Control: public, max-age=31536000, immutable
 /
   Cache-Control: public, max-age=0, must-revalidate
 /index.html
