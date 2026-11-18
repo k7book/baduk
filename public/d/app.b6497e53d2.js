@@ -3264,7 +3264,7 @@ function kfOf(i){if(!KFM){if(!X.KF)return null;KFM=new Map();for(const r of X.KF
 function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]);q.set('r',r[2]);
   q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);q.set('g',G[g.g]);q.set('d',dstr(g.d));
   const col=r[4]||(g.r&&g.r[0]);const bk=col===1?g.wk:col===2?g.lk:null,wk=col===1?g.lk:col===2?g.wk:null;
-  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
+  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);{const pb=PBY[bk],pw=PBY[wk];if(pb&&pb.ph){q.set('bp',pb.ph);if(pb.ph0)q.set('bp0',pb.ph0);}if(pw&&pw.ph){q.set('wp',pw.ph);if(pw.ph0)q.set('wp0',pw.ph0);}if(pb&&pb.c)q.set('bc',pb.c);if(pw&&pw.c)q.set('wc',pw.c);}if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
   return '/kifu.html?'+q.toString();}
 /* KIFU_LAYER_V1: 기보 뷰어를 새 창 대신 화면 위 레이어(주소창 없음)로 엶 — 닫기: ×, 바깥 누르기, Esc */
 let KFL=null,KFL_RET=null;

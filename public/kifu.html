@@ -62,8 +62,10 @@
   .gline h1{ font-size:13.5px; font-weight:500; color:var(--ink-muted); margin:0; letter-spacing:0; line-height:1.5; }
   .gfacts{ display:inline-flex; flex-wrap:wrap; gap:2px 12px; color:var(--ink-muted); margin-left:auto; }
   .gfacts b{ color:var(--ink); font-weight:700; }
-  .av{ position:relative; width:42px; height:42px; border-radius:50%; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:17px; color:var(--ink); flex:none; }
-  .av .st{ position:absolute; right:-3px; bottom:-3px; width:16px !important; height:16px !important; border:2px solid var(--surface); box-sizing:content-box; }
+  .av{ position:relative; width:64px; height:80px; border-radius:4px; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:24px; color:var(--ink); flex:none; overflow:visible; }
+  .av img{ width:100%; height:100%; object-fit:cover; object-position:50% 20%; border-radius:4px; display:block; }
+  .av .ini{ line-height:1; }
+  .av .st{ position:absolute; right:-5px; bottom:-5px; width:18px !important; height:18px !important; border:2px solid var(--surface); box-sizing:content-box; }
   .pl a.nml{ color:inherit; text-decoration:none; } .pl a.nml:hover{ text-decoration:underline; }
   .eyebrow{ font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--ink-muted); }
   h1{ font-weight:900; font-size:clamp(20px,2.6vw,28px); letter-spacing:-.02em; line-height:1.2; margin:6px 0 0; text-wrap:balance; }
@@ -114,7 +116,7 @@
 
   /* 대국자 */
   .players{ display:grid; gap:8px; }
-  .pl{ display:grid; grid-template-columns:42px 1fr auto; gap:10px; align-items:center; padding:11px 12px; background:var(--surface); border-left:4px solid transparent; }
+  .pl{ display:grid; grid-template-columns:64px 1fr auto; gap:10px; align-items:center; padding:11px 12px; background:var(--surface); border-left:4px solid transparent; }
   .pl.turn{ border-left-color:var(--accent); }
   .pl .st{ width:26px; height:26px; border-radius:50%; }
   .pl .st.b{ background:var(--stone-b); box-shadow:0 0 0 1.5px var(--ink-faint); }
@@ -224,8 +226,8 @@
     #helpBtn{ display:none; }
     .colL,.colR{ display:contents; }
     .players{ order:1; grid-template-columns:1fr 1fr; }
-    .pl{ grid-template-columns:32px 1fr auto; padding:8px 10px; gap:8px; }
-    .av{ width:32px; height:32px; font-size:14px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
+    .pl{ grid-template-columns:40px 1fr auto; padding:8px 10px; gap:8px; }
+    .av{ width:40px; height:50px; font-size:16px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
     .res{ order:2; }
     .board-box{ order:3; max-width:none; }
     .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px; width:auto; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
@@ -291,8 +293,8 @@
 
     <div class="colR">
       <div class="players">
-        <div class="pl" id="plB"><span class="av" id="avB">흑<span class="st b"></span></span><div><div class="nm"><span id="nameB">—</span><span id="tagB"></span></div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
-        <div class="pl" id="plW"><span class="av" id="avW">백<span class="st w"></span></span><div><div class="nm"><span id="nameW">—</span><span id="tagW"></span></div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
+        <div class="pl" id="plB"><span class="av" id="avB"><span class="ini">흑</span><span class="st b"></span></span><div><div class="nm"><span id="nameB">—</span><span id="tagB"></span></div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
+        <div class="pl" id="plW"><span class="av" id="avW"><span class="ini">백</span><span class="st w"></span></span><div><div class="nm"><span id="nameW">—</span><span id="tagW"></span></div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
       </div>
 
       <div class="tabsbox">
@@ -577,7 +579,21 @@ function loadGame(text, display){
   // 기사: 이름 첫 글자 + (사이트에서 연 기보면) 이 사이트 기사 페이지 링크
   const nmB = d.black || first('PB') || '흑', nmW = d.white || first('PW') || '백';
   const ini = n => (String(n).replace(/\(.*?\)/g, '').trim()[0] || '?');
-  $('avB').firstChild.nodeValue = ini(nmB); $('avW').firstChild.nodeValue = ini(nmW);
+  // 사진: 사이트 기사 정보에 있는 사진 주소(bp·wp, 대체 bp0·wp0)만 씀 — 없거나 못 받으면 첫 글자
+  const okUrl = u => { try { const x = new URL(u); return x.protocol === 'https:' && /(^|\.)(baduk\.or\.kr|nihonkiin\.or\.jp|igo-kifu\.com|aliyuncs\.com|cwql\.org\.cn|wqs\.link)$/.test(x.hostname) ? x.href : ''; } catch (e) { return ''; } };
+  const setAv = (id, nm, ph, ph0) => {
+    const box = $(id), ic = box.querySelector('.ini'); ic.textContent = ini(nm);
+    const old = box.querySelector('img'); if (old) old.remove();
+    const u = okUrl(ph); if (!u) { ic.hidden = false; return; }
+    const im = new Image(); im.alt = nm + ' 사진'; im.referrerPolicy = 'no-referrer'; im.decoding = 'async';
+    let fb = okUrl(ph0);
+    im.onerror = () => { if (fb) { im.src = fb; fb = ''; } else { im.remove(); ic.hidden = false; } };
+    im.onload = () => { ic.hidden = true; };
+    im.src = u; box.insertBefore(im, ic);
+  };
+  const QP = new URLSearchParams(location.search);
+  setAv('avB', nmB, d.bPh || QP.get('bp'), d.bPh0 || QP.get('bp0')); setAv('avW', nmW, d.wPh || QP.get('wp'), d.wPh0 || QP.get('wp0'));
+  $('subB').textContent = d.bSub || $('subB').textContent; $('subW').textContent = d.wSub || $('subW').textContent;
   const lk = (k, n) => k ? '<a class="nml" href="/players/' + encodeURIComponent(k) + '" target="_blank" rel="noopener" title="기사 페이지 열기">' + esc(n) + '</a>' : esc(n);
   $('nameB').innerHTML = lk(d.bKey, nmB); $('nameW').innerHTML = lk(d.wKey, nmW);
   $('infoDl').innerHTML = dl.map(([a, b]) => '<dt>' + a + '</dt><dd>' + b + '</dd>').join('');
@@ -788,6 +804,8 @@ syncThemeBtn();
       event: q.get('g') || ((q.get('e') || '').split(' · ').slice(1).join(' · ')) || '',
       date: q.get('d') || ((q.get('e') || '').split(' · ')[0] || '').replace(/\./g, '-'),
       bKey: q.get('bk') || '', wKey: q.get('wk') || '',
+      bPh: q.get('bp') || '', bPh0: q.get('bp0') || '', wPh: q.get('wp') || '', wPh0: q.get('wp0') || '',
+      bSub: q.get('bc') || '', wSub: q.get('wc') || '',
       black: q.get('b') || '', blackSub: '',
       white: q.get('w') || '', whiteSub: '',
       bRes: q.get('bs') || '', wRes: q.get('ws') || '',
