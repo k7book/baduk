@@ -44,17 +44,22 @@ const KEYN=N.map((n,i)=>NK[i]||('n:'+n));
 const KNAME={};
 const nameOf=k=>{const p=PBY[k];if(p){if(p.dn)return p.n;if(p.c!=='한국'&&KNAME[k])return KNAME[k].replace(/\((국내|자국|객원|부전)\)/,'');return p.n;}if(KNAME[k])return KNAME[k];return k.startsWith('n:')?k.slice(2):k;};
 /* ---------- games ---------- */
+/* INIT_FAST_V1: 대국 31만여 건을 한 번만 훑으면서 GAMES·BYK·연도·이름 표기를 함께 만듦(예전엔 네 번 훑음) */
 const GAMES=new Array(D.length);
+const BYK={},_YS=new Set(),_NL=new Int32Array(N.length).fill(-1),_ofn=OF.length>0;
 for(let i=0;i<D.length;i++){
-  const t=TT[i],r=RR[i];
+  const t=TT[i],r=RR[i],wi=W[i],li=L[i],wk=KEYN[wi],lk=KEYN[li];
   const y=(D[i]/10000)|0;let rp=RP[r];if(y<2021&&rp[0])rp=[0,rp[1],rp[2],rp[3]];
-  GAMES[i]={i,d:D[i],y,ti:t,g:TG[t],c:CATS[TC[t]],s:TS[t],wk:KEYN[W[i]],lk:KEYN[L[i]],wn:N[W[i]],ln:N[L[i]],r:rp,rs:R[r],j:RJ[r],of:OF.length?OF[i]:1,wc:NC[W[i]]||'',lc:NC[L[i]]||''};
+  const g={i,d:D[i],y,ti:t,g:TG[t],c:CATS[TC[t]],s:TS[t],wk,lk,wn:N[wi],ln:N[li],r:rp,rs:R[r],j:RJ[r],of:_ofn?OF[i]:1,wc:NC[wi]||'',lc:NC[li]||''};
+  GAMES[i]=g;_NL[wi]=2*i;_NL[li]=2*i+1;_YS.add(y);
+  const bw=BYK[wk];if(bw)bw.push(g);else BYK[wk]=[g];
+  if(lk!==wk){const bl=BYK[lk];if(bl)bl.push(g);else BYK[lk]=[g];}
 }
-const KALL={};GAMES.forEach(g=>{KNAME[g.wk]=g.wn;KNAME[g.lk]=g.ln;(KALL[g.wk]=KALL[g.wk]||new Set()).add(g.wn);(KALL[g.lk]=KALL[g.lk]||new Set()).add(g.ln);}); // 가장 최근 대국의 표기를 대표 이름으로
+// 이름 표기: 기사마다 쓰인 모든 표기(KALL)와, 가장 최근 대국의 표기(KNAME, 예전과 같은 순서 규칙)
+const KALL={};{const _o=[];for(let j=0;j<N.length;j++)if(_NL[j]>=0)_o.push(j);_o.sort((a,b)=>_NL[a]-_NL[b]);
+  for(const j of _o){const k=KEYN[j];KNAME[k]=N[j];(KALL[k]||(KALL[k]=new Set())).add(N[j]);}}
 if(X.DX&&X.DX.xn)for(const k in X.DX.xn)if(!KNAME[k])KNAME[k]=X.DX.xn[k];   // 이 사이트에 대국 기록이 없는 일본·중국 옛 기사의 한글 표기
-const BYK={};
-GAMES.forEach(g=>{(BYK[g.wk]=BYK[g.wk]||[]).push(g);if(g.lk!==g.wk)(BYK[g.lk]=BYK[g.lk]||[]).push(g);});
-const YEARS=[...new Set(GAMES.map(g=>g.y))].sort((a,b)=>a-b);
+const YEARS=[..._YS].sort((a,b)=>a-b);
 /* 기록 범위 SCOPE_V2: kr = 한국기원 기록(OF 0·1)만, cn/jp/tw = 모든 기록(중국바둑협회 OF 2 · 일본 OF 3 · 대만 OF 4 포함) · 순위표는 그 나라 기사 */
 const GK=GAMES.filter(g=>g.of<2);
 const SCOPES=[['kr','🇰🇷 한국 기사','한국','한국기원 기록으로 집계'],['cn','🇨🇳 중국 기사','중국','중국바둑협회 기록(중국 기사끼리 둔 대국)까지 합쳐 집계'],['jp','🇯🇵 일본 기사','일본','일본 기사끼리 둔 대국(일본기원 결과·go4go)까지 합쳐 집계'],['tw','🇹🇼 대만 기사','대만','대만 기사끼리 둔 대국까지 합쳐 집계']];
@@ -246,13 +251,14 @@ function currentTop(filter,n){
 function pHome(){
   const t=kst();const mmdd=String(t.m).padStart(2,'0')+'-'+String(t.d).padStart(2,'0');
   const bday=P.filter(p=>p.b&&p.b.slice(5)===mmdd&&(p.st||'').includes('현역'));
-  const yr=YEARS[YEARS.length-1];const A=yagg()[yr]||{w:{},n:{}};
+  const yr=YEARS[YEARS.length-1];const A=yaggY(yr)||{w:{},n:{}};
   const champTop=Object.entries(CHB).map(([k,v])=>[k,v.length]).sort((a,b)=>b[1]-a[1]).slice(0,10);
   const yChamps=CHAMP.filter(c=>c.st===0&&((c.d/10000)|0)===yr).sort((a,b)=>b.d-a.d).slice(0,6);
   const rPrev=rankAt((LASTD/100|0)-100);
   const top=currentTop(null,10),topW=currentTop(k=>(PBY[k]||{}).g==='여자',5);
   const wins=Object.entries(A.w).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const season=Object.keys(A.n).map(k=>{const w=A.w[k]||0,n=A.n[k];return {k,w,l:n-w,n,p:w/n,cur:streaks(k).cur};}).filter(x=>x.n>=10).sort((a,b)=>b.w-a.w||b.p-a.p).slice(0,10);
+  const season=Object.keys(A.n).map(k=>{const w=A.w[k]||0,n=A.n[k];return {k,w,l:n-w,n,p:w/n};}).filter(x=>x.n>=10).sort((a,b)=>b.w-a.w||b.p-a.p).slice(0,10);
+  season.forEach(x=>{x.cur=streaks(x.k).cur;});   // 연승·연패는 보여 줄 10명만 계산
   // 뉴스: 사진 있는 기사 → 톱 기사 1 + 작은 기사 3, 나머지는 헤드라인
   const pic=[],seen=new Set();
   for(const n of NEWSL){if(n.s==='ggl'||!n.img)continue;if(seen.has(n.s)&&pic.length<3)continue;seen.add(n.s);pic.push(n);if(pic.length>=4)break;}
@@ -392,8 +398,16 @@ function pPlayers(q){
 let YAGG=null;
 function yagg(){ if(YAGG)return YAGG; YAGG={};
   for(const g of GSC){if(g.j)continue;const a=YAGG[g.y]=YAGG[g.y]||{w:{},n:{}};a.w[g.wk]=(a.w[g.wk]||0)+1;a.n[g.wk]=(a.n[g.wk]||0)+1;a.n[g.lk]=(a.n[g.lk]||0)+1;}
-  for(const y in YAGG){const a=YAGG[y];a.rw=rankMap(a.w);a.rn=rankMap(a.n);const pr={};for(const k in a.n){if(a.n[k]>=20)pr[k]=(a.w[k]||0)/a.n[k];}a.rp=rankMap(pr);}
+  // YAGG_LAZY_V1: 순위표(rw·rn·rp)는 그 해를 처음 볼 때 만듦(홈은 올해만 봄)
+  const lz=(a,f,fn)=>Object.defineProperty(a,f,{configurable:true,enumerable:true,get(){const v=fn();Object.defineProperty(a,f,{value:v,writable:true,enumerable:true,configurable:true});return v;}});
+  for(const y in YAGG){const a=YAGG[y];lz(a,'rw',()=>rankMap(a.w));lz(a,'rn',()=>rankMap(a.n));lz(a,'rp',()=>{const pr={};for(const k in a.n){if(a.n[k]>=20)pr[k]=(a.w[k]||0)/a.n[k];}return rankMap(pr);});}
   return YAGG;}
+// 한 해만 필요할 때(홈 점수판): 전체 YAGG 를 만들지 않고 그해만 셈. 결과 모양은 yagg()[y] 와 같음
+let YAGG1={};
+function yaggY(y){if(YAGG)return YAGG[y];if(YAGG1.s===GSC&&y in YAGG1.v)return YAGG1.v[y];if(YAGG1.s!==GSC)YAGG1={s:GSC,v:{}};
+  let a=null;for(const g of GSC){if(g.j||g.y!==y)continue;if(!a)a={w:{},n:{}};a.w[g.wk]=(a.w[g.wk]||0)+1;a.n[g.wk]=(a.n[g.wk]||0)+1;a.n[g.lk]=(a.n[g.lk]||0)+1;}
+  if(a){a.rw=rankMap(a.w);a.rn=rankMap(a.n);const pr={};for(const k in a.n){if(a.n[k]>=20)pr[k]=(a.w[k]||0)/a.n[k];}a.rp=rankMap(pr);}
+  return YAGG1.v[y]=a||undefined;}
 function rankMap(obj){const arr=Object.entries(obj).sort((a,b)=>b[1]-a[1]);const m={};let r=0,prev=null;arr.forEach(([k,v],i)=>{if(v!==prev){r=i+1;prev=v;}m[k]=r;});return m;}
 
 /* =============== PLAYER PROFILE =============== */
