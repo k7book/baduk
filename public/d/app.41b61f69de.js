@@ -3262,9 +3262,9 @@ let KFM=null;
 const KFSRC={i:'囲碁棋譜.COM',f:'야호(foxwq)',h:'한게임 바둑',t:'타이젬',w:'101围棋网',g:'Go4Go',o:'사이버오로'};
 function kfOf(i){if(!KFM){if(!X.KF)return null;KFM=new Map();for(const r of X.KF)if(!KFM.has(r[0])||r[1]!=='o')KFM.set(r[0],r);}return KFM.get(i)||null;}
 function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]);q.set('r',r[2]);
-  q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);
+  q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);q.set('g',G[g.g]);q.set('d',dstr(g.d));
   const col=r[4]||(g.r&&g.r[0]);const bk=col===1?g.wk:col===2?g.lk:null,wk=col===1?g.lk:col===2?g.wk:null;
-  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
+  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
   return '/kifu.html?'+q.toString();}
 function kfOpen(a){try{const w=window.open(a.href,'_blank','popup=yes,width=1200,height=880');if(w){try{w.focus();}catch(e){}return false;}}catch(e){}return true;}
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a.kfb');if(!a||a.classList.contains('oro')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;if(kfOpen(a)===false)e.preventDefault();});

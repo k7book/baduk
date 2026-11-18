@@ -53,15 +53,15 @@
   .ghostbtn:hover{ color:var(--ink); border-color:var(--ink); }
   .ghostbtn svg.i{ width:14px; height:14px; }
 
-  header.game{ padding:12px 0 12px; border-bottom:1px solid var(--rule-soft); }
-  .gline{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
-  .gdate{ display:inline-flex; align-items:baseline; gap:6px; background:var(--accent); color:var(--accent-ink); font-weight:800; padding:3px 10px; font-size:14px; }
-  .gdate small{ font-weight:600; font-size:12px; }
-  .gname{ font-size:15px; font-weight:800; color:var(--ink); }
-  .gstrip{ display:grid; grid-template-columns:2.2fr 1fr 2fr 1.2fr .8fr .7fr; gap:1px; background:var(--rule-soft); border:1px solid var(--rule-soft); margin-top:12px; }
-  .gstrip > div{ background:var(--bg); padding:6px 12px; min-width:0; }
-  .gstrip > div > span{ display:block; font-size:11px; color:var(--ink-muted); letter-spacing:.04em; }
-  .gstrip b{ font-size:14px; font-weight:700; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  header.game{ padding:10px 0 10px; border-bottom:1px solid var(--rule-soft); }
+  .gline{ display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; font-size:13.5px; }
+  .gdate[hidden]{ display:none; }
+  .gdate{ display:inline-flex; align-items:baseline; gap:4px; background:var(--accent); color:var(--accent-ink); font-weight:800; padding:1px 8px; font-size:13px; align-self:center; }
+  .gdate small{ font-weight:600; font-size:11.5px; }
+  .gname{ font-weight:800; color:var(--ink); }
+  .gline h1{ font-size:13.5px; font-weight:500; color:var(--ink-muted); margin:0; letter-spacing:0; line-height:1.5; }
+  .gfacts{ display:inline-flex; flex-wrap:wrap; gap:2px 12px; color:var(--ink-muted); margin-left:auto; }
+  .gfacts b{ color:var(--ink); font-weight:700; }
   .av{ position:relative; width:42px; height:42px; border-radius:50%; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:17px; color:var(--ink); flex:none; }
   .av .st{ position:absolute; right:-3px; bottom:-3px; width:16px !important; height:16px !important; border:2px solid var(--surface); box-sizing:content-box; }
   .pl a.nml{ color:inherit; text-decoration:none; } .pl a.nml:hover{ text-decoration:underline; }
@@ -135,6 +135,9 @@
   .tabs button[aria-selected=true]{ color:var(--ink); border-bottom-color:var(--ink); }
   .tabs button:focus-visible{ outline:3px solid var(--accent); }
   .tabs .badge{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-left:4px; font-weight:500; }
+  .box{ margin-bottom:16px; }
+  .bh{ font-size:13px; font-weight:800; margin:0 0 8px; padding-bottom:6px; border-bottom:1px solid var(--rule); }
+  .bh .badge{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-left:6px; font-weight:500; }
   .pane{ padding-top:10px; }
   .pane[hidden]{ display:none; }
 
@@ -163,6 +166,7 @@
   .info dt{ color:var(--ink-muted); } .info dd{ margin:0; }
   .acts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
   .source{ margin-top:14px; padding-top:10px; border-top:1px solid var(--rule-soft); font-size:12px; color:var(--ink-muted); line-height:1.7; }
+  .source:empty{ display:none; }
   .source b{ color:var(--ink); } .source a{ color:var(--ink); }
 
   /* 단축키 */
@@ -174,9 +178,10 @@
   kbd{ font-family:var(--font-mono); font-size:11.5px; border:1px solid var(--rule-soft); padding:0 5px; color:var(--ink); background:var(--surface); }
 
   /* SGF 직접 열기 */
-  details.loader{ margin-top:28px; border-top:3px solid var(--rule); padding-top:10px; }
+  details.loader{ margin-top:6px; border-top:1px solid var(--rule); padding-top:8px; }
+  details.loader summary{ font-size:13px !important; }
   details.loader summary{ cursor:pointer; font-weight:800; font-size:14px; }
-  .lgrid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:12px; }
+  .lgrid{ display:grid; grid-template-columns:1fr; gap:14px; margin-top:10px; }
   .loader h2{ font-size:15px; font-weight:800; margin:0 0 6px; }
   .loader p{ margin:0 0 10px; color:var(--ink-muted); font-size:13px; }
   .drop{ display:block; border:1.5px dashed var(--ink-faint); padding:18px; text-align:center; font-size:13px; color:var(--ink-muted); cursor:pointer; background:var(--surface); }
@@ -190,6 +195,24 @@
   .toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:8px 14px; font-size:13px; z-index:30; }
   .toast[hidden]{ display:none; }
 
+
+  /* FIT_V1: 팝업(약 1200×880)에서 바둑판·조작부가 스크롤 없이 한 화면에 — 오른쪽 칸만 따로 스크롤 */
+  @media (min-width:921px){
+    html,body{ height:100%; overflow:hidden; }
+    body{ padding-inline:16px; }
+    .wrap{ max-width:none; height:100vh; display:flex; flex-direction:column; padding-block:8px 8px; }
+    .topbar{ padding-bottom:6px; }
+    header.game{ padding:7px 0 7px; }
+    .layout{ flex:1; min-height:0; margin-top:10px; grid-template-columns:minmax(0,1fr) minmax(300px,360px); gap:18px; align-items:stretch; }
+    .colL{ min-height:0; align-items:center; gap:8px; }
+    .colR{ position:static; min-height:0; overflow-y:auto; padding-right:4px; gap:12px; }
+    .board-box,.nav{ width:min(100%, calc(100vh - 250px)); max-width:none; margin-inline:0; }
+    .record-tag{ padding:3px 9px 2px; font-size:10.5px; }
+    .nav{ padding:7px 12px 8px; }
+    .tl{ height:20px; } .tl input[type=range]{ height:20px; }
+    .navrow{ margin-top:4px; }
+    .opts{ margin-top:6px; }
+  }
   /* 좁은 화면: 대국자 → 바둑판 → (아래 고정) 조작부 → 탭 */
   @media (max-width:920px){
     body{ padding-inline:12px; }
@@ -198,8 +221,7 @@
     .colL,.colR{ display:contents; }
     .players{ order:1; grid-template-columns:1fr 1fr; }
     .pl{ grid-template-columns:32px 1fr auto; padding:8px 10px; gap:8px; }
-    .av{ width:32px; height:32px; font-size:14px; } .av .st{ width:12px !important; height:12px !important; }
-    .gstrip{ grid-template-columns:1fr 1fr; } .gstrip > div:nth-child(3), .gstrip > div:nth-child(4){ display:none; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
+    .av{ width:32px; height:32px; font-size:14px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
     .res{ order:2; }
     .board-box{ order:3; max-width:none; }
     .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px; width:auto; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
@@ -220,9 +242,12 @@
   </div>
 
   <header class="game">
-    <div class="gline"><span class="gdate" id="gdate" hidden></span><span class="gname" id="eyebrow">고전 명국 · 견본 기보</span></div>
-    <h1 id="title">—</h1>
-    <div class="gstrip" id="gstrip"></div>
+    <div class="gline">
+      <span class="gdate" id="gdate" hidden></span>
+      <span class="gname" id="eyebrow">고전 명국 · 견본 기보</span>
+      <h1 id="title">—</h1>
+      <span class="gfacts" id="gstrip"></span>
+    </div>
   </header>
 
   <div class="layout">
@@ -264,46 +289,43 @@
         <div class="pl" id="plB"><span class="av" id="avB">흑<span class="st b"></span></span><div><div class="nm"><span id="nameB">—</span><span id="tagB"></span></div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
         <div class="pl" id="plW"><span class="av" id="avW">백<span class="st w"></span></span><div><div class="nm"><span id="nameW">—</span><span id="tagW"></span></div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
       </div>
-      <div class="res"><span>결과</span><b id="result">—</b></div>
 
       <div class="tabsbox">
-        <div class="tabs" role="tablist">
-          <button role="tab" id="tab-i" aria-controls="pane-i" aria-selected="true">대국 정보</button>
-          <button role="tab" id="tab-c" aria-controls="pane-c" aria-selected="false" tabindex="-1">해설<span class="badge" id="cmCount"></span></button>
-        </div>
-        <div class="pane" id="pane-c" role="tabpanel" aria-labelledby="tab-c" hidden>
+        <section class="box">
+          <h2 class="bh">해설<span class="badge" id="cmCount"></span></h2>
           <div class="comment empty" id="comment">이 수에 붙은 해설이 없습니다.</div>
           <div class="clist" id="clist"></div>
-        </div>
-        <div class="pane info" id="pane-i" role="tabpanel" aria-labelledby="tab-i">
+        </section>
+        <section class="box info">
+          <h2 class="bh">기보 파일</h2>
           <dl id="infoDl"></dl>
           <div class="acts">
             <button class="ghostbtn" id="copyLink" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>이 수 링크 복사</button>
             <button class="ghostbtn" id="dlSgf" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>SGF 내려받기</button>
           </div>
           <div class="source" id="source"></div>
+        </section>
+  <details class="loader" id="loaderSec">
+        <summary>내 SGF 파일 열어 보기</summary>
+        <div class="lgrid">
+          <div>
+            <h2>SGF 파일 열기</h2>
+            <p>내 컴퓨터의 .sgf 파일을 끌어다 놓거나 눌러서 고르세요. 파일은 이 화면 안에서만 읽고 어디에도 보내지 않습니다.</p>
+            <label class="drop" id="drop"><input type="file" id="file" accept=".sgf,text/plain" hidden>여기로 끌어다 놓거나 눌러서 파일 선택</label>
+          </div>
+          <div>
+            <h2>SGF 텍스트 붙여넣기</h2>
+            <p>예: <span class="num">(;GM[1]SZ[19];B[pd];W[dp]...)</span></p>
+            <textarea id="paste" spellcheck="false" aria-label="SGF 텍스트"></textarea>
+            <div><button class="btn" id="loadPaste" type="button">이 기보 보기</button> <button class="btn ghost" id="loadSample" type="button">견본 기보로 돌아가기</button></div>
+            <div class="msg" id="msg" role="status"></div>
+          </div>
         </div>
+      </details>
       </div>
     </div>
   </div>
 
-  <details class="loader" id="loaderSec">
-    <summary>내 SGF 파일 열어 보기</summary>
-    <div class="lgrid">
-      <div>
-        <h2>SGF 파일 열기</h2>
-        <p>내 컴퓨터의 .sgf 파일을 끌어다 놓거나 눌러서 고르세요. 파일은 이 화면 안에서만 읽고 어디에도 보내지 않습니다.</p>
-        <label class="drop" id="drop"><input type="file" id="file" accept=".sgf,text/plain" hidden>여기로 끌어다 놓거나 눌러서 파일 선택</label>
-      </div>
-      <div>
-        <h2>SGF 텍스트 붙여넣기</h2>
-        <p>예: <span class="num">(;GM[1]SZ[19];B[pd];W[dp]...)</span></p>
-        <textarea id="paste" spellcheck="false" aria-label="SGF 텍스트"></textarea>
-        <div><button class="btn" id="loadPaste" type="button">이 기보 보기</button> <button class="btn ghost" id="loadSample" type="button">견본 기보로 돌아가기</button></div>
-        <div class="msg" id="msg" role="status"></div>
-      </div>
-    </div>
-  </details>
 </div>
 
 <div class="help" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpH">
@@ -478,7 +500,7 @@ const SAMPLE_DISPLAY = {
   eyebrow: '고전 명국 · 견본 기보', event: '고전 명국 (견본 기보)', date: '1846-09-11',
   black: '혼인보 슈사쿠', blackSub: '本因坊秀策 · 4단',
   white: '이노우에 겐난 인세키', whiteSub: '井上幻庵因碩 · 8단',
-  source: '<b>견본 기보 출처와 검증</b> — 공개 저장소에 올라와 있는 이 대국의 SGF 4개(herzbube/littlego, jokkebk/jgoboard, Slymaster/masame, akitaonrails/frank_go)를 받아 수순을 한 수씩 대조했고, <b>325수 모두 일치</b>했습니다. 결과 "흑 2집승"과 대국일 1846년 9월 11일은 위키백과 "Ear-reddening game" 항목과 일치합니다. 덤 없음(당시 관례, 4개 파일 모두 KM 0 또는 미기재). 규칙 엔진으로 끝까지 재생했을 때 이미 돌이 있는 자리에 둔 수·자충수는 0건이었고, 판 위의 돌과 따낸 돌의 합이 흑 163수·백 162수와 정확히 맞았습니다.'
+  source: ''
 };
 
 /* ---------- 상태 ---------- */
@@ -521,48 +543,40 @@ function loadGame(text, display){
   $('subB').textContent = d.blackSub || [first('PB') && d.black ? first('PB') : '', first('BR')].filter(Boolean).join(' · ');
   $('subW').textContent = d.whiteSub || [first('PW') && d.white ? first('PW') : '', first('WR')].filter(Boolean).join(' · ');
   const res = first('RE');
-  $('result').innerHTML = res ? esc(resultText(res)) + ' <span class="num" style="color:var(--ink-faint);font-weight:400">' + esc(res) + '</span>' : '기록 없음';
   // 승패 표시: 사이트에서 연 기보는 대국 기록(bs·ws), 아니면 SGF 결과
   const wb = (d.bRes || '') || (/^B\+/i.test(res) ? '승' : /^W\+/i.test(res) ? '패' : ''), ww = (d.wRes || '') || (/^W\+/i.test(res) ? '승' : /^B\+/i.test(res) ? '패' : '');
   const tag = v => v === '승' ? '<span class="tag win">승</span>' : v === '패' ? '<span class="tag loss">패</span>' : '';
   $('tagB').innerHTML = tag(wb); $('tagW').innerHTML = tag(ww);
   const total = g.states[g.states.length - 1].moveNo;
   const meta = [], dl = [];
-  if (d.event) dl.push(['기전', esc(d.event)]);
-  if (d.title) dl.push(['대국', esc(d.title)]);
-  if (d.date || first('DT')) dl.push(['대국일', '<span class="num">' + esc(d.date || first('DT')) + '</span>']);
-  if (first('EV') && first('EV') !== d.event) dl.push(['기보 속 대회명', esc(first('EV'))]);
-  if (first('PB') && first('PB') !== d.black) dl.push(['기보 속 흑', esc(first('PB')) + (first('BR') ? ' · ' + esc(first('BR')) : '')]);
-  if (first('PW') && first('PW') !== d.white) dl.push(['기보 속 백', esc(first('PW')) + (first('WR') ? ' · ' + esc(first('WR')) : '')]);
-  meta.push('총 <b class="num">' + total + '</b>수');
-  meta.push('덤 <b class="num">' + esc(first('KM') || '기록 없음') + '</b>');
-  dl.push(['판', '<span class="num">' + g.size + '×' + g.size + '</span>'], ['덤', '<span class="num">' + esc(first('KM') || '기록 없음') + '</span>'], ['총 수', '<span class="num">' + total + '</span>수']);
-  if (first('HA') && first('HA') !== '0') { meta.push('치석 <b class="num">' + esc(first('HA')) + '</b>'); dl.push(['치석', esc(first('HA'))]); }
+  if (first('EV') && first('EV') !== d.event) dl.push(['대회명(원본)', esc(first('EV'))]);
+  if (first('PB') && first('PB') !== d.black) dl.push(['흑(원본)', esc(first('PB')) + (first('BR') ? ' · ' + esc(first('BR')) : '')]);
+  if (first('PW') && first('PW') !== d.white) dl.push(['백(원본)', esc(first('PW')) + (first('WR') ? ' · ' + esc(first('WR')) : '')]);
+  if (first('DT') && d.date && first('DT') !== d.date) dl.push(['날짜(원본)', '<span class="num">' + esc(first('DT')) + '</span>']);
+  if (first('RE')) dl.push(['결과(원본)', '<span class="num">' + esc(first('RE')) + '</span>']);
+  dl.push(['판', '<span class="num">' + g.size + '×' + g.size + '</span>']);
   if (first('RU')) dl.push(['규칙', esc(first('RU'))]);
   if (first('PC')) dl.push(['장소', esc(first('PC'))]);
-  dl.push(['결과', res ? esc(resultText(res)) : '기록 없음']);
-  // 맨 위: 대국일 + 기전 / 정보 띠
+  // 맨 위 한 줄: 대국일 · 기전 · 대국 · 결과 · 수 · 덤
   const dt = d.date || first('DT');
-  const wk = s0 => { const m = /^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/.exec(s0 || ''); if (!m) return ''; return '일월화수목금토'[new Date(+m[1], +m[2] - 1, +m[3]).getDay()]; };
-  const fmtD = s0 => { const m = /^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/.exec(s0 || ''); return m ? m[1] + '.' + m[2].padStart(2, '0') + '.' + m[3].padStart(2, '0') : s0; };
-  $('gdate').hidden = !dt; if (dt) $('gdate').innerHTML = '<span class="num">' + esc(fmtD(dt)) + '</span>' + (wk(dt) ? '<small>(' + wk(dt) + ')</small>' : '');
+  const ymd = s0 => /^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/.exec(s0 || '');
+  const dm = ymd(dt);
+  $('gdate').hidden = !dt;
+  if (dt) $('gdate').innerHTML = dm ? '<span class="num">' + dm[1] + '.' + dm[2].padStart(2, '0') + '.' + dm[3].padStart(2, '0') + '</span><small>(' + '일월화수목금토'[new Date(+dm[1], +dm[2] - 1, +dm[3]).getDay()] + ')</small>' : '<span class="num">' + esc(dt) + '</span>';
   const strip = [];
-  strip.push(['기전', esc(d.event || first('EV') || '—')]);
-  strip.push(['대국일', dt ? '<span class="num">' + esc(fmtD(dt)) + '</span>' : '기록 없음']);
-  strip.push(['흑 · 백', esc((d.black || first('PB') || '흑')) + ' · ' + esc((d.white || first('PW') || '백'))]);
-  strip.push(['결과', res ? esc(resultText(res)) : '기록 없음']);
-  strip.push(['총 수', '<span class="num">' + total + '</span>수']);
-  strip.push(['덤', '<span class="num">' + esc(first('KM') || '기록 없음') + '</span>']);
-  if (first('HA') && first('HA') !== '0') strip.push(['치석', '<span class="num">' + esc(first('HA')) + '</span>']);
-  $('gstrip').innerHTML = strip.map(([a, b]) => '<div><span>' + a + '</span><b>' + b + '</b></div>').join('');
-  // 기사: 이름 첫 글자 + (사이트에서 연 기보면) 기사 페이지 링크
+  strip.push('결과 <b>' + (res ? esc(resultText(res)) : '기록 없음') + '</b>');
+  strip.push('<b class="num">' + total + '</b>수');
+  strip.push('덤 <b class="num">' + esc(first('KM') || '—') + '</b>');
+  if (first('HA') && first('HA') !== '0') strip.push('치석 <b class="num">' + esc(first('HA')) + '</b>');
+  $('gstrip').innerHTML = strip.map(x => '<span>' + x + '</span>').join('');
+  // 기사: 이름 첫 글자 + (사이트에서 연 기보면) 이 사이트 기사 페이지 링크
   const nmB = d.black || first('PB') || '흑', nmW = d.white || first('PW') || '백';
   const ini = n => (String(n).replace(/\(.*?\)/g, '').trim()[0] || '?');
   $('avB').firstChild.nodeValue = ini(nmB); $('avW').firstChild.nodeValue = ini(nmW);
   const lk = (k, n) => k ? '<a class="nml" href="/players/' + encodeURIComponent(k) + '" target="_blank" rel="noopener" title="기사 페이지 열기">' + esc(n) + '</a>' : esc(n);
   $('nameB').innerHTML = lk(d.bKey, nmB); $('nameW').innerHTML = lk(d.wKey, nmW);
   $('infoDl').innerHTML = dl.map(([a, b]) => '<dt>' + a + '</dt><dd>' + b + '</dd>').join('');
-  $('source').innerHTML = d.source || ('불러온 SGF를 이 화면에서 직접 해석했습니다. 원본 파일의 내용을 고치지 않고 그대로 보여주며, 분기가 있으면 첫 번째 분기(본선)만 따라갑니다.' + (g.warnings.length ? ' <b>주의:</b> 규칙상 이상한 수 ' + g.warnings.length + '건 — ' + esc(g.warnings.slice(0, 3).join(', ')) + (g.warnings.length > 3 ? ' 외' : '') : ''));
+  $('source').innerHTML = d.source != null ? d.source : ('불러온 SGF를 이 화면에서 직접 해석했습니다. 원본 파일의 내용을 고치지 않고 그대로 보여주며, 분기가 있으면 첫 번째 분기(본선)만 따라갑니다.' + (g.warnings.length ? ' <b>주의:</b> 규칙상 이상한 수 ' + g.warnings.length + '건 — ' + esc(g.warnings.slice(0, 3).join(', ')) + (g.warnings.length > 3 ? ' 외' : '') : ''));
   $('slider').max = g.states.length - 1;
   buildTicks(); buildComments();
   drawBoardBase();
@@ -705,12 +719,6 @@ $('clist').addEventListener('click', e => { const b = e.target.closest('button[d
 $('tNums').onchange = e => { S.showNums = e.target.checked; savePref(); render(); };
 $('tCoords').onchange = e => { S.showCoords = e.target.checked; savePref(); render(); };
 $('tNext').onchange = e => { S.showNext = e.target.checked; savePref(); render(); };
-
-/* 탭 */
-const TABS = ['i', 'c'];
-function showTab(k){ TABS.forEach(t => { const on = t === k; $('tab-' + t).setAttribute('aria-selected', on); $('tab-' + t).tabIndex = on ? 0 : -1; $('pane-' + t).hidden = !on; }); }
-TABS.forEach(t => $('tab-' + t).onclick = () => showTab(t));
-document.querySelector('.tabs').addEventListener('keydown', e => { if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return; e.stopPropagation(); e.preventDefault(); const cur = TABS.findIndex(t => $('tab-' + t).getAttribute('aria-selected') === 'true'); const nx = TABS[(cur + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length]; showTab(nx); $('tab-' + nx).focus(); });
 
 /* 링크 복사 · SGF 내려받기 */
 function toast(t){ const el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 1800); }
