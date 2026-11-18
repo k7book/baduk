@@ -3220,7 +3220,7 @@ window.addEventListener('hashchange',route);
   if(tt){window.addEventListener('scroll',()=>tt.classList.toggle('show',window.scrollY>600),{passive:true});tt.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});}})();
 /* KIFU_V1 기보 버튼 — X.KF: [대국 번호, 출처(i 囲碁棋譜.COM · f 야호 · o 사이버오로), 기보 번호, 묶음 또는 사이버오로 파일] */
 let KFM=null;
-const KFSRC={i:'囲碁棋譜.COM',f:'야호(foxwq)',h:'한게임 바둑',t:'타이젬',w:'101围棋网',o:'사이버오로'};
+const KFSRC={i:'囲碁棋譜.COM',f:'야호(foxwq)',h:'한게임 바둑',t:'타이젬',w:'101围棋网',g:'Go4Go',o:'사이버오로'};
 function kfOf(i){if(!KFM){if(!X.KF)return null;KFM=new Map();for(const r of X.KF)if(!KFM.has(r[0])||r[1]!=='o')KFM.set(r[0],r);}return KFM.get(i)||null;}
 function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]);q.set('r',r[2]);
   q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);
@@ -3231,6 +3231,7 @@ function kfOpen(a){try{const w=window.open(a.href,'_blank','popup=yes,width=1200
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a.kfb');if(!a||a.classList.contains('oro')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;if(kfOpen(a)===false)e.preventDefault();});
 /* KIFU_ICON */const KFI='<svg class="kfi" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 2v12M10.5 2v12M2 5.5h12M2 10.5h12" stroke="currentColor" stroke-width=".8"/><circle cx="10.5" cy="5.5" r="2.2" fill="currentColor"/><circle cx="5.5" cy="10.5" r="2.1" fill="var(--card)" stroke="currentColor" stroke-width="1"/></svg>';
 function kfBtn(g,big){if(!g)return '';const r=kfOf(g.i);if(!r)return '';const c='kfb'+(big?' kfg':'')+(r[1]==='o'?' oro':'');
+  if(r[1]==='g')return `<a class="kfb${big?' kfg':''} oro" href="https://go4go.net/go/games/sgfview/${esc(r[2])}" target="_blank" rel="noopener" title="Go4Go에서 기보 보기 (새 창)" aria-label="Go4Go에서 기보 보기 (새 창)">${KFI}${big?'<span>Go4Go에서 기보 보기</span>':''}</a>`;
   if(r[1]==='o')return `<a class="${c}" href="https://www.cyberoro.com/gibo/gibo_view.oro?gibo=https://open.cyberoro.com/gibo/${esc(r[3])}&gibonum=${esc(r[2])}" target="_blank" rel="noopener" title="사이버오로에서 기보 보기 (새 창)" aria-label="사이버오로에서 기보 보기 (새 창)">${KFI}${big?'<span>사이버오로에서 기보 보기</span>':''}</a>`;
   return `<a class="${c}" href="${esc(kfUrl(g,r))}" target="_blank" rel="noopener" title="기보 보기 (새 창) · 기보 출처 ${KFSRC[r[1]]}" aria-label="기보 보기 (새 창)">${KFI}${big?'<span>기보 보기</span>':''}</a>`;}
 /* 자주 안 쓰는 데이터(로더가 받음) — 도착하면 X 에 채우고 지금 화면을 다시 그림 */
