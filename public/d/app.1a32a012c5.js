@@ -1,3 +1,22 @@
+/* ROUTE_V2 (구조화 C) — 주소를 '#/…' 대신 진짜 경로(/players/…)로 씀.
+   앱 안의 화면 코드는 예전처럼 '#/…' 문자열로 주소를 만들고, 아래 함수들이 진짜 경로로 바꿔 줌.
+   예전 '#/…' 북마크·공유 주소는 처음 열 때 진짜 경로로 바뀜. */
+const routeH=()=>'#'+location.pathname+location.search;
+function routePath(x){x=String(x==null?'':x);if(x.startsWith('#'))x=x.slice(1);if(!x.startsWith('/'))x='/'+x;return x;}
+function routeRS(x){try{history.replaceState(null,'',routePath(x));}catch(e){}}
+function routeGo(x,rep){const p=routePath(x);
+  if(!rep&&p===location.pathname+location.search){window.dispatchEvent(new Event('hashchange'));return;}
+  try{history[rep?'replaceState':'pushState'](null,'',p);}catch(e){location.href=p;return;}
+  window.dispatchEvent(new Event('hashchange'));}
+if(location.hash.startsWith('#/'))routeRS(location.hash);
+window.addEventListener('popstate',()=>window.dispatchEvent(new Event('hashchange')));
+const ROUTE_INT=/^\/(?!d\/|k\/|g\/|gr\/|api\/|kifu|admin|robots|favicon|icon-|apple-|site\.)/;
+['mousedown','focusin','contextmenu','touchstart'].forEach(ev=>document.addEventListener(ev,e=>{const a=e.target&&e.target.closest&&e.target.closest('a[href^="#/"]');if(a)a.setAttribute('href',routePath(a.getAttribute('href')));},{capture:true,passive:true}));
+document.addEventListener('click',e=>{if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  const a=e.target&&e.target.closest&&e.target.closest('a[href]');if(!a||(a.target&&a.target!=='_self')||a.hasAttribute('download'))return;
+  let h=a.getAttribute('href');if(h.startsWith('#/'))h=routePath(h);else if(!ROUTE_INT.test(h))return;
+  e.preventDefault();routeGo(h);});
+
 (function(){
 'use strict';
 const X=window.DATA;
@@ -45,7 +64,7 @@ const SCOPE_C=()=>(SCOPES.find(x=>x[0]===SCOPE)||SCOPES[0])[2];
 const inSC=k=>((PBY[k]||{}).c||'')===SCOPE_C();
 const SRCB={2:['中','중국바둑협회 기록'],3:['日','일본 기사끼리 — 고레이팅(일본기원 결과·go4go)'],4:['臺','대만 기사끼리 — 고레이팅(go4go)']};
 function setScope(s){SCOPE=SCOPES.some(x=>x[0]===s)?s:'kr';try{localStorage.setItem('scope',SCOPE);}catch(e){}GSC=SCOPE==='kr'?GK:GAMES;YAGG=null;RECS=null;BH=null;for(const k in SZS)delete SZS[k];AGEC={};['pairs','ups','fin','ms'].forEach(k=>delete FX[k]);buildYR();
-  const h=location.hash.replace(/([?&])c=[^&]*&?/,'$1').replace(/[?&]$/,'');if(h!==location.hash)history.replaceState(null,'',h||'#/');route();}
+  const h=routeH().replace(/([?&])c=[^&]*&?/,'$1').replace(/[?&]$/,'');if(h!==routeH())routeRS(h||'#/');route();}
 document.addEventListener('click',e=>{const b=e.target.closest('.scopebar [data-sc]');if(b)setScope(b.dataset.sc);});
 function scopeBar(){const cur=SCOPES.find(x=>x[0]===SCOPE)||SCOPES[0];return `<div class="scopebar" role="radiogroup" aria-label="기록 범위"><span class="l">기록 범위</span>${SCOPES.map(([v,l,,s])=>`<button type="button" role="radio" aria-checked="${SCOPE===v}" class="${SCOPE===v?'on':''}" data-sc="${v}" title="${s}">${l}</button>`).join('')}<span class="d">${cur[2]} 기사 순위 · ${cur[3]}</span></div>`;}
 const LASTD=D[D.length-1];
@@ -134,7 +153,7 @@ G.forEach((g,i)=>QS.push({k:'t:'+i,label:g,sub:'대회',hay:g.toLowerCase(),href
   const draw=()=>{box.innerHTML=items.map((x,i)=>`<a href="${x.href}" class="${i===sel?'on':''}">${esc(x.label)}<span>${esc(x.sub)}</span></a>`).join('')||'<div style="padding:8px 10px" class="muted small">일치하는 기사·대회가 없습니다</div>';box.hidden=false;};
   inp.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{const q=inp.value.trim().toLowerCase();if(!q){box.hidden=true;return;}
     items=QS.filter(x=>x.hay.includes(q)).sort((a,b)=>(a.label.toLowerCase().startsWith(q)?0:1)-(b.label.toLowerCase().startsWith(q)?0:1)||(rec(b.k).g||0)-(rec(a.k).g||0)).slice(0,12);sel=-1;draw();},250);});
-  inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Enter'){const x=items[Math.max(0,sel)];if(x){location.hash=x.href;box.hidden=true;inp.value='';}}else if(e.key==='Escape'){box.hidden=true;}});
+  inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Enter'){const x=items[Math.max(0,sel)];if(x){routeGo(x.href);box.hidden=true;inp.value='';}}else if(e.key==='Escape'){box.hidden=true;}});
   document.addEventListener('click',e=>{if(!e.target.closest('.qs'))box.hidden=true;});
   box.addEventListener('click',()=>{box.hidden=true;inp.value='';});})();
 
@@ -218,7 +237,7 @@ function heroSearch(){const f=document.getElementById('hqf'),inp=document.getEle
   const find=()=>{const q=inp.value.trim().toLowerCase();if(!q){items=[];box.hidden=true;return;}items=QS.filter(x=>x.hay.includes(q)).sort((a,b)=>(a.label.toLowerCase().startsWith(q)?0:1)-(b.label.toLowerCase().startsWith(q)?0:1)||(rec(b.k).g||0)-(rec(a.k).g||0)).slice(0,10);sel=-1;draw();};
   inp.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(find,250);});
   inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Escape')box.hidden=true;});
-  f.addEventListener('submit',e=>{e.preventDefault();clearTimeout(tmr);find();const x=items[Math.max(0,sel)];if(x){location.hash=x.href;}});
+  f.addEventListener('submit',e=>{e.preventDefault();clearTimeout(tmr);find();const x=items[Math.max(0,sel)];if(x){routeGo(x.href);}});
   document.addEventListener('click',e=>{if(!e.target.closest('#hqf'))box.hidden=true;},{once:false});}
 function currentTop(filter,n){
   const out=[];for(const k in WS){const s=WS[k];if(s[7]<RANK_MIN)continue;if(s[1]>UNC_MAX)continue;const lastY=(s[2]/100)|0;if(lastY<META.active_since_year)continue;if(filter&&!filter(k))continue;out.push([k,s[0]]);}
@@ -306,7 +325,7 @@ function homeSearch(){
   const draw=()=>{box.innerHTML=items.map((x,i)=>`<a href="${x.href}" class="${i===sel?'on':''}">${esc(x.label)}<span>${esc(x.sub)}</span></a>`).join('')||'<div class="none">일치하는 기사·대회가 없습니다</div>';box.hidden=false;};
   inp.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{const q=inp.value.trim().toLowerCase();if(!q){box.hidden=true;return;}
     items=QS.filter(x=>x.hay.includes(q)).sort((a,b)=>(a.label.toLowerCase().startsWith(q)?0:1)-(b.label.toLowerCase().startsWith(q)?0:1)||(rec(b.k).g||0)-(rec(a.k).g||0)).slice(0,8);sel=-1;draw();},180);});
-  inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Enter'){const x=items[Math.max(0,sel)];if(x)location.hash=x.href;}else if(e.key==='Escape')box.hidden=true;});
+  inp.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);draw();e.preventDefault();}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);draw();e.preventDefault();}else if(e.key==='Enter'){const x=items[Math.max(0,sel)];if(x)routeGo(x.href);}else if(e.key==='Escape')box.hidden=true;});
   document.addEventListener('click',e=>{if(!e.target.closest('.hsearch'))box.hidden=true;});
 }
 
@@ -337,7 +356,7 @@ function pPlayers(q){
   document.getElementById('pso').value=pst.sort;
   document.getElementById('pc').onclick=e=>{const b=e.target.closest('button');if(!b)return;pst.c=b.dataset.v;pst.page=0;document.querySelectorAll('#pc button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();};
   {const cnt={all:P.length,'기타':0};P.forEach(p=>{if(['한국','중국','일본','대만'].includes(p.c))cnt[p.c]=(cnt[p.c]||0)+1;else cnt['기타']++;});document.querySelectorAll('#pc button').forEach(b=>b.querySelector('em').textContent=fmt(cnt[b.dataset.v]||0));}
-  let tm;document.getElementById('pq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{pst.q=e.target.value.trim();pst.page=0;try{history.replaceState(null,'','#/players'+(pst.q?'?q='+encodeURIComponent(pst.q):''));}catch(_){}draw();},250);});
+  let tm;document.getElementById('pq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{pst.q=e.target.value.trim();pst.page=0;try{routeRS('#/players'+(pst.q?'?q='+encodeURIComponent(pst.q):''));}catch(_){}draw();},250);});
   draw();
   function draw(){
     const q=pst.q.toLowerCase();
@@ -706,7 +725,7 @@ const mvTxt=(now,prev)=>prev==null?'새로 진입':now<prev?'▲'+(prev-now):now
 function rerank(map,keep){const m={};Object.keys(map).filter(keep).sort((a,b)=>map[a]-map[b]).forEach((k,i)=>m[k]=i+1);return m;}
 function pRankings(sub,q){
   sub=sub||'';q=q||{};
-  if(RMOVED.hasOwnProperty(sub)){location.replace('#/records'+(RMOVED[sub]?'/'+RMOVED[sub]:'')+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+  if(RMOVED.hasOwnProperty(sub)){routeGo('#/records'+(RMOVED[sub]?'/'+RMOVED[sub]:'')+(routeH().includes('?')?routeH().slice(routeH().indexOf('?')):''),1);return;}
   if(RALIAS[sub]){q={...RALIAS[sub][1],...q};sub=RALIAS[sub][0];}
   if(!RSUB.some(t=>t[0]===sub))sub='';
   app.innerHTML=crumb([['홈','#/'],['랭킹']])+`<h1 class="pt">랭킹</h1><nav class="tabs">${RSUB.map(([s,l])=>`<a href="#/rankings${s?'/'+s:''}" class="${sub===s?'on':''}">${l}</a>`).join('')}</nav>${sub==='all'?scopeBar():''}<p class="lede rdesc">${RDESC[sub]}</p><div id="rk"></div>`;
@@ -938,7 +957,7 @@ function pCompare(q){
   <div class="pick2"><input class="q" id="ca" list="cl" placeholder="기사 A" value="${esc(a&&!a.startsWith('?')?nameOf(a):a.replace(/^\?/,''))}"><span class="vs">VS</span><input class="q" id="cb" list="cl" placeholder="기사 B" value="${esc(b&&!b.startsWith('?')?nameOf(b):b.replace(/^\?/,''))}"><datalist id="cl">${Object.keys(BYK).filter(k=>rec(k).g>=20).map(k=>`<option value="${esc(nameOf(k))}">`).join('')}</datalist></div>
   <div id="cr"></div>`;
   const $=id=>document.getElementById(id);
-  const go=()=>{const ka=keyFromInput($('ca').value),kb=keyFromInput($('cb').value);if(ka&&kb)location.hash=`#/players/compare?p1=${encodeURIComponent(ka)}&p2=${encodeURIComponent(kb)}`;};
+  const go=()=>{const ka=keyFromInput($('ca').value),kb=keyFromInput($('cb').value);if(ka&&kb)routeGo(`#/players/compare?p1=${encodeURIComponent(ka)}&p2=${encodeURIComponent(kb)}`);};
   $('ca').onchange=go;$('cb').onchange=go;
   const el=$('cr');
   if(!a||!b){el.innerHTML='<div class="empty">두 기사의 이름을 입력하거나 아래 기록에서 고르세요.</div>'+bestH2H();return;}
@@ -1060,14 +1079,14 @@ function rkTrend(el,q){
   const colOf=k=>{const i=st.p.indexOf(k);return cols[i%8];};
   const fillY=()=>{fillSel('kf','시작',yopts,String(st.f),true);fillSel('kt','끝',yopts,String(st.t),true);};
   fillY();
-  const setLink=()=>{const qs=new URLSearchParams();if(G==='w')qs.set('g','w');if(st.c!=='bump')qs.set('c',st.c);if(st.f!==Y0)qs.set('from',st.f);if(st.t!==Y1)qs.set('to',st.t);qs.set('p',st.p.join(','));history.replaceState(null,'','#/rankings/trend?'+qs.toString());};
+  const setLink=()=>{const qs=new URLSearchParams();if(G==='w')qs.set('g','w');if(st.c!=='bump')qs.set('c',st.c);if(st.f!==Y0)qs.set('from',st.f);if(st.t!==Y1)qs.set('to',st.t);qs.set('p',st.p.join(','));routeRS('#/rankings/trend?'+qs.toString());};
   const setRange=(f,t)=>{st.f=Math.max(Y0,Math.min(f,t));st.t=Math.min(Y1,Math.max(f,t));fillY();all();};
   document.getElementById('kf').onchange=e=>setRange(+e.target.value,st.t);
   document.getElementById('kt').onchange=e=>setRange(st.f,+e.target.value);
   document.getElementById('kq').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v;
     if(v==='all')setRange(Y0,Y1);else if(v==='10y')setRange(Y1-9,Y1);else setRange(+v,+v+9);};
   bindPills('kc',v=>{st.c=v;chart();setLink();});
-  bindPills('kg',v=>{location.hash='#/rankings/trend'+(v==='w'?'?g=w':'');});
+  bindPills('kg',v=>{routeGo('#/rankings/trend'+(v==='w'?'?g=w':''));});
   const inp=document.getElementById('kin');
   const addBy=()=>{const n=inp.value.trim();if(!n)return;const k=cand.find(x=>nameOf(x)===n)||cand.find(x=>nameOf(x).includes(n));
     if(k&&!st.p.includes(k)){if(st.p.length>=10)st.p.shift();st.p.push(k);}inp.value='';chips();chart();tables();setLink();};
@@ -1289,9 +1308,9 @@ function pSearch(q){
   <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"><button class="btn pri" id="sgo">검색</button><button class="btn" id="sclr">조건 초기화</button></div>
   <div id="sres"></div>`;
   const $=id=>document.getElementById(id);
-  $('sgo').onclick=e=>{e.preventDefault();const qs=new URLSearchParams();SFIELDS.forEach(f=>{const x=$('s_'+f).value.trim();if(x)qs.set(f,x);});location.hash='#/games/search?'+qs.toString();};
+  $('sgo').onclick=e=>{e.preventDefault();const qs=new URLSearchParams();SFIELDS.forEach(f=>{const x=$('s_'+f).value.trim();if(x)qs.set(f,x);});routeGo('#/games/search?'+qs.toString());};
   $('sf').onsubmit=e=>{e.preventDefault();$('sgo').click();};
-  $('sclr').onclick=()=>location.hash='#/games/search';
+  $('sclr').onclick=()=>routeGo('#/games/search');
   const has=SFIELDS.some(f=>q[f]);
   if(!has){$('sres').innerHTML='<div class="empty">조건을 하나 이상 넣고 검색하세요.</div>';return;}
   const list=s=>s?s.split(',').map(x=>x.trim()).filter(Boolean):[];
@@ -1315,7 +1334,7 @@ function pSearch(q){
   <div class="kpis" style="margin-top:12px"><div class="kpi"><div class="num">${fmt(F.length)}</div><div class="lbl">대국</div></div><div class="kpi"><div class="num">${F.length?(F[F.length-1].y+'–'+F[0].y):'–'}</div><div class="lbl">기간</div></div><div class="kpi"><div class="num">${fmt(ps.size)}</div><div class="lbl">관련 기사</div></div><div class="kpi"><div class="num">${fmt(new Set(F.map(g=>g.g)).size)}</div><div class="lbl">관련 대회</div></div><div class="kpi"><div class="num"><button class="btn" id="scsv">CSV 내려받기</button></div><div class="lbl">조건 기록 포함</div></div></div>
   ${!F.length&&lowcov.length?`<div class="empty">조건에 맞는 대국이 없습니다. ${lowcov.map(([f,p,l])=>`'${l}' 정보는 전체 대국 중 약 ${100-p}%에만 기록되어 있어 나머지는 제외됐습니다. <button class="linkbtn" data-f="${f}">이 조건만 빼기</button>`).join(' ')}</div>`:''}
   <nav class="tabs" id="sv"><a href="javascript:void 0" data-v="list" class="on">목록</a><a href="javascript:void 0" data-v="player">기사별</a><a href="javascript:void 0" data-v="tour">대회별</a><a href="javascript:void 0" data-v="year">연도별</a><a href="javascript:void 0" data-v="stage">단계별</a></nav><div id="sl" style="margin-top:8px"></div>`;
-  $('sres').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const qs=new URLSearchParams();SFIELDS.forEach(f=>{if(q[f]&&f!==b.dataset.f)qs.set(f,q[f]);});location.hash='#/games/search?'+qs;});
+  $('sres').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const qs=new URLSearchParams();SFIELDS.forEach(f=>{if(q[f]&&f!==b.dataset.f)qs.set(f,q[f]);});routeGo('#/games/search?'+qs);});
   const show=vw=>{$('sv').querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.v===vw));const el=$('sl');
     if(vw==='list')return pagedTable(el,F,GAME_HEAD,x=>gameRows(x),50);
     const agg={};const add=(k,w)=>{const o=agg[k]=agg[k]||[0,0,0];o[0]++;if(w===1)o[1]++;else if(w===0)o[2]++;};
@@ -1405,7 +1424,7 @@ function pNews(q){
   const $=id=>document.getElementById(id);
   $('nsrc').onclick=e=>{const b=e.target.closest('button');if(!b)return;st.s=b.dataset.v;st.n=40;$('nsrc').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();};
   let tm;$('nq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{st.q=e.target.value.trim();st.n=40;draw();},200);});
-  $('npx').onclick=()=>{st.p='';$('npw').style.display='none';history.replaceState(null,'','#/news');draw();};
+  $('npx').onclick=()=>{st.p='';$('npw').style.display='none';routeRS('#/news');draw();};
   if(st.p)$('npc').textContent=nameOf(st.p)+' 관련';
   draw();
   function draw(){
@@ -1723,7 +1742,7 @@ function pSeason(y){
     <div class="mod"><div class="hd"><span>최장 연패</span><span class="desc">기사 정보가 있는 기사 · 시즌 안에서만</span></div><div class="bd">${worstS?(()=>{const L2=Object.entries(worst).filter(([k])=>person(k)&&!isNK(k)).map(([k,v])=>[k,v[0],v[1]]).sort((a,b)=>b[1]-a[1]).slice(0,8);return L2.map(([k,n,d])=>`<div class="lb2"><span class="nm">${plink(k)} ${flag((PBY[k]||{}).c)}</span><span class="s">${dstr(d).slice(5)} 도달</span><span class="v">${n}연패</span></div>`).join('');})():'<div class="empty">기록 없음</div>'}</div></div>
   </div>`;
   {const bx=document.getElementById('ys'),on=bx&&bx.querySelector('a.on');if(on)bx.scrollLeft=on.offsetLeft-bx.clientWidth/2;}
-  const ysel=document.getElementById('ysel');if(ysel)ysel.onchange=()=>{location.hash='#/seasons/'+ysel.value;};
+  const ysel=document.getElementById('ysel');if(ysel)ysel.onchange=()=>{routeGo('#/seasons/'+ysel.value);};
   window.scrollTo(0,0);
   document.getElementById('natp').onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#natp button').forEach(x=>x.setAttribute('aria-pressed',x===b));document.getElementById('natb').innerHTML=natHtml(natAgg(b.dataset.v==='1'));};
   /* charts */
@@ -2022,7 +2041,7 @@ function ixYears(el,q){
     return `<td data-k="${esc(r[2])}" title="${esc(e[1]+' 제'+r[0]+'회'+(r[4]?' · 결승 '+dstr(r[4]):'')+(r[5]?' · 준우승 '+nameOf(r[5]):''))}">${ixDot(r[2])}${ixNm(r[2],r[3])}</td>`;}).join('')}</tr>`).join('')}</tbody></table></div>
   <p class="note">점 색은 우승자 국적, 굵은 대회명은 지금도 열리는 대회입니다. 칸에 마우스를 올리면 회차·결승 날짜·준우승자가 보입니다. '기사 강조'로 한 기사의 우승 칸만 진하게 볼 수 있습니다.</p>`;
   const paint=()=>{document.querySelectorAll('#ixg td[data-k]').forEach(td=>td.classList.toggle('on',!!hi&&td.dataset.k===hi));document.getElementById('ixg').classList.toggle('dim',!!hi);};
-  document.getElementById('ixhi').onchange=e=>{hi=e.target.value;paint();history.replaceState(null,'','#/tournaments/intl/years'+(hi?'?p='+encodeURIComponent(hi):''));};
+  document.getElementById('ixhi').onchange=e=>{hi=e.target.value;paint();routeRS('#/tournaments/intl/years'+(hi?'?p='+encodeURIComponent(hi):''));};
   paint();
 }
 
@@ -2185,7 +2204,7 @@ function pDiary(q){
   <div class="fbar">${pillGroup('dr','구분',REGS.map(([v,l])=>[v,l]),st.r)}</div>
   <div id="dy" class="diary"></div><div class="dmore"><button type="button" class="pill" id="dmore">이전 날짜 더 보기</button></div></div>
   <aside class="dside">${schedPeek(true)}<p class="dnote">한국기원 기록실·중국바둑협회·일본·대만 기록을 날짜별·대회별로 모은 대국 일지입니다.</p></aside></div>`;
-  bindPills('dr',v=>{st.r=v;st.n=10;try{history.replaceState(null,'','#/games'+(v==='all'?'':'?r='+v));}catch(_){}draw();});
+  bindPills('dr',v=>{st.r=v;st.n=10;try{routeRS('#/games'+(v==='all'?'':'?r='+v));}catch(_){}draw();});
   document.getElementById('dmore').onclick=()=>{st.n+=10;draw(true);};
   draw();
   function draw(keep){
@@ -2486,7 +2505,7 @@ function pSchedule(q){
         ${lines.length?`<ul>${lines.join('')}${more>0?`<li class="more">+${more}</li>`:''}</ul>`:''}${gs.length?`<i class="cd-bar" style="width:${Math.max(6,Math.round(gs.length/mx*100))}%"></i>`:''}</button>`;}
     const cg=document.getElementById('cgrid');cg.innerHTML=h;
     cg.onclick=e=>{const b=e.target.closest('button.cd[data-d]');if(!b||b.disabled)return;sel=+b.dataset.d;cg.querySelectorAll('.cd.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');side();
-      try{history.replaceState(null,'',`#/games/calendar?y=${y}&m=${m}&d=${sel}${st.r!=='all'?'&r='+st.r:''}&keep=1`);}catch(_){}
+      try{routeRS(`#/games/calendar?y=${y}&m=${m}&d=${sel}${st.r!=='all'?'&r='+st.r:''}&keep=1`);}catch(_){}
       if(window.innerWidth<900)document.getElementById('cside').scrollIntoView({behavior:'smooth',block:'start'});};
     side();
     function side(){
@@ -2532,7 +2551,7 @@ const fxInEra=(e,y)=>e==='all'?true:e==='old'?y<1980:(y>=+e&&y<+e+10);
 const fxCtry=[['all','전체'],['한국','한국'],['중국','중국'],['일본','일본'],['대만','대만']];
 const fxSel=(id,label,opts,cur)=>`<div class="fg"><span class="fl">${label}</span><select class="q" id="${id}" style="min-width:96px">${opts.map(([v,l])=>`<option value="${v}" ${String(cur)===String(v)?'selected':''}>${l}</option>`).join('')}</select></div>`;
 const fxMargin=g=>g.r&&g.r[2]!=null?g.r[2]:null;
-const fxQ=(base,q)=>{const s=new URLSearchParams();Object.entries(q).forEach(([k,v])=>{if(v!=null&&v!==''&&v!=='all')s.set(k,v);});const x=s.toString();history.replaceState(null,'',base+(x?'?'+x:''));};
+const fxQ=(base,q)=>{const s=new URLSearchParams();Object.entries(q).forEach(([k,v])=>{if(v!=null&&v!==''&&v!=='all')s.set(k,v);});const x=s.toString();routeRS(base+(x?'?'+x:''));};
 
 /* ---------- 1) 역대 라이벌 ---------- */
 function fxPairs(){
@@ -2852,7 +2871,7 @@ function pSeasonTL(q){
   <div class="fbar">${fxSel('ty','연도',ys.map(v=>[v,v+'년']),y)}<div class="fg"><span class="fl">이해 최다 우승</span><span>${top.map(([k,n])=>`${plink(k)} <b>${n}</b>`).join(' · ')||'–'}</span></div></div>
   <div class="tw"><table class="fx-tl"><thead><tr><th></th>${[...Array(12).keys()].map(m=>`<th>${m+1}월</th>`).join('')}</tr></thead><tbody>${rows.filter(([c])=>byR[c]).map(([c,l])=>`<tr><th class="lab">${l}<span class="muted small"> ${byR[c].length}</span></th>${[...Array(12).keys()].map(m=>`<td>${byR[c].filter(x=>((x.d/100)|0)%100===m+1).map(x=>`<a class="fx-tc ${gcat[x.g]==='세계기전'?'w':''}" href="#/tournaments/${x.g}" title="${esc(G[x.g]+' '+x.ed+' · '+dstr(x.d))}"><span class="t">${esc(G[x.g])}</span><span class="n">${flag((PBY[x.ck]||{}).c)}${esc(x.ck?nameOf(x.ck):'?')}</span></a>`).join('')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
   ${L.length?'':'<div class="empty">이해에 판정된 우승이 없습니다</div>'}`;
-  document.getElementById('ty').onchange=e=>{location.hash='#/tournaments/timeline?y='+e.target.value;};
+  document.getElementById('ty').onchange=e=>{routeGo('#/tournaments/timeline?y='+e.target.value);};
 }
 
 /* ---------- 12) 홈: 오늘의 바둑사 ---------- */
@@ -2911,8 +2930,8 @@ function pLeague(q){
   app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['리그 시즌']])+`<h1 class="pt">리그 시즌 기록</h1>
   <p class="lede">바둑리그·여자바둑리그·프로기사협회 리그를 시즌별로 모아 개인 성적과 라운드별 결과를 봅니다.</p>${typeof pCnLeague!=='undefined'?'<div class="fxw-go"><b>🇨🇳 중국 리그</b><span class="muted small">갑조·을조·병조·여자 갑조·을조를 리그별·시즌별로 따로 모았습니다.</span><a class="btn" href="#/tournaments/cnleague">중국 리그 보기 →</a></div>':''}
   <div class="fbar">${fxSel('lg','리그',groups.map(x=>[x[0],x[1]+' ('+x[2]+'시즌)']),gid)}${fxSel('ls','시즌',eds.map(o=>[o.ed,o.ed]),E?E.ed:'')}</div><div id="lgb"></div>`;
-  document.getElementById('lg').onchange=e=>{location.hash='#/tournaments/league?l='+e.target.value;};
-  document.getElementById('ls').onchange=e=>{location.hash='#/tournaments/league?l='+gid+'&s='+encodeURIComponent(e.target.value);};
+  document.getElementById('lg').onchange=e=>{routeGo('#/tournaments/league?l='+e.target.value);};
+  document.getElementById('ls').onchange=e=>{routeGo('#/tournaments/league?l='+gid+'&s='+encodeURIComponent(e.target.value));};
   if(!E){document.getElementById('lgb').innerHTML='<div class="empty">리그 기록이 없습니다</div>';return;}
   const S={};E.gs.forEach(g=>{for(const k of [g.wk,g.lk]){const o=S[k]||(S[k]={k,n:0,w:0,l:0,bw:0,bn:0,run:0,best:0,top:null});o.n++;if(g.j)continue;const win=g.wk===k;win?o.w++:o.l++;if(win){o.run++;o.best=Math.max(o.best,o.run);}else o.run=0;
       if(g.r[0]){const my=win?g.r[0]:(g.r[0]===1?2:1);if(my===1){o.bn++;if(win)o.bw++;}}
@@ -2994,13 +3013,13 @@ function pBracket(q){
   let gq=+q.g;if(!grp.some(o=>o.v===gq))gq=((grp.find(o=>o.grp==='세계대회')||grp[0])||{}).v;
   app.innerHTML=crumb([['홈','#/'],['대회','#/tournaments'],['대진표']])+`<h1 class="pt">대진표</h1><p class="lede">토너먼트 단계(64강·32강·16강·8강·4강·결승)별 맞대결을 한 장의 대진으로 그렸습니다. 기사 이름에 마우스를 올리면 그 기사가 지나온 길이 표시됩니다.</p>
   <div class="fbar"><div class="fg"><span class="fl">대회</span><button class="fxp-btn" id="bq"><b>${esc(G[gq]||'대회 고르기')}</b><span>▾ 다른 대회</span></button></div>${gq!=null?`<a class="pl small" href="#/tournaments/${gq}/bracket">이 대회 페이지에서 보기 ›</a>`:''}</div><div id="bw"></div>`;
-  document.getElementById('bq').onclick=()=>fxPickTour(grp,gq,v=>{location.hash='#/tournaments/bracket?g='+v;});
+  document.getElementById('bq').onclick=()=>fxPickTour(grp,gq,v=>{routeGo('#/tournaments/bracket?g='+v);});
   fxBracketView(document.getElementById('bw'),gq,q.e,e=>'#/tournaments/bracket?g='+gq+'&e='+encodeURIComponent(e));
 }
 function fxBracketView(host,gq,qe,hashOf){
   const list=fxBrackets().filter(o=>o.g===gq);const E=list.find(o=>o.ed===qe)||list[0];
   host.innerHTML=`${list.length>1?`<div class="fbar"><div class="fg"><span class="fl">회차</span><select class="q" id="be">${list.map(o=>`<option value="${esc(o.ed)}" ${E&&o.ed===E.ed?'selected':''}>${esc(o.ed)}${o.fin?'':' (진행 중)'}</option>`).join('')}</select></div></div>`:''}<div id="bb"></div>`;
-  const be=host.querySelector('#be');if(be)be.onchange=e=>{location.hash=hashOf(e.target.value);};
+  const be=host.querySelector('#be');if(be)be.onchange=e=>{routeGo(hashOf(e.target.value));};
   if(!E){document.getElementById('bb').innerHTML='<div class="empty">대진 기록이 없습니다</div>';return;}
   // 단계별 맞대결 (번기는 한 칸)
   const st={},sl={};E.gs.forEach(([g,s0])=>{if(s0>64)return;const s=Math.pow(2,Math.ceil(Math.log2(s0)));sl[s]=s0;const a=g.wk<g.lk?g.wk:g.lk,b=a===g.wk?g.lk:g.wk;const r=st[s]||(st[s]={});const o=r[a+'|'+b]||(r[a+'|'+b]={a,b,wa:0,wb:0,gs:[]});o.gs.push(g);if(!g.j){if(g.wk===a)o.wa++;else o.wb++;}});
@@ -3087,7 +3106,7 @@ function pWLeague(q){
   ${fxPanel('역대 시즌','',`<div class="tw"><table><thead><tr><th>시즌</th><th>정규 1위</th><th>우승</th><th>준우승</th><th>다승</th></tr></thead><tbody>${hist.map(h=>`<tr><td><a class="pl" href="#/tournaments/wleague?y=${h[0]}">${h[0]}</a></td><td class="small">${esc(h[1])}</td><td class="small"><b>${esc(h[2]||'–')}</b></td><td class="small">${esc(h[3]||'–')}</td><td class="small">${h[4]?plink(h[4][0])+' '+h[4][1]+'승':'–'}</td></tr>`).join('')}</tbody></table></div>`)}</div>
   ${fxPanel('라운드별 결과','최신 라운드부터',[...rounds.entries()].sort((a,b)=>Math.max(...b[1].map(m=>m[1]))-Math.max(...a[1].map(m=>m[1]))).map(([r,ms])=>`<div class="fx-rd"><div class="fx-rdh"><b>${esc(r)}</b></div>${ms.map(mrow).join('')}</div>`).join(''))}
   <div class="note">순위는 팀 승수, 같으면 개인 승수 득실로 매긴 계산값이라 공식 순위(동률 처리 규정)와 다를 수 있습니다. 출처: 한국여자바둑리그 공식 사이트 · ${esc((W.fetched||'').slice(0,10))} 수집</div>`;
-  document.getElementById('wy').onchange=e=>{location.hash='#/tournaments/wleague?y='+e.target.value;};
+  document.getElementById('wy').onchange=e=>{routeGo('#/tournaments/wleague?y='+e.target.value);};
 }
 function fxKSelection(){
   const K=WLG.k;if(!K||!K.teams||!K.teams.length)return '';
@@ -3178,7 +3197,7 @@ function pSources(){
   <div class="note">원본 사이트의 이용 조건을 지키며, 요청 사이에 쉬는 시간을 두고 받습니다. 원본에 없는 대국은 만들어 넣지 않습니다(대진표의 '中' 표시 칸은 중국바둑협회 기록에서 가져온 실제 대국입니다).</div>`;
 }
 /* =============== fx 끝 =============== */
-function parseHash(){const h=location.hash.replace(/^#\/?/,'');const i=h.indexOf('?');const path=i<0?h:h.slice(0,i),qs=i<0?'':h.slice(i+1);return {parts:path.split('/').filter(Boolean).map(decodeURIComponent),q:Object.fromEntries(new URLSearchParams(qs))};}
+function parseHash(){const h=routeH().replace(/^#\/?/,'');const i=h.indexOf('?');const path=i<0?h:h.slice(0,i),qs=i<0?'':h.slice(i+1);return {parts:path.split('/').filter(Boolean).map(decodeURIComponent),q:Object.fromEntries(new URLSearchParams(qs))};}
 let lastPath='';
 function route(){
   killCharts();
@@ -3190,20 +3209,20 @@ function route(){
     if(r==='home')pHome();
     else if(r==='players'){if(parts[1]==='feed')pFeed(q);else if(parts[1]==='compare')pCompare(q);else if(parts[1])pPlayer(parts[1],parts[2]||'',q);else pPlayers(q);}
     else if(r==='rankings')pRankings(parts[1],q);
-    else if(r==='goratings'){location.replace('#/rankings/goratings'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='goratings'){routeGo('#/rankings/goratings'+(routeH().includes('?')?routeH().slice(routeH().indexOf('?')):''),1);return;}
     else if(r==='tournaments'){if(parts[1]==='cnleague')pCnLeague(q);else if(parts[1]==='wleague')pWLeague(q);else if(parts[1]==='league')pLeague(q);else if(parts[1]==='bracket')pBracket(q);else if(parts[1]==='sim')pSim(q);else if(parts[1]==='timeline')pSeasonTL(q);else if(parts[1]==='grades')pGrades();else if(parts[1]==='intl')pIntl(parts[2],q);else if(['open','women','limited','world','team','jp','cn'].includes(parts[1]))pDom(parts[1],parts[2],q);else if(parts[1]!=null)pTournament(parts[1],parts[2],q);else pTournaments(q);}
     else if(r==='seasons')pSeason(parts[1]);
-    else if(r==='search'){location.replace('#/games/search'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='search'){routeGo('#/games/search'+(routeH().includes('?')?routeH().slice(routeH().indexOf('?')):''),1);return;}
     else if(r==='records'){
       // 예전 기록실(대국 목록) 주소 → 대국 › 대국 목록, 예전 역대 기록 → 기록 › 연속·최다 기록
-      if(parts[1]==='history'){location.replace('#/records/streaks');return;}
-      if(parts[1]==='games'||(!parts[1]&&['y','c','t','p'].some(k=>q[k]!=null))){location.replace('#/games/list'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+      if(parts[1]==='history'){routeGo('#/records/streaks',1);return;}
+      if(parts[1]==='games'||(!parts[1]&&['y','c','t','p'].some(k=>q[k]!=null))){routeGo('#/games/list'+(routeH().includes('?')?routeH().slice(routeH().indexOf('?')):''),1);return;}
       pRecHub(parts[1],q);}
     else if(r==='federations')pFederations();
-    else if(r==='schedule'){location.replace('#/games/calendar'+(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')):''));return;}
+    else if(r==='schedule'){routeGo('#/games/calendar'+(routeH().includes('?')?routeH().slice(routeH().indexOf('?')):''),1);return;}
     else if(r==='games'){if(parts[1]==='g')pGame(parts[2]);else if(parts[1]==='schedule')pUpcoming(q);else if(parts[1]==='japan')pJpGames(q);else if(parts[1]==='calendar')pSchedule(q);else if(parts[1]==='list')pGames(q);else if(parts[1]==='search')pSearch(q);else pDiary(q);}
     else if(r==='news')pNews(q);
-    else if(r==='data'){location.replace('#/');return;}
+    else if(r==='data'){routeGo('#/',1);return;}
     else if(r==='about')pAbout(parts[1]);else if(r==='sources')pSources();
     else if(r==='brand')pBrand();
     else if(r==='overview')pOverview(q);
@@ -3215,7 +3234,7 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 (function(){const mb=document.querySelector('.mbar'),tt=document.getElementById('totop');
-  const mark=()=>{if(!mb)return;const r=(location.hash.replace(/^#\/?/,'').split(/[/?]/)[0])||'home';mb.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.r===r||(r==='compare'&&a.dataset.r==='players')));};
+  const mark=()=>{if(!mb)return;const r=(routeH().replace(/^#\/?/,'').split(/[/?]/)[0])||'home';mb.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.r===r||(r==='compare'&&a.dataset.r==='players')));};
   window.addEventListener('hashchange',mark);mark();
   if(tt){window.addEventListener('scroll',()=>tt.classList.toggle('show',window.scrollY>600),{passive:true});tt.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});}})();
 /* KIFU_V1 기보 버튼 — X.KF: [대국 번호, 출처(i 囲碁棋譜.COM · f 야호 · o 사이버오로), 기보 번호, 묶음 또는 사이버오로 파일] */
