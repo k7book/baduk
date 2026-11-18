@@ -1919,7 +1919,7 @@ const NEWS = [["ggl","20261023","\"AI 로봇과 바둑 한판?\"…충남도서�
 </script>
 <script>
 (function(){
-  var V={"core": "/d/core.56318ccf37.json", "old": "/d/old.1fb523be04.json", "extra": "/d/extra.8feae80112.json", "app": "/d/app.b6497e53d2.js", "g": ["D", "TT", "W", "L", "RR", "OF"], "gb": ["g00.0b6f7433.json", "g01.324d939a.json", "g02.bcc11040.json", "g03.41e10833.json", "g04.2db73218.json", "g05.1ed4df2c.json", "g06.79d6c64e.json", "g07.9f2c8ddd.json", "g08.07d4c7df.json", "g09.dafc2ec2.json", "g10.bd1c1b50.json", "g11.05c21b76.json", "g12.5eaae3ae.json", "g13.54e94fdb.json", "g14.b00fb291.json", "g15.8c76e1dc.json", "g16.475996aa.json", "g17.603594c8.json", "g18.1ab532e8.json", "g19.971fc337.json", "g20.7e6b734d.json", "g21.dcfac45c.json", "g22.6b1340bc.json", "g23.1067d405.json", "g24.f621efa0.json", "g25.7527e52b.json", "g26.9539a9e0.json", "g27.5406574a.json", "g28.c04ba0b4.json", "g29.7670ece6.json", "g30.52a739d6.json", "g31.412c7131.json"]};var app=document.getElementById('app');
+  var V={"core": "/d/core.56318ccf37.json", "old": "/d/old.1fb523be04.json", "extra": "/d/extra.8feae80112.json", "app": "/d/app.681d4b09ab.js", "g": ["D", "TT", "W", "L", "RR", "OF"], "gb": ["g00.0b6f7433.json", "g01.324d939a.json", "g02.bcc11040.json", "g03.41e10833.json", "g04.2db73218.json", "g05.1ed4df2c.json", "g06.79d6c64e.json", "g07.9f2c8ddd.json", "g08.07d4c7df.json", "g09.dafc2ec2.json", "g10.bd1c1b50.json", "g11.05c21b76.json", "g12.5eaae3ae.json", "g13.54e94fdb.json", "g14.b00fb291.json", "g15.8c76e1dc.json", "g16.475996aa.json", "g17.603594c8.json", "g18.1ab532e8.json", "g19.971fc337.json", "g20.7e6b734d.json", "g21.dcfac45c.json", "g22.6b1340bc.json", "g23.1067d405.json", "g24.f621efa0.json", "g25.7527e52b.json", "g26.9539a9e0.json", "g27.5406574a.json", "g28.c04ba0b4.json", "g29.7670ece6.json", "g30.52a739d6.json", "g31.412c7131.json"]};var app=document.getElementById('app');
   // NEWS_EARLY_V1: 최신 뉴스를 자료와 동시에 받기 시작 → 화면 코드가 처음 그릴 때 이미 들어와 있으면 한 번에 그림
   if(location.protocol!=='file:'){try{window.__NEWSP=fetch('/api/news').then(function(r){return r.ok?r.json():null;}).then(function(j){window.__NEWSJ=j;return j;}).catch(function(){return null;});}catch(e){}}
   var pre=app&&app.getAttribute('data-pre')==='1'&&location.pathname==='/';
@@ -1934,16 +1934,18 @@ const NEWS = [["ggl","20261023","\"AI 로봇과 바둑 한판?\"…충남도서�
   document.addEventListener('click',early);
   var j=function(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(u+' '+r.status);return r.json();});};
   var un=function(a){for(var i=1;i<a.length;i++)a[i]+=a[i-1];return a;};
-  window.__GB=V.gb||null;window.__EXTRA=j(V.extra);window.__EXTRA.catch(function(){});
+  // LOAD_ORDER_V1: ① 화면 코드(app)는 자료와 동시에 미리 받아 둠 ② 자주 안 쓰는 extra 는 핵심 자료(core·old)가 온 뒤에 받음
+  try{var pl=document.createElement('link');pl.rel='preload';pl.as='script';pl.href=V.app;document.head.appendChild(pl);}catch(e){}
+  var exGo;window.__GB=V.gb||null;window.__EXTRA=new Promise(function(res,rej){exGo=function(){j(V.extra).then(res,rej);};});window.__EXTRA.catch(function(){});
   Promise.all([j(V.core),j(V.old)]).then(function(r){
-    var c=r[0],o=r[1];un(c.D);un(o.D);
+    exGo();var c=r[0],o=r[1];un(c.D);un(o.D);
     V.g.forEach(function(k){if(o[k]&&c[k])c[k]=o[k].concat(c[k]);});
     window.DATA=c;var s=document.createElement('script');s.src=V.app;
     s.onerror=function(){if(app)app.innerHTML='<div class="bootld">화면 코드를 불러오지 못했습니다. 새로고침해 주세요.</div>';};
     s.onload=function(){window.__APPREADY=1;document.removeEventListener('click',early);};
     var go=function(){document.body.appendChild(s);};   // Chart.js(defer)가 먼저 준비되도록 문서 읽기가 끝난 뒤 실행
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
-  }).catch(function(e){if(app)app.innerHTML='<div class="bootld">기록을 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.<br><small>'+String(e&&e.message||e)+'</small></div>';});
+  }).catch(function(e){try{exGo();}catch(x){}if(app)app.innerHTML='<div class="bootld">기록을 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.<br><small>'+String(e&&e.message||e)+'</small></div>';});
 })();
 </script>
 

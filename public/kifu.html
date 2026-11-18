@@ -62,7 +62,7 @@
   .gline h1{ font-size:13.5px; font-weight:500; color:var(--ink-muted); margin:0; letter-spacing:0; line-height:1.5; }
   .gfacts{ display:inline-flex; flex-wrap:wrap; gap:2px 12px; color:var(--ink-muted); margin-left:auto; }
   .gfacts b{ color:var(--ink); font-weight:700; }
-  .av{ position:relative; width:64px; height:80px; border-radius:4px; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:24px; color:var(--ink); flex:none; overflow:visible; }
+  .av{ position:relative; width:84px; height:105px; border-radius:4px; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:24px; color:var(--ink); flex:none; overflow:visible; }
   .av img{ width:100%; height:100%; object-fit:cover; object-position:50% 20%; border-radius:4px; display:block; }
   .av .ini{ line-height:1; }
   .av .st{ position:absolute; right:-5px; bottom:-5px; width:18px !important; height:18px !important; border:2px solid var(--surface); box-sizing:content-box; }
@@ -76,6 +76,7 @@
   .layout{ display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:24px; margin-top:18px; align-items:start; }
   .colL,.colR{ display:flex; flex-direction:column; gap:14px; min-width:0; }
   .colR{ position:sticky; top:12px; }
+  .colR .nav{ max-width:none; width:100%; margin:0; }
 
   .board-box{ width:100%; max-width:max(340px, calc(100vh - 400px)); margin-inline:auto; }
   .record-frame{ border:6px solid var(--accent); background:var(--board); position:relative; }
@@ -116,7 +117,7 @@
 
   /* 대국자 */
   .players{ display:grid; gap:8px; }
-  .pl{ display:grid; grid-template-columns:64px 1fr auto; gap:10px; align-items:center; padding:11px 12px; background:var(--surface); border-left:4px solid transparent; }
+  .pl{ display:grid; grid-template-columns:84px 1fr auto; gap:10px; align-items:center; padding:11px 12px; background:var(--surface); border-left:4px solid transparent; }
   .pl.turn{ border-left-color:var(--accent); }
   .pl .st{ width:26px; height:26px; border-radius:50%; }
   .pl .st.b{ background:var(--stone-b); box-shadow:0 0 0 1.5px var(--ink-faint); }
@@ -211,8 +212,14 @@
     .layout{ flex:1; min-height:0; margin-top:10px; grid-template-columns:minmax(0,1fr) minmax(300px,360px); gap:18px; align-items:stretch; }
     .colL{ min-height:0; align-items:center; gap:8px; }
     .colR{ position:static; min-height:0; overflow-y:auto; padding-right:4px; gap:12px; }
-    .board-box,.nav{ width:min(100%, calc(100vh - 250px)); max-width:none; margin-inline:0; }
-    html.embed .board-box, html.embed .nav{ width:min(100%, calc(100vh - 212px)); }
+    .board-box{ width:min(100%, calc(100vh - 128px)); max-width:none; margin-inline:0; }
+    html.embed .board-box{ width:min(100%, calc(100vh - 92px)); }
+    .colR .nav{ width:100%; max-width:none; margin:0; }
+    .colR .navrow{ flex-wrap:wrap; row-gap:8px; }
+    .colR .cnt{ order:1; } .colR .mvnow{ order:2; margin-left:auto; min-width:0; }
+    .colR .btns{ order:3; width:100%; margin:0; gap:4px; }
+    .colR .btns button{ flex:1; width:auto; height:38px; } .colR .btns button.play{ flex:1.4; }
+    .colR .opts label.muted{ display:none; } .colR .opts .chip{ padding:3px 8px; }
     .record-tag{ padding:3px 9px 2px; font-size:10.5px; }
     .nav{ padding:7px 12px 8px; }
     .tl{ height:20px; } .tl input[type=range]{ height:20px; }
@@ -226,11 +233,11 @@
     #helpBtn{ display:none; }
     .colL,.colR{ display:contents; }
     .players{ order:1; grid-template-columns:1fr 1fr; }
-    .pl{ grid-template-columns:40px 1fr auto; padding:8px 10px; gap:8px; }
-    .av{ width:40px; height:50px; font-size:16px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
+    .pl{ grid-template-columns:48px 1fr auto; padding:8px 10px; gap:8px; }
+    .av{ width:48px; height:60px; font-size:16px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
     .res{ order:2; }
     .board-box{ order:3; max-width:none; }
-    .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px; width:auto; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
+    .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px !important; width:auto !important; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
     .tabsbox{ order:5; }
     .btns button{ width:44px; height:44px; } .btns button.play{ width:56px; }
     .cnt{ min-width:0; } .cnt b{ font-size:18px; } .mvnow{ display:none; }
@@ -265,6 +272,14 @@
         <span class="sr" id="boardStatus" aria-live="polite"></span>
       </section>
 
+    </div>
+
+    <div class="colR">
+      <div class="players">
+        <div class="pl" id="plB"><span class="av" id="avB"><span class="ini">흑</span><span class="st b"></span></span><div><div class="nm"><span id="nameB">—</span><span id="tagB"></span></div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
+        <div class="pl" id="plW"><span class="av" id="avW"><span class="ini">백</span><span class="st w"></span></span><div><div class="nm"><span id="nameW">—</span><span id="tagW"></span></div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
+      </div>
+
       <section class="nav" aria-label="수 이동">
         <div class="tl"><div class="ticks" id="ticks" aria-hidden="true"></div><input type="range" id="slider" min="0" max="0" value="0" aria-label="수 이동"></div>
         <div class="navrow">
@@ -286,17 +301,9 @@
           <label class="chip"><input type="checkbox" id="tNext">다음 수 보기</label>
           <span class="sp"></span>
           <label class="muted" for="speed">재생 속도</label>
-          <select id="speed"><option value="1200">느리게</option><option value="650" selected>보통</option><option value="300">빠르게</option></select>
+          <select id="speed" title="재생 속도" aria-label="재생 속도"><option value="1200">느리게</option><option value="650" selected>보통</option><option value="300">빠르게</option></select>
         </div>
       </section>
-    </div>
-
-    <div class="colR">
-      <div class="players">
-        <div class="pl" id="plB"><span class="av" id="avB"><span class="ini">흑</span><span class="st b"></span></span><div><div class="nm"><span id="nameB">—</span><span id="tagB"></span></div><div class="sub" id="subB"></div></div><div class="cap">따낸 돌<span class="num" id="capB">0</span></div></div>
-        <div class="pl" id="plW"><span class="av" id="avW"><span class="ini">백</span><span class="st w"></span></span><div><div class="nm"><span id="nameW">—</span><span id="tagW"></span></div><div class="sub" id="subW"></div></div><div class="cap">따낸 돌<span class="num" id="capW">0</span></div></div>
-      </div>
-
       <div class="tabsbox">
         <section class="box">
           <h2 class="bh">해설<span class="badge" id="cmCount"></span></h2>
