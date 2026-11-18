@@ -196,6 +196,9 @@
   .toast[hidden]{ display:none; }
 
 
+  /* 레이어(사이트 안에서 연 기보): 맨 위 막대 숨김 */
+  html.embed .topbar{ display:none; }
+  html.embed header.game{ padding-right:28px; }
   /* FIT_V1: 팝업(약 1200×880)에서 바둑판·조작부가 스크롤 없이 한 화면에 — 오른쪽 칸만 따로 스크롤 */
   @media (min-width:921px){
     html,body{ height:100%; overflow:hidden; }
@@ -207,6 +210,7 @@
     .colL{ min-height:0; align-items:center; gap:8px; }
     .colR{ position:static; min-height:0; overflow-y:auto; padding-right:4px; gap:12px; }
     .board-box,.nav{ width:min(100%, calc(100vh - 250px)); max-width:none; margin-inline:0; }
+    html.embed .board-box, html.embed .nav{ width:min(100%, calc(100vh - 212px)); }
     .record-tag{ padding:3px 9px 2px; font-size:10.5px; }
     .nav{ padding:7px 12px 8px; }
     .tl{ height:20px; } .tl input[type=range]{ height:20px; }
@@ -235,6 +239,7 @@
   </style>
 </head>
 <body>
+<script>(function(){var q=new URLSearchParams(location.search);if(q.get('embed')==='1')document.documentElement.classList.add('embed');var t=q.get('th');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;})();</script>
 <div class="wrap">
   <div class="topbar">
     <span><a class="brand" href="/">바둑DB</a> · 기보 뷰어</span>
@@ -732,6 +737,7 @@ $('helpClose').onclick = () => { help.hidden = true; $('helpBtn').focus(); };
 help.addEventListener('click', e => { if (e.target === help) { help.hidden = true; } });
 document.addEventListener('keydown', e => {
   if (!help.hidden) { if (e.key === 'Escape') { help.hidden = true; $('helpBtn').focus(); } return; }
+  if (e.key === 'Escape' && document.documentElement.classList.contains('embed')) { try { parent.postMessage('kifu-close', location.origin); } catch (x) {} return; }
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const k = e.key, step = e.shiftKey ? 10 : 1;
@@ -785,8 +791,7 @@ syncThemeBtn();
       black: q.get('b') || '', blackSub: '',
       white: q.get('w') || '', whiteSub: '',
       bRes: q.get('bs') || '', wRes: q.get('ws') || '',
-      source: '<b>기보 출처</b> — ' + (SRC[1] ? '<a href="' + SRC[1] + '" target="_blank" rel="noopener">' + esc(SRC[0]) + '</a>' : esc(SRC[0])) +
-        '에 공개된 SGF의 본선 수순만 보여줍니다(변화도·해설 제외). 대국 정보(대회·날짜·기사)는 이 사이트의 대국 기록(한국기원 기록실 기준)에서 가져왔고, 흑백·덤·결과 표기는 기보 파일을 따릅니다.'
+      source: ''
     });
     document.title = (q.get('t') || '기보') + ' · 기보 뷰어';
   }).catch(err => {
