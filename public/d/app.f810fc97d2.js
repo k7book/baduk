@@ -1382,6 +1382,11 @@ const NWZ='bk_news_v1';
 let NEWS_PENDING=false,NEWS_FB=null;
 (function(){
   if(location.protocol==='file:')return;
+  // NEWS_EARLY_V1: 로더가 자료와 함께 미리 받아 둔 최신 뉴스가 있으면 그것으로 바로 그림(다시 그리기 없음)
+  const J=window.__NEWSJ;
+  if(J&&Array.isArray(J.items)&&J.items.length){NEWSL.length=0;J.items.forEach(x=>NEWSL.push(nMap(x)));newsIndex();if(J.meta&&J.meta.updated)NEWS_UPD=J.meta.updated;
+    try{localStorage.setItem(NWZ,JSON.stringify({at:Date.now(),items:J.items,meta:J.meta?{updated:J.meta.updated}:{}}));}catch(e){}
+    window.__NEWSUSED=1;return;}
   let c=null;try{c=JSON.parse(localStorage.getItem(NWZ)||'null');}catch(e){}
   if(c&&Array.isArray(c.items)&&c.items.length){
     const L=c.items.map(nMap);
@@ -1395,8 +1400,9 @@ function loadLiveNews(){
   if(location.protocol==='file:')return;
   const sig=()=>NEWSL.slice(0,16).map(n=>n.u+n.d).join('|');
   const done=()=>{if(NEWS_PENDING){NEWS_PENDING=false;if(NEWS_FB){NEWSL.length=0;NEWS_FB.items.forEach(x=>NEWSL.push(nMap(x)));newsIndex();if(NEWS_FB.meta&&NEWS_FB.meta.updated)NEWS_UPD=NEWS_FB.meta.updated;}newsRedraw();}};
+  if(window.__NEWSUSED)return;   // 이미 최신 뉴스로 그림
   setTimeout(done,6000);
-  fetch('/api/news').then(r=>r.ok?r.json():null).then(j=>{
+  (window.__NEWSP||fetch('/api/news').then(r=>r.ok?r.json():null)).then(j=>{
     if(!j||!Array.isArray(j.items)||!j.items.length){done();return;}
     try{localStorage.setItem(NWZ,JSON.stringify({at:Date.now(),items:j.items,meta:j.meta?{updated:j.meta.updated}:{}}));}catch(e){}
     const was=NEWS_PENDING,before=sig();
