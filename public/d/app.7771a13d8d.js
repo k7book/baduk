@@ -319,13 +319,19 @@ function homeFill(){
   const e3=document.querySelector('.e3');if(!e3)return;
   e3.classList.remove('bal');e3.querySelectorAll('.efill>.xf.on').forEach(x=>x.classList.remove('on'));
   // HOME_ALIGN_V1: 넓은 화면에서 '바로 가기'와 뉴스 묶음의 높이를 맞춰 다음 칸(실력 점수 순위·타이틀 보유자)이 같은 줄에서 시작
-  const QL=e3.querySelector('.e3-l>.ec:first-child'),QN=e3.querySelector('.e3-c>.enews');
+  const QL=e3.querySelector('.e3-l>.ec:first-child'),QN=e3.querySelector('.e3-c>.enews'),QR=e3.querySelector('.e3-r>.ec:first-child');
   if(QL)QL.style.minHeight='';if(QN)QN.style.minHeight='';
+  if(QR){QR.style.minHeight='';QR.querySelectorAll('li.xh').forEach(x=>x.classList.remove('xh'));QR.querySelectorAll('.efill>.xf.on').forEach(x=>x.classList.remove('on'));}
   const cols=[...e3.children];if(getComputedStyle(e3).gridTemplateColumns.split(' ').length<3)return;
   if(QL&&QN){const lh=QL.getBoundingClientRect().height,nh=QN.getBoundingClientRect().height;if(lh<nh-1)QL.style.minHeight=nh+'px';else if(nh<lh-1)QN.style.minHeight=lh+'px';}
+  // 헤드라인(오른쪽 첫 칸)도 같은 높이: 넘치면 아래 제목부터 숨기고, 모자라면 높이만 맞춤
+  if(QR&&(QL||QN)){const T=Math.max(QL?QL.getBoundingClientRect().height:0,QN?QN.getBoundingClientRect().height:0);const lis=[...QR.querySelectorAll('.ehn>li')];const H=()=>QR.getBoundingClientRect().height;
+    lis.forEach(li=>{if(li.classList.contains('xf'))li.classList.add('on');});
+    for(let i=lis.length-1;i>0&&H()>T+1;i--)lis[i].classList.add('xh');
+    if(H()<T-1)QR.style.minHeight=T+'px';}
   const nat=c=>[...c.children].reduce((h,x,i)=>h+x.getBoundingClientRect().height+(i?16:0),0);
   const target=Math.max(...cols.map(nat));
-  for(const c of cols){for(const li of c.querySelectorAll('.efill>.xf')){li.classList.add('on');if(nat(c)>target+2){li.classList.remove('on');break;}}}
+  for(const c of cols){for(const li of c.querySelectorAll('.efill>.xf')){if(QR&&QR.contains(li))continue;li.classList.add('on');if(nat(c)>target+2){li.classList.remove('on');break;}}}
   e3.classList.add('bal');
 }
 {let t;window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(homeFill,150);});window.addEventListener('load',homeFill);}
@@ -3269,6 +3275,7 @@ function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]
   q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);q.set('g',G[g.g]);q.set('d',dstr(g.d));
   const col=r[4]||(g.r&&g.r[0]);const bk=col===1?g.wk:col===2?g.lk:null,wk=col===1?g.lk:col===2?g.wk:null;
   if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);{const pb=PBY[bk],pw=PBY[wk];if(pb&&pb.ph){q.set('bp',pb.ph);if(pb.ph0)q.set('bp0',pb.ph0);}if(pw&&pw.ph){q.set('wp',pw.ph);if(pw.ph0)q.set('wp0',pw.ph0);}if(pb&&pb.c)q.set('bc',pb.c);if(pw&&pw.c)q.set('wc',pw.c);}if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
+  {const rs=resText(g).replace(/^\d+수 /,'').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&');if(rs)q.set('rs',rs);}
   return '/kifu.html?'+q.toString();}
 /* KIFU_LAYER_V1: 기보 뷰어를 새 창 대신 화면 위 레이어(주소창 없음)로 엶 — 닫기: ×, 바깥 누르기, Esc */
 let KFL=null,KFL_RET=null;

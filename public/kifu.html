@@ -535,8 +535,23 @@ try { const p = JSON.parse(localStorage.getItem(PREF) || '{}'); if (p.nums != nu
 const savePref = () => { try { localStorage.setItem(PREF, JSON.stringify({ nums: S.showNums, coords: S.showCoords, next: S.showNext, speed: $('speed').value })); } catch (e) {} };
 $('tNums').checked = S.showNums; $('tCoords').checked = S.showCoords; $('tNext').checked = S.showNext;
 
+function cjkResult(re){
+  const s0 = String(re).trim(); if (!/[぀-ヿ一-鿿]/.test(s0)) return null;
+  const who = /^(黑|黒)/.test(s0) ? '흑' : /^白/.test(s0) ? '백' : '';
+  if (/(和棋|持碁|ジゴ|无胜负|無勝負)/.test(s0)) return '무승부';
+  if (/(中押|中盘|中盤|认输|認輸|投了)/.test(s0)) return (who || '') + ' 불계승';
+  if (/(时间|時間|超时|超時|切れ)/.test(s0)) return (who || '') + ' 시간승';
+  if (/(反则|反則|犯规|犯規)/.test(s0)) return (who || '') + ' 반칙승';
+  if (/半目/.test(s0) && !/\d/.test(s0)) return who + ' 반집승';
+  let m = /(\d+)\s*目半/.exec(s0); if (m) return who + ' ' + m[1] + '집반승';
+  m = /(\d+(?:\.\d+)?)\s*目/.exec(s0); if (m) return who + ' ' + m[1] + '집승';
+  m = /(\d+)\s*又\s*(\d+)\s*\/\s*(\d+)\s*子/.exec(s0); if (m) { const z = +m[1] + m[2] / m[3]; return who + ' ' + (z * 2).toString() + '집승'; }
+  m = /(\d+(?:\.\d+)?)\s*(子|点|點)/.exec(s0); if (m) return who + ' ' + (m[2] === '子' ? +m[1] * 2 : m[1]) + '집승';
+  return who ? who + ' 승' : '결과 기록(외국어)';
+}
 function resultText(re){
   if (!re) return '기록 없음';
+  { const k = cjkResult(re); if (k) return k.trim(); }
   const m = /^([BW])\+(.*)$/i.exec(re.trim());
   if (!m) { if (/^(0|draw|jigo)$/i.test(re.trim())) return '무승부'; if (re.trim() === 'Void') return '무효'; if (re.trim() === '?') return '미상'; return re; }
   const who = m[1].toUpperCase() === 'B' ? '흑' : '백', r = m[2].trim();
@@ -569,7 +584,7 @@ function loadGame(text, display){
   $('tagB').innerHTML = tag(wb); $('tagW').innerHTML = tag(ww);
   const total = g.states[g.states.length - 1].moveNo;
   const meta = [], dl = [];
-  if (first('RE')) dl.push(['결과', esc(resultText(first('RE')))]);
+  if (d.res || first('RE')) dl.push(['결과', esc(d.res || resultText(first('RE')))]);
   dl.push(['판', '<span class="num">' + g.size + '×' + g.size + '</span>']);
   const RUK = { japanese: '일본 규칙', chinese: '중국 규칙', korean: '한국 규칙', aga: '미국(AGA) 규칙', ing: '응씨 규칙', 'new zealand': '뉴질랜드 규칙', nz: '뉴질랜드 규칙', jp: '일본 규칙', cn: '중국 규칙', kr: '한국 규칙' };
   const ru = (first('RU') || '').trim(); if (ru) { const k = RUK[ru.toLowerCase()]; if (k) dl.push(['규칙', k]); else if (/^[\x20-\x7E가-힣\s()·.,-]+$/.test(ru)) dl.push(['규칙', esc(ru)]); }
@@ -583,7 +598,8 @@ function loadGame(text, display){
   $('gdate').hidden = !dt;
   if (dt) $('gdate').innerHTML = dm ? '<span class="num">' + dm[1] + '.' + dm[2].padStart(2, '0') + '.' + dm[3].padStart(2, '0') + '</span><small>(' + '일월화수목금토'[new Date(+dm[1], +dm[2] - 1, +dm[3]).getDay()] + ')</small>' : '<span class="num">' + esc(dt) + '</span>';
   const strip = [];
-  strip.push('결과 <b>' + (res ? esc(resultText(res)) : '기록 없음') + '</b>');
+  const resK = d.res || (res ? resultText(res) : '기록 없음');
+  strip.push('결과 <b>' + esc(resK) + '</b>');
   strip.push('<b class="num">' + total + '</b>수');
   strip.push('덤 <b class="num">' + esc(first('KM') || '—') + '</b>');
   if (first('HA') && first('HA') !== '0') strip.push('치석 <b class="num">' + esc(first('HA')) + '</b>');
@@ -700,8 +716,8 @@ function render(){
   const nextCol = mv ? 3 - mv.col : 1;
   $('plB').classList.toggle('turn', S.idx < total && nextCol === 1);
   $('plW').classList.toggle('turn', S.idx < total && nextCol === 2);
-  const cm = st.comment && st.comment.trim();
-  $('comment').textContent = cm || (st.moveNo ? st.moveNo + '수에 붙은 해설이 없습니다.' : '이 국면에 붙은 해설이 없습니다.');
+  const cm0 = st.comment && st.comment.trim(), cm = cm0 && isKo(cm0) ? cm0 : '';
+  $('comment').textContent = cm || (cm0 ? '이 수의 해설은 외국어 원문이라 보여 주지 않습니다.' : st.moveNo ? st.moveNo + '수에 붙은 해설이 없습니다.' : '이 국면에 붙은 해설이 없습니다.');
   $('comment').classList.toggle('empty', !cm);
   const sl = $('slider'); sl.value = S.idx; sl.style.setProperty('--p', (total ? S.idx / total * 100 : 0) + '%');
   sl.setAttribute('aria-valuetext', st.moveNo + '수');
@@ -714,15 +730,16 @@ function buildTicks(){
   const g = S.game, total = g.states.length - 1, out = [];
   g.states.forEach((st, i) => {
     if (!total) return; const left = (i / total * 100).toFixed(2) + '%';
-    if (st.comment && st.comment.trim() && i) out.push('<i style="left:' + left + '"></i>');
+    if (st.comment && st.comment.trim() && i && isKo(st.comment)) out.push('<i style="left:' + left + '"></i>');
     if (st.captured && st.captured.length >= 3) out.push('<i class="cap" style="left:' + left + '"></i>');
   });
   $('ticks').innerHTML = out.join('');
 }
+function isKo(t){ return /[가-힣]/.test(t) || !/[\u3040-\u30ff\u4e00-\u9fff]/.test(t); }
 function buildComments(){
-  const g = S.game, items = [];
-  g.states.forEach((st, i) => { const c = st.comment && st.comment.trim(); if (c && i) items.push('<button type="button" data-i="' + i + '"><span class="num">' + st.moveNo + '수</span><span>' + esc(c.length > 60 ? c.slice(0, 60) + '…' : c) + '</span></button>'); });
-  $('clist').innerHTML = items.length ? items.join('') : '<div class="muted">이 기보에는 해설이 없습니다.</div>';
+  const g = S.game, items = []; let hid = 0;
+  g.states.forEach((st, i) => { const c = st.comment && st.comment.trim(); if (c && i && !isKo(c)) { hid++; return; } if (c && i) items.push('<button type="button" data-i="' + i + '"><span class="num">' + st.moveNo + '수</span><span>' + esc(c.length > 60 ? c.slice(0, 60) + '…' : c) + '</span></button>'); });
+  $('clist').innerHTML = (items.length ? items.join('') : '<div class="muted">이 기보에는 한국어 해설이 없습니다.</div>') + (hid ? '<div class="muted">외국어 원문 해설 ' + hid + '개는 감췄습니다.</div>' : '');
   $('cmCount').textContent = items.length || '';
 }
 
@@ -816,7 +833,7 @@ syncThemeBtn();
       title: q.get('t') || '', eyebrow: q.get('g') || ((q.get('e') || '').split(' · ').slice(1).join(' · ')) || q.get('e') || '',
       event: q.get('g') || ((q.get('e') || '').split(' · ').slice(1).join(' · ')) || '',
       date: q.get('d') || ((q.get('e') || '').split(' · ')[0] || '').replace(/\./g, '-'),
-      bKey: q.get('bk') || '', wKey: q.get('wk') || '',
+      bKey: q.get('bk') || '', wKey: q.get('wk') || '', res: q.get('rs') || '',
       bPh: q.get('bp') || '', bPh0: q.get('bp0') || '', wPh: q.get('wp') || '', wPh0: q.get('wp0') || '',
       bSub: q.get('bc') || '', wSub: q.get('wc') || '',
       black: q.get('b') || '', blackSub: '',
