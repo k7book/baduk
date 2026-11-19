@@ -283,8 +283,8 @@ function pHome(){
       ${bday.length?card('오늘 생일','','<ul class="ehl">'+bday.slice(0,8).map(p=>`<li>${plink(p.k)} <span class="s">${p.b.slice(0,4)}년생 · 만 ${ageNow(p.b)}세</span></li>`).join('')+'</ul>'):''}
     </aside>
     <div class="e3-c">
-      ${NEWS_PENDING?nSkel(420,0):''}${lead&&!NEWS_PENDING?`<article class="etop">${nlink(lead,`<span class="img">${nImg(lead)}<span class="eph">${NSRC[lead.s][0]}</span></span>`,'eimg')}<div class="tx"><div class="meta">${nsBadge(lead.s)}<span>${dstr(lead.d).replace(/-/g,'.')}</span></div><h2>${nlink(lead,esc(nTitle(lead).t))}</h2>${lead.sm?`<p>${esc(lead.sm)}</p>`:''}</div></article>`:''}
-      ${subs.length&&!NEWS_PENDING?`<div class="esubs">${subs.map(n=>nlink(n,`<span class="img">${nImg(n)}<span class="eph">${NSRC[n.s][0]}</span></span><span class="meta">${nsBadge(n.s)}<span>${nWhen(n.d)}</span></span><b>${esc(nTitle(n).t)}</b>`,'esub')).join('')}</div>`:''}
+      <div class="enews">${NEWS_PENDING?nSkel(420,0):''}${lead&&!NEWS_PENDING?`<article class="etop">${nlink(lead,`<span class="img">${nImg(lead)}<span class="eph">${NSRC[lead.s][0]}</span></span>`,'eimg')}<div class="tx"><div class="meta">${nsBadge(lead.s)}<span>${dstr(lead.d).replace(/-/g,'.')}</span></div><h2>${nlink(lead,esc(nTitle(lead).t))}</h2>${lead.sm?`<p>${esc(lead.sm)}</p>`:''}</div></article>`:''}
+      ${subs.length&&!NEWS_PENDING?`<div class="esubs">${subs.map(n=>nlink(n,`<span class="img">${nImg(n)}<span class="eph">${NSRC[n.s][0]}</span></span><span class="meta">${nsBadge(n.s)}<span>${nWhen(n.d)}</span></span><b>${esc(nTitle(n).t)}</b>`,'esub')).join('')}</div>`:''}</div>
       ${homeHolders(card)}
       ${card(`${yr} 우승`,'#/tournaments','<div class="ech">'+(yChamps.length?yChamps.map(c=>`<a class="echc" href="#/tournaments/${c.g}"><span class="t">${esc(G[c.g])}</span><span class="ed">${esc(c.ed)} · ${dstr(c.d).slice(5).replace('-','.')}</span><span class="w">${flag((PBY[c.ck]||{}).c)} ${esc(nameOf(c.ck))}</span></a>`).join(''):'<div class="empty">올해 판정된 우승이 아직 없습니다</div>')+'</div>','대회 전체')}
       ${card(`${yr} 시즌 다승`,'#/seasons/'+yr,`<div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div><p class="efoot">${yr}년 10국 이상 · 무승부·무효 제외</p>`,'시즌 전체')}
@@ -318,7 +318,11 @@ function homeHolders(card){
 function homeFill(){
   const e3=document.querySelector('.e3');if(!e3)return;
   e3.classList.remove('bal');e3.querySelectorAll('.efill>.xf.on').forEach(x=>x.classList.remove('on'));
+  // HOME_ALIGN_V1: 넓은 화면에서 '바로 가기'와 뉴스 묶음의 높이를 맞춰 다음 칸(실력 점수 순위·타이틀 보유자)이 같은 줄에서 시작
+  const QL=e3.querySelector('.e3-l>.ec:first-child'),QN=e3.querySelector('.e3-c>.enews');
+  if(QL)QL.style.minHeight='';if(QN)QN.style.minHeight='';
   const cols=[...e3.children];if(getComputedStyle(e3).gridTemplateColumns.split(' ').length<3)return;
+  if(QL&&QN){const lh=QL.getBoundingClientRect().height,nh=QN.getBoundingClientRect().height;if(lh<nh-1)QL.style.minHeight=nh+'px';else if(nh<lh-1)QN.style.minHeight=lh+'px';}
   const nat=c=>[...c.children].reduce((h,x,i)=>h+x.getBoundingClientRect().height+(i?16:0),0);
   const target=Math.max(...cols.map(nat));
   for(const c of cols){for(const li of c.querySelectorAll('.efill>.xf')){li.classList.add('on');if(nat(c)>target+2){li.classList.remove('on');break;}}}

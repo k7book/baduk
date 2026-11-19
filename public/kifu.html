@@ -114,6 +114,10 @@
   .chip:has(input:focus-visible){ outline:3px solid var(--accent); outline-offset:2px; }
   .opts select{ border:1px solid var(--rule-soft); background:var(--bg); color:var(--ink-muted); font-size:12.5px; padding:3px 6px; }
   .opts .sp{ flex:1; }
+  .pgrp{ display:inline-flex; align-items:center; gap:6px; margin-left:auto; }
+  .playbtn{ display:inline-flex; align-items:center; gap:5px; border:1px solid var(--ink); background:var(--bg); color:var(--ink); padding:3px 10px; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .playbtn svg.i{ width:13px; height:13px; }
+  .playbtn[aria-pressed=true]{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
 
   /* 대국자 */
   .players{ display:grid; gap:8px; }
@@ -218,7 +222,7 @@
     .colR .navrow{ flex-wrap:wrap; row-gap:8px; }
     .colR .cnt{ order:1; } .colR .mvnow{ order:2; margin-left:auto; min-width:0; }
     .colR .btns{ order:3; width:100%; margin:0; gap:4px; }
-    .colR .btns button{ flex:1; width:auto; height:38px; } .colR .btns button.play{ flex:1.4; }
+    .colR .btns button{ flex:1; width:auto; height:38px; }
     .colR .opts label.muted{ display:none; } .colR .opts .chip{ padding:3px 8px; }
     .record-tag{ padding:3px 9px 2px; font-size:10.5px; }
     .nav{ padding:7px 12px 8px; }
@@ -239,7 +243,7 @@
     .board-box{ order:3; max-width:none; }
     .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px !important; width:auto !important; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
     .tabsbox{ order:5; }
-    .btns button{ width:44px; height:44px; } .btns button.play{ width:56px; }
+    .btns button{ width:44px; height:44px; } 
     .cnt{ min-width:0; } .cnt b{ font-size:18px; } .mvnow{ display:none; }
     .lgrid{ grid-template-columns:1fr; }
   }
@@ -288,7 +292,6 @@
             <button type="button" id="bFirst" title="처음 (Home · ↑)" aria-label="처음"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14"/><path d="M18 6l-8 6 8 6z"/></svg></button>
             <button type="button" id="bBack10" class="opt10" title="10수 뒤로 (Shift+←)" aria-label="10수 뒤로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l-7 6 7 6z"/><path d="M20 6l-7 6 7 6z"/></svg></button>
             <button type="button" id="bPrev" title="한 수 뒤로 (←)" aria-label="한 수 뒤로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-            <button type="button" id="bPlay" class="play" title="자동 재생 (Space)" aria-label="자동 재생" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg></button>
             <button type="button" id="bNext" title="한 수 앞으로 (→)" aria-label="한 수 앞으로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
             <button type="button" id="bFwd10" class="opt10" title="10수 앞으로 (Shift+→)" aria-label="10수 앞으로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l7 6-7 6z"/><path d="M12 6l7 6-7 6z"/></svg></button>
             <button type="button" id="bLast" title="마지막 (End · ↓)" aria-label="마지막"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14"/><path d="M6 6l8 6-8 6z"/></svg></button>
@@ -300,8 +303,11 @@
           <label class="chip"><input type="checkbox" id="tCoords" checked>좌표</label>
           <label class="chip"><input type="checkbox" id="tNext">다음 수 보기</label>
           <span class="sp"></span>
-          <label class="muted" for="speed">재생 속도</label>
-          <select id="speed" title="재생 속도" aria-label="재생 속도"><option value="1200">느리게</option><option value="650" selected>보통</option><option value="300">빠르게</option></select>
+          <span class="pgrp">
+          <button type="button" id="bPlay" class="playbtn" title="자동 재생 (Space)" aria-pressed="false"><span id="playIc"></span><span id="playLab">자동 재생</span></button>
+            <label class="muted" for="speed">재생 속도</label>
+            <select id="speed" title="재생 속도" aria-label="재생 속도"><option value="1200">느리게</option><option value="650" selected>보통</option><option value="300">빠르게</option></select>
+          </span>
         </div>
       </section>
       <div class="tabsbox">
@@ -563,14 +569,13 @@ function loadGame(text, display){
   $('tagB').innerHTML = tag(wb); $('tagW').innerHTML = tag(ww);
   const total = g.states[g.states.length - 1].moveNo;
   const meta = [], dl = [];
-  if (first('EV') && first('EV') !== d.event) dl.push(['대회명(원본)', esc(first('EV'))]);
-  if (first('PB') && first('PB') !== d.black) dl.push(['흑(원본)', esc(first('PB')) + (first('BR') ? ' · ' + esc(first('BR')) : '')]);
-  if (first('PW') && first('PW') !== d.white) dl.push(['백(원본)', esc(first('PW')) + (first('WR') ? ' · ' + esc(first('WR')) : '')]);
-  if (first('DT') && d.date && first('DT') !== d.date) dl.push(['날짜(원본)', '<span class="num">' + esc(first('DT')) + '</span>']);
-  if (first('RE')) dl.push(['결과(원본)', '<span class="num">' + esc(first('RE')) + '</span>']);
+  if (first('RE')) dl.push(['결과', esc(resultText(first('RE')))]);
   dl.push(['판', '<span class="num">' + g.size + '×' + g.size + '</span>']);
-  if (first('RU')) dl.push(['규칙', esc(first('RU'))]);
-  if (first('PC')) dl.push(['장소', esc(first('PC'))]);
+  const RUK = { japanese: '일본 규칙', chinese: '중국 규칙', korean: '한국 규칙', aga: '미국(AGA) 규칙', ing: '응씨 규칙', 'new zealand': '뉴질랜드 규칙', nz: '뉴질랜드 규칙', jp: '일본 규칙', cn: '중국 규칙', kr: '한국 규칙' };
+  const ru = (first('RU') || '').trim(); if (ru) { const k = RUK[ru.toLowerCase()]; if (k) dl.push(['규칙', k]); else if (/^[\x20-\x7E가-힣\s()·.,-]+$/.test(ru)) dl.push(['규칙', esc(ru)]); }
+  if (first('KM')) dl.push(['덤', '<span class="num">' + esc(first('KM')) + '</span>집']);
+  if (first('TM')) { const tm = parseInt(first('TM'), 10); if (tm > 0) dl.push(['제한 시간', '각자 ' + (tm >= 3600 ? Math.floor(tm / 3600) + '시간' + (tm % 3600 ? ' ' + Math.round(tm % 3600 / 60) + '분' : '') : Math.round(tm / 60) + '분')]); }
+  if (first('PC') && /^[\x20-\x7E가-힣\s()·.,-]+$/.test(first('PC'))) dl.push(['장소', esc(first('PC'))]);   // 한글·영문 표기만(중국어·일본어 원문은 뺌)
   // 맨 위 한 줄: 대국일 · 기전 · 대국 · 결과 · 수 · 덤
   const dt = d.date || first('DT');
   const ymd = s0 => /^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/.exec(s0 || '');
@@ -722,14 +727,15 @@ function buildComments(){
 }
 
 function go(i){ const max = S.game.states.length - 1; S.idx = Math.max(0, Math.min(max, i)); render(); }
-function stopPlay(){ if (S.timer) { clearInterval(S.timer); S.timer = null; } const b = $('bPlay'); b.innerHTML = IC_PLAY; b.setAttribute('aria-pressed', 'false'); b.title = '자동 재생 (Space)'; }
+function stopPlay(){ if (S.timer) { clearInterval(S.timer); S.timer = null; } const b = $('bPlay'); $('playIc').innerHTML = IC_PLAY; $('playLab').textContent = '자동 재생'; b.setAttribute('aria-pressed', 'false'); b.title = '자동 재생 (Space)'; }
 function startPlay(){
   stopPlay();
   if (S.idx >= S.game.states.length - 1) go(0);
-  const b = $('bPlay'); b.innerHTML = IC_PAUSE; b.setAttribute('aria-pressed', 'true'); b.title = '멈춤 (Space)';
+  const b = $('bPlay'); $('playIc').innerHTML = IC_PAUSE; $('playLab').textContent = '멈춤'; b.setAttribute('aria-pressed', 'true'); b.title = '멈춤 (Space)';
   S.timer = setInterval(() => { if (S.idx >= S.game.states.length - 1) { stopPlay(); return; } go(S.idx + 1); }, +$('speed').value || 650);
 }
 const togglePlay = () => S.timer ? stopPlay() : startPlay();
+$('playIc').innerHTML = IC_PLAY;
 
 $('bFirst').onclick = () => { stopPlay(); go(0); };
 $('bBack10').onclick = () => { stopPlay(); go(S.idx - 10); };
