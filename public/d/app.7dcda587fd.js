@@ -262,7 +262,7 @@ function pHome(){
   // 뉴스: 사진 있는 기사 → 톱 기사 1 + 작은 기사 3, 나머지는 헤드라인
   const pic=[],seen=new Set();
   for(const n of NEWSL){if(n.s==='ggl'||!n.img)continue;if(seen.has(n.s)&&pic.length<3)continue;seen.add(n.s);pic.push(n);if(pic.length>=4)break;}
-  const recentG=GK.filter(g=>!g.j).slice(-40).reverse();
+  const recentG=GK.filter(g=>!g.j).slice(-40).reverse();HKG=new Map(recentG.map(g=>[g.i,g]));
   const heads=NEWSL.filter(n=>!pic.includes(n)).slice(0,30);
   const xf=(i,base)=>i>=base?' class="xf"':'';
   const grRows=(typeof GR!=='undefined'&&GR&&GR.rows)?GR.rows.slice(0,50):[];
@@ -288,7 +288,7 @@ function pHome(){
       ${homeHolders(card)}
       ${card(`${yr} 우승`,'#/tournaments','<div class="ech">'+(yChamps.length?yChamps.map(c=>`<a class="echc" href="#/tournaments/${c.g}"><span class="t">${esc(G[c.g])}</span><span class="ed">${esc(c.ed)} · ${dstr(c.d).slice(5).replace('-','.')}</span><span class="w">${flag((PBY[c.ck]||{}).c)} ${esc(nameOf(c.ck))}</span></a>`).join(''):'<div class="empty">올해 판정된 우승이 아직 없습니다</div>')+'</div>','대회 전체')}
       ${card(`${yr} 시즌 다승`,'#/seasons/'+yr,`<div class="tw"><table class="hseason"><thead><tr><th class="c">순위</th><th>기사</th><th class="r">대국</th><th class="r">승</th><th class="r">패</th><th class="r">승률</th><th>흐름</th><th class="r">실력 점수</th></tr></thead><tbody>${season.map((x,i)=>{const s=ws(x.k);return `<tr><td class="n c">${i+1}</td><td><span class="pfl">${flag((PBY[x.k]||{}).c)||'<i></i>'}</span>${plink(x.k)}</td><td class="n r">${x.n}</td><td class="n r"><b>${x.w}</b></td><td class="n r">${x.l}</td><td class="n r">${(x.p*100).toFixed(1)}%</td><td>${x.cur[1]?`<span class="${x.cur[0]==='연승'?'rw':'rl'}">${x.cur[1]}${x.cur[0]}</span>`:''}</td><td class="n r">${s?fmt(s[0]):dash}</td></tr>`;}).join('')}</tbody></table></div><p class="efoot">${yr}년 10국 이상 · 무승부·무효 제외</p>`,'시즌 전체')}
-      ${card('최근 대국','#/games','<ul class="egm efill">'+recentG.map((g,i)=>`<li${xf(i,6)}><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="t" title="${esc(T[g.ti])}">${esc(T[g.ti])}</span><span class="p">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><em>승</em><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="r">${resText(g).replace(/^\d+수 /,"")}</span></li>`).join('')+'</ul>','대국 목록')}
+      ${card('최근 대국','#/games','<ul class="egm efill">'+recentG.map((g,i)=>`<li${xf(i,6)}><span class="d">${dstr(g.d).slice(5).replace('-','.')}</span><span class="t" title="${esc(T[g.ti])}">${esc(T[g.ti])}</span><span class="p">${stone(g)||'<span class="stone none"></span>'}<a href="#/players/${encodeURIComponent(g.wk)}">${esc(nameOf(g.wk))}</a><em>승</em><a class="l" href="#/players/${encodeURIComponent(g.lk)}">${esc(nameOf(g.lk))}</a></span><span class="r">${resText(g).replace(/^\d+수 /,"")}</span><span class="k" data-g="${g.i}">${kfBtn(g)}</span></li>`).join('')+'</ul>','대국 목록')}
     </div>
     <aside class="e3-r">
       ${NEWS_PENDING?card('헤드라인','#/news',nSkel(300,8),'뉴스 전체'):heads.length?card('헤드라인','#/news','<ul class="ehl ehn efill">'+heads.map((n,i)=>`<li${xf(i,8)}>${nlink(n,esc(nTitle(n).t))}</li>`).join('')+'</ul>','뉴스 전체'):''}
@@ -3308,8 +3308,9 @@ function kfBtn(g,big){if(!g)return '';const r=kfOf(g.i);if(!r)return '';const c=
   return `<a class="${c}" href="${esc(kfUrl(g,r))}" target="_blank" rel="noopener" title="기보 보기" aria-label="기보 보기">${KFI}${big?'<span>기보 보기</span>':''}</a>`;}
 /* 자주 안 쓰는 데이터(로더가 받음) — 도착하면 X 에 채우고 지금 화면을 다시 그림 */
 let EXTRA_OK=!window.__EXTRA;
+/* HOME_KIFU_V1: 홈은 다시 그리지 않고 최근 대국의 기보 버튼만 채움 */var HKG=null;function homeKf(){if(!HKG)return;document.querySelectorAll('.egm .k[data-g]').forEach(s=>{if(s.firstChild)return;const g=HKG.get(+s.dataset.g);if(g)s.innerHTML=kfBtn(g);});}
 if(window.__EXTRA)window.__EXTRA.then(ex=>{for(const k in ex){const v=ex[k],o=X[k];if(o&&v&&typeof o==='object'&&typeof v==='object'&&!Array.isArray(o)&&!Array.isArray(v))Object.assign(o,v);else X[k]=v;}
-  KRH=X.KRH||null;CNR=X.CNR||null;KFM=null;if(typeof FX!=='undefined'){delete FX.cn;delete FX.br;delete FX.bs;}EXTRA_OK=true;if((parseHash().parts[0]||'home')!=='home')route();})
+  KRH=X.KRH||null;CNR=X.CNR||null;KFM=null;if(typeof FX!=='undefined'){delete FX.cn;delete FX.br;delete FX.bs;}EXTRA_OK=true;if((parseHash().parts[0]||'home')!=='home')route();else homeKf();})
   .catch(()=>{EXTRA_OK=true;route();});
 document.getElementById('dl').textContent=`바둑DB · 기준일 ${dstr(LASTD).replace(/-/g,'.')} · 대국 ${fmt(GAMES.length)} · 기사 정보 ${fmt(P.length)} · ${YEARS[0]}년부터`;
 route();
