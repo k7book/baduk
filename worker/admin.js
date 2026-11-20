@@ -112,12 +112,7 @@ td.d{white-space:nowrap;color:var(--mute);font-variant-numeric:tabular-nums}td.t
 <main class="wrap">
 <h2>수집 현황</h2><div class="grid" id="cards"><div class="card muted">불러오는 중…</div></div>
 <h2>할 일</h2><div class="card" style="padding:0"><ul class="todo" id="todo"></ul></div>
-<h2 style="display:flex;align-items:center;gap:10px">뉴스 관리 <span class="muted" style="font-size:13px;font-weight:400" id="ncnt"></span><span style="flex:1"></span><button class="btn pri" id="refresh">지금 뉴스 수집</button></h2>
-<div class="bar"><input type="search" id="q" placeholder="제목·언론사 검색"><select id="fs"><option value="">모든 출처</option><option value="oro">사이버오로</option><option value="tyg">타이젬</option><option value="han">한게임바둑</option><option value="ggl">언론 뉴스</option></select>
-<label><input type="checkbox" id="fh"> 숨긴 것만</label><label><input type="checkbox" id="fp"> 고정한 것만</label></div>
-<table><thead><tr><th class="d">날짜</th><th>기사</th><th style="text-align:right">관리</th></tr></thead><tbody id="tb"></tbody></table>
-<div class="more"><button class="btn" id="more">더 보기</button></div>
-<p class="muted" style="font-size:12.5px;margin-bottom:40px">숨기기·고정·기사 이름 고치기는 사이트 뉴스에 바로 적용됩니다(방문자 화면은 길어야 5분 뒤). 기사 이름은 쉼표로 구분해 적습니다. 예: 신진서, 박정환</p>
+<h2 style="display:flex;align-items:center;gap:10px">뉴스 수집<span style="flex:1"></span><button class="btn pri" id="refresh">지금 뉴스 수집</button></h2><div style="margin-bottom:40px"></div>
 </main><div class="msg" id="msg"></div>
 <script>
 const SRC={oro:'사이버오로',tyg:'타이젬',han:'한게임바둑',ggl:'언론 뉴스'};
@@ -168,29 +163,7 @@ async function loadStatus(){
     card('사이트 파일',esc(si.built||'–'),si.players?Number(si.players).toLocaleString()+'명 기사 정보':'');
   $('todo').innerHTML=todo.length?todo.map(t=>'<li><span>•</span><span>'+t+'</span></li>').join(''):'<li><span>✓</span><span>밀린 일이 없습니다.</span></li>';
 }
-let N={items:[],ovr:{hide:{},pin:{},tags:{}},names:{}},LIM=60,OPEN='';
-async function loadNews(){N=await api('/api/admin/news');N.ovr.hide=N.ovr.hide||{};N.ovr.pin=N.ovr.pin||{};N.ovr.tags=N.ovr.tags||{};draw();}
-function draw(){
-  const q=$('q').value.trim(),fs=$('fs').value,fh=$('fh').checked,fp=$('fp').checked,O=N.ovr;
-  let L=N.items.filter(x=>(!fs||x[0]===fs)&&(!q||(x[2]+' '+x[3]).includes(q))&&(!fh||O.hide[x[4]])&&(!fp||O.pin[x[4]]));
-  L=L.filter(x=>O.pin[x[4]]).concat(L.filter(x=>!O.pin[x[4]]));
-  $('ncnt').textContent=L.length.toLocaleString()+'건';
-  $('tb').innerHTML=L.slice(0,LIM).map((x,i)=>{const u=x[4],h=!!O.hide[u],p=!!O.pin[u];const tg=O.tags[u]||x[6]||[];
-    return '<tr class="'+(h?'hid ':'')+(p?'pin':'')+'" data-u="'+esc(u)+'"><td class="d">'+ymd(x[1])+'</td><td class="t"><span class="sb">'+SRC[x[0]]+'</span> '+(x[0]==='ggl'&&x[3]?'<span class="muted" style="font-size:12px">'+esc(x[3])+'</span> ':'')+'<br><a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x[2])+'</a>'+
-    '<div class="tags">'+tg.map(k=>'<span>'+esc(N.names[k]||k)+'</span>').join('')+(O.tags[u]?'<span style="background:transparent;color:var(--mute)">(고침)</span>':'')+'</div>'+
-    (OPEN===u?'<div class="ed"><input id="edv" value="'+esc(tg.map(k=>N.names[k]||k).join(', '))+'" placeholder="기사 이름, 쉼표로"><button class="btn" data-a="save" style="height:30px">저장</button><button class="btn" data-a="reset" style="height:30px">원래대로</button></div>':'')+
-    '</td><td class="act"><button data-a="pin" class="'+(p?'on':'')+'">'+(p?'고정됨':'고정')+'</button><button data-a="hide" class="'+(h?'on':'')+'">'+(h?'숨김':'숨기기')+'</button><button data-a="tag">기사 이름</button></td></tr>';}).join('')||'<tr><td colspan="3" class="muted">해당하는 뉴스가 없습니다</td></tr>';
-  $('more').style.display=L.length>LIM?'':'none';
-}
-$('tb').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const u=b.closest('tr').dataset.u,a=b.dataset.a,O=N.ovr;
-  if(a==='tag'){OPEN=OPEN===u?'':u;draw();const v=$('edv');if(v)v.focus();return;}
-  let body={u};if(a==='pin')body.pin=!O.pin[u];if(a==='hide')body.hide=!O.hide[u];if(a==='save')body.tags=$('edv').value;if(a==='reset')body.tags=null;
-  b.disabled=true;const r=await api('/api/admin/news/set',body);b.disabled=false;
-  if(!r.ok){toast(r.error||'실패');return;}N.ovr=r.ovr;Object.assign(N.names,r.names||{});if(a==='save'||a==='reset')OPEN='';draw();
-  toast(a==='pin'?(body.pin?'맨 위에 고정했습니다':'고정을 풀었습니다'):a==='hide'?(body.hide?'사이트에서 숨겼습니다':'다시 보이게 했습니다'):(r.unknown&&r.unknown.length?'모르는 이름: '+r.unknown.join(', '):'기사 이름을 저장했습니다'));};
-['q','fs','fh','fp'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',()=>{LIM=60;draw();}));
-$('more').onclick=()=>{LIM+=60;draw();};
-$('reload').onclick=()=>{loadStatus();loadNews();};
-$('refresh').onclick=async()=>{const b=$('refresh');b.disabled=true;b.textContent='수집 중…';try{const r=await api('/api/admin/refresh',{});toast('수집 완료 — 새 기사 '+((r.meta||{}).added??0)+'건');}catch(e){toast('수집 실패');}b.disabled=false;b.textContent='지금 뉴스 수집';loadStatus();loadNews();};
-loadStatus().catch(()=>toast('현황을 불러오지 못했습니다'));loadNews().catch(()=>toast('뉴스를 불러오지 못했습니다'));
+$('reload').onclick=()=>{loadStatus();};
+$('refresh').onclick=async()=>{const b=$('refresh');b.disabled=true;b.textContent='수집 중…';try{const r=await api('/api/admin/refresh',{});toast('수집 완료 — 새 기사 '+((r.meta||{}).added??0)+'건');}catch(e){toast('수집 실패');}b.disabled=false;b.textContent='지금 뉴스 수집';loadStatus();};
+loadStatus().catch(()=>toast('현황을 불러오지 못했습니다'));
 </script><script src="/admin/pc.js"></script></body></html>`;
