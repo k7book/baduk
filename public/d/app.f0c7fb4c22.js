@@ -2841,7 +2841,7 @@ function fxRecentTour(k,gs){
   const lastLoss=L.filter(g=>!g.j&&g.lk===k).pop();
   const res=won?'🏆 우승':run?'준우승':lastLoss&&lastLoss===L[L.length-1]?'탈락 — '+esc((T[lastLoss.ti].replace(ed,'').replace(G[lg.g],'').trim())||'')+'':'진행 중';
   const title=(ed?ed+' ':'')+G[lg.g];
-  return fxPanel(`가장 최근 대회 · <a class="pl" href="#/tournaments/${lg.g}">${esc(title)}</a>`,esc(res),`<div class="tw"><table><thead><tr><th>날짜</th><th>단계</th><th>상대</th><th class="c">결과</th><th>내용</th></tr></thead><tbody>${L.slice().reverse().map(g=>{const o=g.wk===k?g.lk:g.wk;const st=T[g.ti].replace(ed,'').replace(G[lg.g],'').trim()||T[g.ti];return `<tr><td class="d">${dstr(g.d)}</td><td class="small">${esc(st)}</td><td>${pf(o)}</td><td class="c">${g.j?'<span class="mv">무</span>':g.wk===k?'<span class="mv up">승</span>':'<span class="mv dn">패</span>'}</td><td class="small">${stone(g)}${resText(g)}</td></tr>`;}).join('')}</tbody></table></div>`);
+  return fxPanel(`가장 최근 대회 · <a class="pl" href="#/tournaments/${lg.g}">${esc(title)}</a>`,esc(res),`<div class="tw"><table><thead><tr><th>날짜</th><th>단계</th><th>상대</th><th class="c">결과</th><th>내용</th><th class="c">기보</th></tr></thead><tbody>${L.slice().reverse().map(g=>{const o=g.wk===k?g.lk:g.wk;const st=T[g.ti].replace(ed,'').replace(G[lg.g],'').trim()||T[g.ti];return `<tr><td class="d">${dstr(g.d)}</td><td class="small">${esc(st)}</td><td>${pf(o)}</td><td class="c">${g.j?'<span class="mv">무</span>':g.wk===k?'<span class="mv up">승</span>':'<span class="mv dn">패</span>'}</td><td class="small">${stone(g)}${resText(g)}</td><td class="c">${kfBtn(g)}</td></tr>`;}).join('')}</tbody></table></div>`);
 }
 function fxTeacher(){
   if(FX.tc)return FX.tc;const byN={};P.forEach(p=>{[p.n,p.dn,p.n0].filter(Boolean).forEach(n=>{const z=n.replace(/\(.*?\)/g,'').replace(/\s/g,'');(byN[z]=byN[z]||[]).push(p.k);});});
@@ -3296,7 +3296,11 @@ function kfOf(i){if(!KFM){if(!X.KF)return null;KFM=new Map();for(const r of X.KF
 function kfUrl(g,r){const q=new URLSearchParams();q.set('s',r[1]);q.set('c',r[3]);q.set('r',r[2]);
   q.set('t',T[g.ti]);q.set('e',dstr(g.d).replace(/-/g,'.')+' · '+G[g.g]);q.set('g',G[g.g]);q.set('d',dstr(g.d));
   const col=r[4]||(g.r&&g.r[0]);const bk=col===1?g.wk:col===2?g.lk:null,wk=col===1?g.lk:col===2?g.wk:null;
-  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);{const pb=PBY[bk],pw=PBY[wk];if(pb&&pb.ph){q.set('bp',pb.ph);if(pb.ph0)q.set('bp0',pb.ph0);}if(pw&&pw.ph){q.set('wp',pw.ph);if(pw.ph0)q.set('wp0',pw.ph0);}if(pb&&pb.c)q.set('bc',pb.c);if(pw&&pw.c)q.set('wc',pw.c);}if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}}
+  if(bk){q.set('b',nameOf(bk));q.set('w',nameOf(wk));q.set('bk',bk);q.set('wk',wk);{const pb=PBY[bk],pw=PBY[wk];if(pb&&pb.ph){q.set('bp',pb.ph);if(pb.ph0)q.set('bp0',pb.ph0);}if(pw&&pw.ph){q.set('wp',pw.ph);if(pw.ph0)q.set('wp0',pw.ph0);}if(pb&&pb.c)q.set('bc',pb.c);if(pw&&pw.c)q.set('wc',pw.c);}if(!g.j){q.set('bs',bk===g.wk?'승':'패');q.set('ws',wk===g.wk?'승':'패');}
+    /* H2H_V1: 기보 뷰어 '두 기사' 칸 — 상대전적·최근 맞대결·기록 */
+    {const ms=(BYK[bk]||[]).filter(x=>!x.j&&((x.wk===bk&&x.lk===wk)||(x.wk===wk&&x.lk===bk)));let a=0,b=0;for(const x of ms){if(x.wk===bk)a++;else b++;}q.set('h2',a+'-'+b);
+     q.set('hl',ms.slice(-6).reverse().map(x=>x.d+'~'+(x.wk===bk?'b':'w')+'~'+String(G[x.g]||'').replace(/[~|]/g,' ')).join('|'));
+     const fx=k=>{const c=rec(k),o=[`통산 ${c.w}승 ${c.l}패`];const yr=(LASTD/10000)|0;const ys=(BYK[k]||[]).filter(x=>x.y===yr);if(ys.length){const y=cntRec(ys,k);o.push(`${yr}년 ${y.w}승 ${y.l}패`);}const t=(CHB[k]||[]).length;if(t)o.push(`우승 ${t}회`);const s=ws(k);if(s)o.push(`실력 점수 ${fmt(s[0])}`);return o.join('|');};q.set('bx',fx(bk));q.set('wx',fx(wk));}}
   {const rs=resText(g).replace(/^\d+수 /,'').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&');if(rs)q.set('rs',rs);}
   return '/kifu.html?'+q.toString();}
 /* KIFU_LAYER_V1: 기보 뷰어를 새 창 대신 화면 위 레이어(주소창 없음)로 엶 — 닫기: ×, 바깥 누르기, Esc */
@@ -3322,7 +3326,10 @@ function kfLayer(h){
   if(KFL._center)KFL._center();KFL.hidden=false;document.documentElement.style.overflow='hidden';
   setTimeout(()=>{try{KFL.querySelector('iframe').focus();}catch(e){}},50);}
 function kfOpen(a){const h=a.getAttribute('href')||'';if(!h.startsWith('/kifu.html'))return true;KFL_RET=a;kfLayer(h);return false;}
-document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a.kfb');if(!a||a.classList.contains('oro')||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;if(kfOpen(a)===false)e.preventDefault();});
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a.kfb');if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;
+  /* ORO_POPUP_V1: 사이버오로 기보는 사이버오로가 쓰는 크기(860×630) 새 창으로 */
+  if(a.classList.contains('oro')){const h=a.getAttribute('href')||'';if(/cyberoro\.com\/gibo\/gibo_view/.test(h)){e.preventDefault();const w=window.open(h,'oro_gibo','toolbar=no,location=no,status=no,scrollbars=no,menubar=no,resizable=yes,width=860,height=630');if(w)w.focus();else location.href=h;}return;}
+  if(kfOpen(a)===false)e.preventDefault();});
 /* KIFU_ICON */const KFI='<svg class="kfi" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 2v12M10.5 2v12M2 5.5h12M2 10.5h12" stroke="currentColor" stroke-width=".8"/><circle cx="10.5" cy="5.5" r="2.2" fill="currentColor"/><circle cx="5.5" cy="10.5" r="2.1" fill="var(--card)" stroke="currentColor" stroke-width="1"/></svg>';
 function kfBtn(g,big){if(!g)return '';const r=kfOf(g.i);if(!r)return '';const c='kfb'+(big?' kfg':'')+(r[1]==='o'?' oro':'');
   if(r[1]==='g')return `<a class="kfb${big?' kfg':''} oro" href="https://go4go.net/go/games/sgfview/${esc(r[2])}" target="_blank" rel="noopener" title="Go4Go에서 기보 보기 (새 창)" aria-label="Go4Go에서 기보 보기 (새 창)">${KFI}${big?'<span>Go4Go에서 기보 보기</span>':''}</a>`;

@@ -54,18 +54,18 @@
   .ghostbtn svg.i{ width:14px; height:14px; }
 
   header.game{ padding:10px 0 10px; border-bottom:1px solid var(--rule-soft); }
-  .gline{ display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; font-size:13.5px; }
+  .gline{ display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; font-size:15px; }   /* KV_CLEAR_V1: 제목 크게 */
   .gdate[hidden]{ display:none; }
-  .gdate{ display:inline-flex; align-items:baseline; gap:4px; background:var(--accent); color:var(--accent-ink); font-weight:800; padding:1px 8px; font-size:13px; align-self:center; }
+  .gdate{ display:inline-flex; align-items:baseline; gap:4px; background:var(--accent); color:var(--accent-ink); font-weight:800; padding:2px 9px; font-size:14px; align-self:center; }
   .gdate small{ font-weight:600; font-size:11.5px; }
-  .gname{ font-weight:800; color:var(--ink); }
-  .gline h1{ font-size:13.5px; font-weight:500; color:var(--ink-muted); margin:0; letter-spacing:0; line-height:1.5; }
+  .gname{ font-weight:800; color:var(--ink); font-size:20px; letter-spacing:-.01em; }
+  .gline h1{ font-size:17px; font-weight:600; color:var(--ink); margin:0; letter-spacing:0; line-height:1.45; }
   .gfacts{ display:inline-flex; flex-wrap:wrap; gap:2px 12px; color:var(--ink-muted); margin-left:auto; }
   .gfacts b{ color:var(--ink); font-weight:700; }
   .av{ position:relative; width:84px; height:105px; border-radius:4px; background:var(--surface-3); display:grid; place-items:center; font-weight:900; font-size:24px; color:var(--ink); flex:none; overflow:visible; }
   .av img{ width:100%; height:100%; object-fit:cover; object-position:50% 20%; border-radius:4px; display:block; }
   .av .ini{ line-height:1; }
-  .av .st{ position:absolute; right:-5px; bottom:-5px; width:18px !important; height:18px !important; border:2px solid var(--surface); box-sizing:content-box; }
+  .av .st{ position:absolute; right:-7px; bottom:-7px; width:24px !important; height:24px !important; border:2px solid var(--surface); box-sizing:content-box; }
   .pl a.nml{ color:inherit; text-decoration:none; } .pl a.nml:hover{ text-decoration:underline; }
   .eyebrow{ font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--ink-muted); }
   h1{ font-weight:900; font-size:clamp(20px,2.6vw,28px); letter-spacing:-.02em; line-height:1.2; margin:6px 0 0; text-wrap:balance; }
@@ -124,8 +124,8 @@
   .pl{ display:grid; grid-template-columns:84px 1fr auto; gap:10px; align-items:center; padding:11px 12px; background:var(--surface); border-left:4px solid transparent; }
   .pl.turn{ border-left-color:var(--accent); }
   .pl .st{ width:26px; height:26px; border-radius:50%; }
-  .pl .st.b{ background:var(--stone-b); box-shadow:0 0 0 1.5px var(--ink-faint); }
-  .pl .st.w{ background:var(--stone-w); box-shadow:inset 0 0 0 1.5px var(--stone-w-edge); }
+  .pl .st.b{ background:var(--stone-b); box-shadow:0 0 0 1.5px var(--ink-muted), inset -3px -3px 5px rgba(255,255,255,.18); }
+  .pl .st.w{ background:#FFFFFF; box-shadow:inset 0 0 0 2.5px #111111, 0 0 0 1.5px var(--ink-muted); }
   .pl .nm{ font-weight:800; font-size:16px; line-height:1.25; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
   .pl .sub{ font-size:12px; color:var(--ink-muted); }
   .pl .cap{ text-align:right; font-size:11px; color:var(--ink-muted); line-height:1.2; }
@@ -143,6 +143,25 @@
   .tabs button:focus-visible{ outline:3px solid var(--accent); }
   .tabs .badge{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-left:4px; font-weight:500; }
   .box{ margin-bottom:16px; }
+  .flag{ display:inline-flex; vertical-align:-2px; line-height:0; margin-right:6px; } .flag svg{ width:21px; height:14px; border-radius:2px; box-shadow:0 0 0 1px rgba(0,0,0,.2); }
+  .stn{ display:inline-block; width:13px; height:13px; border-radius:50%; vertical-align:-1px; } .stn.b{ background:#111; box-shadow:0 0 0 1px var(--ink-muted); } .stn.w{ background:#fff; box-shadow:inset 0 0 0 2px #111; }
+  /* H2H_V1: 해설 대신 두 기사 상대전적·최근 맞대결·기록 */
+  .h2h .hrow{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:10px; font-size:13px; }
+  .h2h .hrow .nb{ text-align:left; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .h2h .hrow .nw{ text-align:right; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .h2h .hs{ font-family:var(--font-mono); font-size:20px; font-weight:800; letter-spacing:.02em; }
+  .h2h .bar{ display:flex; height:6px; margin:6px 0 2px; background:var(--rule-soft); overflow:hidden; border-radius:3px; }
+  .h2h .bar i{ display:block; height:100%; background:var(--ink); }
+  .h2h .bar i+i{ background:var(--ink-faint); }
+  .h2h .cap{ font-size:11.5px; color:var(--ink-faint); text-align:center; margin-bottom:10px; }
+  .h2h h3{ font-size:12px; font-weight:800; color:var(--ink-muted); margin:12px 0 4px; }
+  .h2h ul{ list-style:none; margin:0; padding:0; font-size:12.5px; }
+  .h2h li{ display:grid; grid-template-columns:72px minmax(0,1fr) auto; gap:8px; padding:4px 0; border-bottom:1px solid var(--rule-soft); }
+  .h2h li .t{ color:var(--ink-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .h2h li .d{ font-family:var(--font-mono); color:var(--ink-faint); }
+  .h2h li.now{ font-weight:700; }
+  .h2h .facts{ display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; color:var(--ink-muted); line-height:1.6; }
+  .h2h .facts b{ color:var(--ink); display:block; font-size:12.5px; margin-bottom:2px; }
   .bh{ font-size:13px; font-weight:800; margin:0 0 8px; padding-bottom:6px; border-bottom:1px solid var(--rule); }
   .bh .badge{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-left:6px; font-weight:500; }
   .pane{ padding-top:10px; }
@@ -238,7 +257,7 @@
     .colL,.colR{ display:contents; }
     .players{ order:1; grid-template-columns:1fr 1fr; }
     .pl{ grid-template-columns:48px 1fr auto; padding:8px 10px; gap:8px; }
-    .av{ width:48px; height:60px; font-size:16px; } .av .st{ width:12px !important; height:12px !important; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
+    .av{ width:48px; height:60px; font-size:16px; } .av .st{ width:17px !important; height:17px !important; right:-5px; bottom:-5px; } #nameB,#nameW{ white-space:nowrap; } .flag{ margin-right:4px; } .flag svg{ width:16px; height:11px; } .pl .nm{ font-size:14px; } .pl .sub{ display:none; } .pl .cap .num{ font-size:16px; }
     .res{ order:2; }
     .board-box{ order:3; max-width:none; }
     .nav{ order:4; position:sticky; bottom:0; z-index:5; max-width:none; margin-inline:-12px !important; width:auto !important; border-top:1px solid var(--rule); padding:8px 12px calc(8px + env(safe-area-inset-bottom)); }
@@ -311,7 +330,11 @@
         </div>
       </section>
       <div class="tabsbox">
-        <section class="box">
+        <section class="box" id="h2hBox" hidden>
+          <h2 class="bh">두 기사</h2>
+          <div class="h2h" id="h2h"></div>
+        </section>
+        <section class="box" hidden>
           <h2 class="bh">해설<span class="badge" id="cmCount"></span></h2>
           <div class="comment empty" id="comment">이 수에 붙은 해설이 없습니다.</div>
           <div class="clist" id="clist"></div>
@@ -623,16 +646,45 @@ function loadGame(text, display){
   setAv('avB', nmB, d.bPh || QP.get('bp'), d.bPh0 || QP.get('bp0')); setAv('avW', nmW, d.wPh || QP.get('wp'), d.wPh0 || QP.get('wp0'));
   $('subB').textContent = d.bSub || $('subB').textContent; $('subW').textContent = d.wSub || $('subW').textContent;
   const lk = (k, n) => k ? '<a class="nml" href="/players/' + encodeURIComponent(k) + '" target="_blank" rel="noopener" title="기사 페이지 열기">' + esc(n) + '</a>' : esc(n);
-  $('nameB').innerHTML = lk(d.bKey, nmB); $('nameW').innerHTML = lk(d.wKey, nmW);
+  $('nameB').innerHTML = flagH(QP.get('bc')) + lk(d.bKey, nmB); $('nameW').innerHTML = flagH(QP.get('wc')) + lk(d.wKey, nmW);
   $('infoDl').innerHTML = dl.map(([a, b]) => '<dt>' + a + '</dt><dd>' + b + '</dd>').join('');
   $('source').innerHTML = d.source != null ? d.source : ('불러온 SGF를 이 화면에서 직접 해석했습니다. 원본 파일의 내용을 고치지 않고 그대로 보여주며, 분기가 있으면 첫 번째 분기(본선)만 따라갑니다.' + (g.warnings.length ? ' <b>주의:</b> 규칙상 이상한 수 ' + g.warnings.length + '건 — ' + esc(g.warnings.slice(0, 3).join(', ')) + (g.warnings.length > 3 ? ' 외' : '') : ''));
   $('slider').max = g.states.length - 1;
   buildTicks(); buildComments();
+  if (display && display !== SAMPLE_DISPLAY && d.bKey) buildH2H(nmB, nmW); else $('h2hBox').hidden = true;   // 견본·내 SGF 파일은 '두 기사' 칸 숨김
   drawBoardBase();
   // 주소의 m=수 번호로 바로 이동
   const m = parseInt(new URLSearchParams(location.search).get('m') || '', 10);
   if (m > 0) { const i = g.states.findIndex(s => s.move && s.moveNo === m); if (i > 0) S.idx = i; }
   render();
+}
+
+/* KV_CLEAR_V1: 국기 (사이트와 같은 그림) */
+const FLAG=(()=>{
+  const star=(cx,cy,r,rot=0)=>{let d='';for(let i=0;i<10;i++){const a=(rot-90+i*36)*Math.PI/180,rr=i%2?r*0.382:r;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(2)+' '+(cy+rr*Math.sin(a)).toFixed(2);}return `<path d="${d}Z"/>`;};
+  const bars=(o)=>`<path d="M-6 ${o}h12v2h-12zM-6 ${o+3}h12v2h-12zM-6 ${o+6}h12v2h-12z"/>`;
+  const kr=`<svg viewBox="-36 -24 72 48" aria-hidden="true"><rect x="-36" y="-24" width="72" height="48" fill="#fff"/><g transform="rotate(-56.31)">${bars(-26)}${bars(18)}<path stroke="#fff" stroke-width="1" d="M0 17v10"/><path fill="#cd2e3a" d="M0-12A12 12 0 0 1 0 12z"/><path fill="#0047a0" d="M0-12A12 12 0 0 0 0 12 6 6 0 0 0 0 0z"/><circle cy="-6" fill="#cd2e3a" r="6"/></g><g transform="rotate(-123.69)">${bars(-26)}${bars(18)}<path stroke="#fff" stroke-width="1" d="M0-23.5v3M0 17v3.5M0 23.5v3"/></g></svg>`;
+  const cn=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#ee1c25"/><g fill="#ffde00">${star(5,5,3)}${star(10,2,1,23)}${star(12,4,1,46)}${star(12,7,1,70)}${star(10,9,1,21)}</g></svg>`;
+  const jp=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></svg>`;
+  const tw=`<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fe0000"/><rect width="15" height="10" fill="#000095"/><g fill="#fff">${star(7.5,5,3.6)}</g><circle cx="7.5" cy="5" r="1.9" fill="#000095"/><circle cx="7.5" cy="5" r="1.5" fill="#fff"/></svg>`;
+  return {'한국':kr,'중국':cn,'일본':jp,'대만':tw};
+})();
+const flagH = c => FLAG[c] ? '<span class="flag" title="' + c + '">' + FLAG[c] + '</span>' : '';
+
+/* H2H_V1: 사이트가 주소로 넘긴 두 기사 정보 (h2 = 흑승-백승, hl = 최근 맞대결 날짜~이긴쪽(b/w)~대회 | …, bx/wx = 기록 줄 | …) */
+function buildH2H(nmB, nmW){
+  const q = new URLSearchParams(location.search), h2 = q.get('h2'), hl = q.get('hl'), bx = q.get('bx'), wx = q.get('wx');
+  const box = $('h2hBox'); if (!h2 && !bx && !wx) { box.hidden = true; return; }
+  let html = '';
+  if (h2) { const [a, b] = h2.split('-').map(n => +n || 0), n = a + b;
+    html += '<div class="hrow"><span class="nb"><span class="stn b"></span> ' + flagH(q.get('bc')) + esc(nmB) + '</span><span class="hs">' + a + ' : ' + b + '</span><span class="nw">' + flagH(q.get('wc')) + esc(nmW) + ' <span class="stn w"></span></span></div>';
+    html += '<div class="bar">' + (n ? '<i style="width:' + (a / n * 100).toFixed(1) + '%"></i><i style="width:' + (b / n * 100).toFixed(1) + '%"></i>' : '') + '</div>';
+    html += '<div class="cap">' + (n ? '통산 상대전적 ' + n + '국' : '이번이 첫 맞대결') + '</div>'; }
+  if (hl) { const cur = q.get('d') || ''; const rows = hl.split('|').filter(Boolean).map(s => s.split('~'));
+    if (rows.length) html += '<h3>최근 맞대결</h3><ul>' + rows.map(([d, w, t]) => '<li class="' + (d === cur.replace(/-/g, '') ? 'now' : '') + '"><span class="d">' + esc(d.slice(0, 4) + '.' + d.slice(4, 6) + '.' + d.slice(6, 8)) + '</span><span class="t">' + esc(t || '') + '</span><span>' + esc(w === 'b' ? nmB : nmW) + ' 승</span></li>').join('') + '</ul>'; }
+  if (bx || wx) { const f = (n, x) => '<div><b>' + esc(n) + '</b>' + (x || '').split('|').filter(Boolean).map(esc).join('<br>') + '</div>';
+    html += '<h3>기록</h3><div class="facts">' + f(nmB, bx) + f(nmW, wx) + '</div>'; }
+  $('h2h').innerHTML = html; box.hidden = false;
 }
 
 /* ---------- 바둑판 그리기 (SVG) — 색·모양은 예전 그대로 ---------- */
@@ -682,7 +734,7 @@ function render(){
     const cx = PAD + x * CELL, cy = PAD + y * CELL;
     el('circle', c === 1
       ? { cx, cy, r: R, fill: 'var(--stone-b)' }
-      : { cx, cy, r: R - 0.6, fill: 'var(--stone-w)', stroke: 'var(--stone-w-edge)', 'stroke-width': 1.2 }, stoneLayer);
+      : { cx, cy, r: R - 0.3, fill: '#FFFFFF', stroke: '#111111', 'stroke-width': 1.6 }, stoneLayer);
     const num = st.nums[y][x];
     if (S.showNums && num) {
       el('text', { x: cx, y: cy + 4, 'text-anchor': 'middle', 'font-family': 'IBM Plex Mono, ui-monospace, monospace', 'font-size': num > 99 ? 10 : 12, 'font-weight': 600, fill: c === 1 ? '#F5F5F0' : '#111111' }, markLayer).textContent = num;
