@@ -61,13 +61,13 @@ const KALL={};{const _o=[];for(let j=0;j<N.length;j++)if(_NL[j]>=0)_o.push(j);_o
 if(X.DX&&X.DX.xn)for(const k in X.DX.xn)if(!KNAME[k])KNAME[k]=X.DX.xn[k];   // 이 사이트에 대국 기록이 없는 일본·중국 옛 기사의 한글 표기
 const YEARS=[..._YS].sort((a,b)=>a-b);
 /* 기록 범위 SCOPE_V2: kr = 한국기원 기록(OF 0·1)만, cn/jp/tw = 모든 기록(중국바둑협회 OF 2 · 일본 OF 3 · 대만 OF 4 포함) · 순위표는 그 나라 기사 */
-const GK=GAMES.filter(g=>g.of<2);
+const GK=GAMES.filter(g=>g.of<2||g.of===6);   /* RECENT_KIFU_V1: 6 = 기록실보다 새 한국 기사 대국(기보 출처) */
 const SCOPES=[['kr','🇰🇷 한국 기사','한국','한국기원 기록으로 집계'],['cn','🇨🇳 중국 기사','중국','중국바둑협회 기록(중국 기사끼리 둔 대국)까지 합쳐 집계'],['jp','🇯🇵 일본 기사','일본','일본 기사끼리 둔 대국(일본기원 결과·go4go)까지 합쳐 집계'],['tw','🇹🇼 대만 기사','대만','대만 기사끼리 둔 대국까지 합쳐 집계']];
 let SCOPE=(()=>{try{const v=localStorage.getItem('scope');return SCOPES.some(x=>x[0]===v)?v:'kr';}catch(e){return 'kr';}})();
 let GSC=SCOPE==='kr'?GK:GAMES;
 const SCOPE_C=()=>(SCOPES.find(x=>x[0]===SCOPE)||SCOPES[0])[2];
 const inSC=k=>((PBY[k]||{}).c||'')===SCOPE_C();
-const SRCB={2:['中','중국바둑협회 기록'],3:['日','일본 기사끼리 — 고레이팅(일본기원 결과·go4go)'],4:['臺','대만 기사끼리 — 고레이팅(go4go)'],5:['譜','해외 기사끼리 — 기보 사이트 기록(囲碁棋譜.COM·101围棋网·야호·한게임·타이젬·사이버오로·Go4Go)']};
+const SRCB={2:['中','중국바둑협회 기록'],3:['日','일본 기사끼리 — 고레이팅(일본기원 결과·go4go)'],4:['臺','대만 기사끼리 — 고레이팅(go4go)'],5:['譜','해외 기사끼리 — 기보 사이트 기록(囲碁棋譜.COM·101围棋网·야호·한게임·타이젬·사이버오로·Go4Go)'],6:['譜','최신 대국 — 한국기원 기록실에 올라오기 전 기보 사이트 기록 (기록실에 올라오면 그 기록으로 바뀜)']};
 function setScope(s){SCOPE=SCOPES.some(x=>x[0]===s)?s:'kr';try{localStorage.setItem('scope',SCOPE);}catch(e){}GSC=SCOPE==='kr'?GK:GAMES;YAGG=null;RECS=null;BH=null;for(const k in SZS)delete SZS[k];AGEC={};['pairs','ups','fin','ms'].forEach(k=>delete FX[k]);buildYR();
   const h=routeH().replace(/([?&])c=[^&]*&?/,'$1').replace(/[?&]$/,'');if(h!==routeH())routeRS(h||'#/');route();}
 document.addEventListener('click',e=>{const b=e.target.closest('.scopebar [data-sc]');if(b)setScope(b.dataset.sc);});
