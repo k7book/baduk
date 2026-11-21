@@ -248,6 +248,28 @@ function currentTop(filter,n){
   const out=[];for(const k in WS){const s=WS[k];if(s[7]<RANK_MIN)continue;if(s[1]>UNC_MAX)continue;const lastY=(s[2]/100)|0;if(lastY<META.active_since_year)continue;if(filter&&!filter(k))continue;out.push([k,s[0]]);}
   return out.sort((a,b)=>b[1]-a[1]).slice(0,n);
 }
+/* HOME_LIVE_V1: 홈 왼쪽 첫 칸 — 진행 중인 기전 · 방금 끝난 기전 (두 줄씩) */
+function homeLive(){
+  const day=d=>{const s=String(d);return Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8))/864e5;};
+  let LK=0;for(const g of GK)if(g.d>LK)LK=g.d;const L0=day(LK);
+  const edOf=s=>{const m=/제\s*\d+\s*[기회]|^\d{4}/.exec(s||'');return m?m[0].replace(/\s/g,''):'';};
+  const mmdd=d=>dstr(d).slice(5).replace('-','.');
+  const OK=new Set(['국내기전','세계기전','리그']),KG=new Set();for(const g of GK)if(OK.has(g.c)&&L0-day(g.d)<=75)KG.add(g.g);
+  const sc=(c,a,b)=>{let x=0,y=0;for(const i of c.gi||[]){const g=GAMES[i];if(!g||g.j)continue;if(g.wk===a)x++;else if(g.wk===b)y++;}return x+':'+y;};
+  const fin=CHAMP.filter(c=>c.st===0&&c.ck&&c.d<=LK&&L0-day(c.d)<=45&&KG.has(c.g)).sort((a,b)=>b.d-a.d).filter((c,i,a)=>a.findIndex(x=>x.g===c.g)===i).slice(0,4);
+  const done=new Set(CHAMP.filter(c=>c.st===0).map(c=>c.g+'|'+edOf(c.ed)));
+  const grp={};
+  for(const g of GK){if(g.j||!OK.has(g.c)||L0-day(g.d)>30)continue;const tn=T[g.ti],ed=edOf(tn),k=g.g+'|'+ed;if(done.has(k))continue;const o=grp[k];if(!o||g.d>o.d||(g.d===o.d&&(g.s||0)>(o.s||0)))grp[k]={g:g.g,ed,d:g.d,s:g.s,tn};}
+  const on=Object.values(grp).sort((a,b)=>b.d-a.d).filter((o,i,a)=>a.findIndex(x=>x.g===o.g)===i).slice(0,5);
+  const SL=['예선','본선','8강','4강','결승'];
+  const stg=o=>{let s=o.tn.replace(o.ed,'').replace(G[o.g],'').replace(/\s+/g,' ').trim();if(!s||s.length>16)s=SL[o.s]||'';return s;};
+  const onRow=o=>{const fc=CHAMP.find(c=>c.st!==0&&c.g===o.g&&edOf(c.ed)===o.ed&&c.gi&&c.gi.length);let sub=esc(o.ed)+(stg(o)?' · '+esc(stg(o)):'');
+    if(fc){const g0=GAMES[fc.gi[0]];if(g0)sub+=` · <b>${esc(nameOf(g0.wk))} ${sc(fc,g0.wk,g0.lk)} ${esc(nameOf(g0.lk))}</b>`;}
+    return `<li><a href="#/tournaments/${o.g}"><span class="t">${esc(G[o.g])}</span><span class="d">${mmdd(o.d)}</span><span class="m">${sub}</span></a></li>`;};
+  const finRow=c=>`<li><a href="#/tournaments/${c.g}"><span class="t">${esc(G[c.g])}</span><span class="d">${mmdd(c.d)}</span><span class="m">${flag((PBY[c.ck]||{}).c)||''}<b>${esc(nameOf(c.ck))}</b> 우승${c.rk?` · ${sc(c,c.ck,c.rk)} ${esc(nameOf(c.rk))}`:''}</span></a></li>`;
+  return '<div class="elive"><h3>진행 중인 기전</h3>'+(on.length?'<ul>'+on.map(onRow).join('')+'</ul>':'<p class="empty">최근 30일 대국이 있는 기전이 없습니다</p>')+
+    '<h3>방금 끝난 기전</h3>'+(fin.length?'<ul>'+fin.map(finRow).join('')+'</ul>':'<p class="empty">최근 45일 안에 우승이 정해진 기전이 없습니다</p>')+'</div>';
+}
 function pHome(){
   const t=kst();const mmdd=String(t.m).padStart(2,'0')+'-'+String(t.d).padStart(2,'0');
   const bday=P.filter(p=>p.b&&p.b.slice(5)===mmdd&&(p.st||'').includes('현역'));
@@ -275,7 +297,7 @@ function pHome(){
   app.innerHTML=`<h1 class="sr">바둑DB 홈</h1>
   <div class="e3">
     <aside class="e3-l">
-      ${card('바로 가기','','<nav class="eql">'+links.map(([h,l,ic])=>`<a href="${h}"><span class="ic" aria-hidden="true">${ic}</span>${l}</a>`).join('')+'</nav>')}
+      ${card('기전 소식','#/tournaments',homeLive(),'대회 전체')}
       ${card('실력 점수 순위','#/rankings/all',rk(top,r=>fmt(r[1]),mv)+'<p class="efoot">현역 · 이 사이트 계산값 · 화살표는 1년 전 대비</p>')}
       ${topW.length?card('여자 실력 점수','#/rankings/all?g=w',rk(topW,r=>fmt(r[1]))):''}
       ${grRows.length?card('고레이팅 세계 순위','#/rankings/goratings','<ol class="erk efill">'+grRows.map((r,i)=>`<li${xf(i,5)}><span class="i">${r[0]}</span><span class="f">${flag(GRCC[r[4]])||'<i></i>'}</span><span class="nm">${r[6]?plink(r[6]):esc(r[1])}</span><span class="v">${fmt(r[5])}</span></li>`).join('')+'</ol>'):''}
